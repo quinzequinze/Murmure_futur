@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<script type="text/javascript">"use strict";</script>
+<head>
+    <style type="text/css">
+    @font-face {
+        font-family: "bau";
+        src: url("fonts/bau-super.woff") format("woff");
+        font-weight: bold;
+        font-style: normal;
+    }
+    @font-face {
+        font-family: "bau";
+        src: url("fonts/bau-medium.woff") format("woff");
+        font-weight: normal;
+        font-style: normal;
+    }
+    html {
+        height: 100%;
+        width: 100%;
+    }
+    body {
+        padding: 0;
+        margin: 0;
+        font-size: 0;
+        font-family: bau;
+        font-weight: bold;
+        height: 100%;
+        box-sizing: border-box;
+        padding: 20px;
+        background: black;
+    }
+    .button {
+        background: white;
+        cursor : pointer;
+    }
+    .button:hover {
+        background: Aquamarine;
+    }
+    .button:before {
+        content: "";
+        margin-left: -100%;
+    }
+    .button:after {
+        content: "";
+        margin-right: -100%;
+    }
+    </style>
+</head>
+<html>
+    <body>
+        <div id="container" ></div>
+    </body>
+    <script src="idSelec.js"></script>
+</html>
