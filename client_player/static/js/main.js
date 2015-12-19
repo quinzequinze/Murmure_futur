@@ -69,7 +69,7 @@ function startPlayer(_id) {
 
 function loop() {
    requestAnimationFrame(loop);
-    if(context.renderer){
+    if(context.render){
     context.updateRender();
 }
     ///FONCTION À L'ÉTUDE
