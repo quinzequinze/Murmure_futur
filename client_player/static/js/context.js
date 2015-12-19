@@ -31,7 +31,7 @@ instal.context = {
         }
     },
     room: function(_w, _l) {
-        console.log("toto");
+        console.log("tata");
         var geometry = new THREE.BoxGeometry(_w, 7, _l);
         var material = new THREE.MeshBasicMaterial({
             color: 0xff0000
