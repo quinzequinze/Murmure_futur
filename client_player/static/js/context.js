@@ -25,21 +25,27 @@ instal.context = {
         if (this.render) {
             this.renderer = Object.create(instal.renderer);
             this.renderer.setup(this.scene);
-            this.room();
+            this.room(10,20);
         }
     },
     room: function(_w, _l) {
-        var geometry = new THREE.BoxGeometry(20, 7, 20);
+        var geometry = new THREE.BoxGeometry(_w, 7, _l);
         var material = new THREE.MeshBasicMaterial({
             color: 0xff0000
         });
         var object = new THREE.Mesh(geometry, material);
+        object.position.y = 0;
+        object.position.x  = -_w/2;
+        object.position.z  = -_l/2;
+
+        object.updateMatrixWorld();
+
         var edges = new THREE.EdgesHelper(object, 0xffffff);
         edges.material.linewidth = 2;
-        //scene.add( object );
-        edges.position.y = 7;
         this.scene.add(edges);
-        geometry = new THREE.BoxGeometry(20, 0.5, 20);
+
+        //ground
+        geometry = new THREE.BoxGeometry(_w, 0.5, _l);
         material = new THREE.MeshBasicMaterial({
             color: 0xcccccc
         });
@@ -47,7 +53,10 @@ instal.context = {
         ground.castShadow = false;
         ground.receiveShadow = true;
         ground.position.y = -7 / 2 + 0.25;
+        ground.position.x  = -_w/2;
+        ground.position.z  = -_l/2;
         this.scene.add(ground);
+        //lights
         var mainLight = new THREE.PointLight(0xcccccc, 1.5, 250);
         mainLight.position.y = 7;
         this.scene.add(mainLight);
