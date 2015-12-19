@@ -9,6 +9,7 @@ instal.sound = {
         this.audio.volume.disconnect();
     },
     setup: function() {
+        var self = this;
         var a = {};
         this.audio = a;
         window.AudioContext = window.AudioContext || window.webkitAudioContext;
@@ -25,6 +26,14 @@ instal.sound = {
         a.flatGain.connect(a.volume);
         a.convolverGain.connect(a.volume);
         a.volume.connect(a.context.destination);
+
+
+        window.addEventListener('blur', function(ev) {
+            self.stop()
+        }, false);
+        window.addEventListener('focus', function(ev) {
+            self.play()
+        }, false);
     },
     createSoundCone: function(object, innerAngle, outerAngle, outerGain) {
         var innerScale = 1,
@@ -80,11 +89,11 @@ instal.sound = {
         var q = new THREE.Vector3();
 
         q.setFromMatrixPosition(object.matrixWorld);
-        
+
         this.audio.context.listener.setPosition(q.x, q.y, q.z);
-        
+
         //orientation
-        
+
         var m = object.matrix;
         var mx = m.elements[12],
             my = m.elements[13],
@@ -98,9 +107,9 @@ instal.sound = {
         var up = new THREE.Vector3(0, -1, 0);
         up.applyProjection(m);
         up.normalize();
-        
+
         this.audio.context.listener.setOrientation(vec.x, vec.y, vec.z, up.x, up.y, up.z);
-        
+
         m.elements[12] = mx;
         m.elements[13] = my;
         m.elements[14] = mz;
@@ -149,4 +158,5 @@ instal.sound = {
         });
         return sound;
     },
+
 };
