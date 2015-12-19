@@ -95,8 +95,8 @@ instal.context = {
         this.soundNodeArray[id] = null;
         scene.remove(getObjectByName(_id));
     },
-    updateUser: function(_JSON) {},
-    updateSound: function(_JSON) {},
+    updateUsers: function(_JSON) {},
+    updateSounds: function(_JSON) {},
     updateRender: function() {
         if (this.render = true) {
             control.moveCamera(context.renderer.camera);
