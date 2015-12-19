@@ -1,16 +1,13 @@
-<!DOCTYPE html>
-<script type="text/javascript">"use strict";</script>
-<head>
-    <style type="text/css">
+
     @font-face {
         font-family: "bau";
-        src: url("fonts/bau-super.woff") format("woff");
+        src: url("bau-super.woff") format("woff");
         font-weight: bold;
         font-style: normal;
     }
     @font-face {
         font-family: "bau";
-        src: url("fonts/bau-medium.woff") format("woff");
+        src: url("bau-medium.woff") format("woff");
         font-weight: normal;
         font-style: normal;
     }
@@ -50,13 +47,3 @@
         content: "";
         margin-right: -100%;
     }
-    </style>
-</head>
-<html>
-    <body>
-        <div id="container" ></div>
-    </body>
-    <script type="text/javascript" src="moduleIselec.js"></script>
-
-    
-</html>
