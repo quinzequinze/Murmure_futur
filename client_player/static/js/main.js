@@ -45,14 +45,14 @@ function idSelectInit() {
 //////////////////////////PLAYER
 function startPlayer(_id) {
 
-// - envoi de l'id au serveur / ---> le slot est occupé / le slot n'est pas disponible
+// - envoi de l'id au serveur / ---> le slot est occupé / le slot n'est pas disponible / le slot est en debug
 
     console.log("** player started, userId: " + _id);
     context = Object.create(instal.context);
     context.init(_id);
     //context.renderer = false;
     context.render = true;
-    //
+    // - control devient debug, add event listener sur 'd' pour focer le debug
     if (keyBoardControl) {
         control = Object.create(instal.control);
     } else {
