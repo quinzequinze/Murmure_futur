@@ -30,20 +30,15 @@ function mapVar(value, low1, high1, low2, high2) {
 }
 
 function getMobileOperatingSystem() {
-  var userAgent = navigator.userAgent || navigator.vendor || window.opera;
+    var userAgent = navigator.userAgent || navigator.vendor || window.opera;
 
-  if( userAgent.match( /iPad/i ) || userAgent.match( /iPhone/i ) || userAgent.match( /iPod/i ) )
-  {
-    return 'iOS';
+    if (userAgent.match(/iPad/i) || userAgent.match(/iPhone/i) || userAgent.match(/iPod/i)) {
+        return 'iOS';
 
-  }
-  else if( userAgent.match( /Android/i ) )
-  {
+    } else if (userAgent.match(/Android/i)) {
 
-    return 'Android';
-  }
-  else
-  {
-    return 'unknown';
-  }
+        return 'Android';
+    } else {
+        return 'unknown';
+    }
 };

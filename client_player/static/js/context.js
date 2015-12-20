@@ -11,7 +11,7 @@ instal.context = {
     init: function(_myId) {
         //this.scene.matrixAutoUpdate = false;
 
-        this.scene.translateOnAxis(new THREE.Vector3(1, 0, 1).normalize() , 20);
+        this.scene.translateOnAxis(new THREE.Vector3(1, 0, 1).normalize(), 20);
 
         var dir = new THREE.Vector3(1, 0, 0);
         var origin = new THREE.Vector3(0, 0, 0);
@@ -25,7 +25,7 @@ instal.context = {
         if (this.render) {
             this.renderer = Object.create(instal.renderer);
             this.renderer.setup(this.scene);
-            this.room(10,20);
+            this.room(10, 20);
         }
     },
     room: function(_w, _l) {
@@ -36,8 +36,8 @@ instal.context = {
         });
         var object = new THREE.Mesh(geometry, material);
         object.position.y = 0;
-        object.position.x  = -_w/2;
-        object.position.z  = -_l/2;
+        object.position.x = -_w / 2;
+        object.position.z = -_l / 2;
 
         object.updateMatrixWorld();
 
@@ -54,8 +54,8 @@ instal.context = {
         ground.castShadow = false;
         ground.receiveShadow = true;
         ground.position.y = -7 / 2 + 0.25;
-        ground.position.x  = -_w/2;
-        ground.position.z  = -_l/2;
+        ground.position.x = -_w / 2;
+        ground.position.z = -_l / 2;
         this.scene.add(ground);
         //lights
         var mainLight = new THREE.PointLight(0xcccccc, 1.5, 250);
@@ -102,7 +102,7 @@ instal.context = {
             debug.moveCamera(context.renderer.camera);
             this.sound.setListener(context.renderer.camera);
             this.renderer.render();
-          //  console.log(context.renderer.camera.position);
+            //  console.log(context.renderer.camera.position);
         }
 
     },

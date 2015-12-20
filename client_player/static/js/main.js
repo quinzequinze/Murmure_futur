@@ -1,8 +1,9 @@
 ///debug
-var debug = true;
+var debugMode = true;
 var keyBoardDebug = (getMobileOperatingSystem() == "unknown"); //Automatic detection of mobil devices: CYM
 ///globals
-var context, debug, idSelect;
+var context, debug = null,
+    idSelect;
 var roomWidth, roomLength, nbUser, userId, soundData, userData;
 var config;
 var hasConfig = false;
@@ -45,32 +46,42 @@ if (keyBoardDebug) {
     window.addEventListener('keydown', function(ev) {
         switch (ev.keyCode) {
             case 'D'.charCodeAt(0):
-                window.alert("Debug enabled!");
+                debugHandler();
                 break;
         }
     }, false);
-}
-else {
+} else {
     //Press the screen to start debugging on a mobile
-    window.alert("Debug enabled!");
-    window.addEventListener('touchstart', function() {
 
+    window.addEventListener('touchstart', function() {
+        debugHandler();
     }, false);
 }
 
 
 //////////////////////////DEBUG
 function debugHandler() {
-    if (debug) {
+    if (debugMode && (debug == null)) {
         if (keyBoardDebug) {
+            window.alert("Debug enabled!");
             debug = Object.create(instal.debug);
         } else {
+            window.alert("Debug enabled!");
             debug = Object.create(instal.mobilDebug);
         }
-    };
-    
-}
+        debug.setup();
+        debug.clock = context.clock;
+    } else {
+        if (debug != null) {
+            window.alert("Debug object already created!");
+        };
+        if (!debugMode) {
+            window.alert("Debug not enabled!");
+        };
 
+    };
+
+}
 //////////////////////////ID_SELECT
 function idSelectInit() {
     idSelect = Object.create(instal.idSelect);
@@ -84,7 +95,7 @@ function idSelectInit() {
 //////////////////////////PLAYER
 function startPlayer(_id) {
 
-// - envoi de l'id au serveur / ---> le slot est occupé / le slot n'est pas disponible / le slot est en debug
+    // - envoi de l'id au serveur / ---> le slot est occupé / le slot n'est pas disponible / le slot est en debug
 
     console.log("** player started, userId: " + _id);
     context = Object.create(instal.context);
@@ -92,25 +103,19 @@ function startPlayer(_id) {
     //context.renderer = false;
     context.render = true;
     // - control devient debug, add event listener sur 'd' pour focer le debug
-    if (keyBoardDebug) {
-        debug = Object.create(instal.debug);
-    } else {
-        debug = Object.create(instal.mobilDebug);
-    }
-    debug.setup();
-    debug.clock = context.clock;
-    //
-        var path = nf(1, 2) + ".mp3"
+    debugHandler()
+        //
+    var path = nf(1, 2) + ".mp3"
     context.addSoundNode(1, path);
     // console.log(instal);
     loop();
 }
 
 function loop() {
-   requestAnimationFrame(loop);
-    if(context.renderer){
-    context.updateRender();
-}
+    requestAnimationFrame(loop);
+    if (context.renderer) {
+        context.updateRender();
+    }
     ///FONCTION À L'ÉTUDE
     /*
     for (var i = 0; i < context.soundNodeArray.length; i++) {

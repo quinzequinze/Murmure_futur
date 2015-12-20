@@ -12,10 +12,10 @@ var connectCounter = 0;
 var numberOfTags = 10;
 
 var config = {
-    render: true,
-    nbUserServer: numberOfTags,
-    roomWidth: 30,
-    roomLength: 50,
+  render: true,
+  nbUserServer: numberOfTags,
+  roomWidth: 30,
+  roomLength: 50,
 };
 
 
@@ -59,20 +59,20 @@ app.use(express.static(__dirname + '/static/samples'));
 open('http://localhost:3000/');
 open('http://localhost:3000/');
 
-process.once('SIGUSR2', function () {
+process.once('SIGUSR2', function() {
   io.emit("closeClient");
   process.kill(process.pid, 'SIGUSR2');
 });
 
 //////////////////////////HANDLERS
 app.get('/', function(req, res) {
-  res.sendfile(__dirname+ '/etsi_player.html');
+  res.sendfile(__dirname + '/etsi_player.html');
   console.log("reload")
-  // res.sendfile('idSelec.html');
+    // res.sendfile('idSelec.html');
 });
 
 app.get('/record', function(req, res) {
-  res.sendfile(__dirname+ '/etsi_recorder.html');
+  res.sendfile(__dirname + '/etsi_recorder.html');
   // res.sendfile('idSelec.html');
 });
 
