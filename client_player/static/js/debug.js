@@ -1,5 +1,5 @@
 var instal = instal || {};
-instal.control = {
+instal.debug = {
     self: "",
     up: false,
     down: false,
@@ -39,19 +39,15 @@ instal.control = {
         }, false);
         window.addEventListener('keydown', function(ev) {
             switch (ev.keyCode) {
-                case 'W'.charCodeAt(0):
                 case 38:
                     self.keyForward = true;
                     break;
-                case 'S'.charCodeAt(0):
                 case 40:
                     self.keyBackward = true;
                     break;
-                case 'A'.charCodeAt(0):
                 case 37:
                     self.keyLeft = true;
                     break;
-                case 'D'.charCodeAt(0):
                 case 39:
                     self.keyRight = true;
                     break;
@@ -59,19 +55,15 @@ instal.control = {
         }, false);
         window.addEventListener('keyup', function(ev) {
             switch (ev.keyCode) {
-                case 'W'.charCodeAt(0):
                 case 38:
                     self.keyForward = false;
                     break;
-                case 'S'.charCodeAt(0):
                 case 40:
                     self.keyBackward = false;
                     break;
-                case 'A'.charCodeAt(0):
                 case 37:
                     self.keyLeft = false;
                     break;
-                case 'D'.charCodeAt(0):
                 case 39:
                     self.keyRight = false;
                     break;

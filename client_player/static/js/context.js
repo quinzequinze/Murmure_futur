@@ -99,7 +99,7 @@ instal.context = {
     updateSounds: function(_JSON) {},
     updateRender: function() {
         if (this.render = true) {
-            control.moveCamera(context.renderer.camera);
+            debug.moveCamera(context.renderer.camera);
             this.sound.setListener(context.renderer.camera);
             this.renderer.render();
           //  console.log(context.renderer.camera.position);

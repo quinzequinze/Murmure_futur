@@ -1,5 +1,5 @@
 var instal = instal || {};
-instal.mobilControl = {
+instal.mobilDebug = {
     self: "",
     tiltForward: false,
     tiltBackward: false,

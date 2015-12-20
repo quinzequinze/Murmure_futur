@@ -1,7 +1,8 @@
 ///debug
-var keyBoardControl = true;
+var debug = true;
+var keyBoardDebug = (getMobileOperatingSystem() == "unknown"); //Automatic detection of mobil devices: CYM
 ///globals
-var context, control, idSelect;
+var context, debug, idSelect;
 var roomWidth, roomLength, nbUser, userId, soundData, userData;
 var config;
 var hasConfig = false;
@@ -15,6 +16,7 @@ if (typeof Object.create !== "function") {
         return new F();
     };
 }
+
 //////////////////////////SERVER
 socket.on('newClient', function(data) {
     config = data;
@@ -26,12 +28,49 @@ socket.on('newClient', function(data) {
     idSelectInit();
 });
 socket.on('emitUsers', function(data) {
-context.updateUsers(data);
+    context.updateUsers(data);
 });
 
 socket.on('emitSound', function(data) {
-context.updateSounds(data);
+    context.updateSounds(data);
 });
+
+socket.on('closeClient', function(data) {
+    window.close();
+});
+
+//////////////////////////MANUAL ACTIONS
+if (keyBoardDebug) {
+    //Press 'D' to start debugging from a station
+    window.addEventListener('keydown', function(ev) {
+        switch (ev.keyCode) {
+            case 'D'.charCodeAt(0):
+                window.alert("Debug enabled!");
+                break;
+        }
+    }, false);
+}
+else {
+    //Press the screen to start debugging on a mobile
+    window.alert("Debug enabled!");
+    window.addEventListener('touchstart', function() {
+
+    }, false);
+}
+
+
+//////////////////////////DEBUG
+function debugHandler() {
+    if (debug) {
+        if (keyBoardDebug) {
+            debug = Object.create(instal.debug);
+        } else {
+            debug = Object.create(instal.mobilDebug);
+        }
+    };
+    
+}
+
 //////////////////////////ID_SELECT
 function idSelectInit() {
     idSelect = Object.create(instal.idSelect);
@@ -53,17 +92,17 @@ function startPlayer(_id) {
     //context.renderer = false;
     context.render = true;
     // - control devient debug, add event listener sur 'd' pour focer le debug
-    if (keyBoardControl) {
-        control = Object.create(instal.control);
+    if (keyBoardDebug) {
+        debug = Object.create(instal.debug);
     } else {
-        control = Object.create(instal.mobilControl);
+        debug = Object.create(instal.mobilDebug);
     }
-    control.setup();
-    control.clock = context.clock;
+    debug.setup();
+    debug.clock = context.clock;
     //
         var path = nf(1, 2) + ".mp3"
     context.addSoundNode(1, path);
-    console.log(instal);
+    // console.log(instal);
     loop();
 }
 
