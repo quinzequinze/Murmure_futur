@@ -41,8 +41,6 @@ instal.renderer = {
     },
 
     updateCameraTarget: function(_camera, _angles) {
-        console.log(_angles.angle);
-
         var lx = Math.sin(_angles.angle);
         var lz = Math.cos(_angles.angle);
         //not implemented yet, set to yangle = 0 CYM

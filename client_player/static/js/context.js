@@ -107,7 +107,6 @@ instal.context = {
         this.user3dObject.position.y = _JSON[this.userId].y;
         this.user3dObject.position.z = _JSON[this.userId].z;
 
-        console.log(this.user3dObject.position);
         var camera = context.renderer.camera;
 
         //Moved to rneder doesn't work
@@ -137,7 +136,12 @@ instal.context = {
     updateSounds: function(_JSON) {},
     updateRender: function() {
         if (this.render = true) {
-            debug.moveCamera(context.renderer.camera);
+            //Move camera is responsible for calculating the position from the keyboard action
+            //Only used if in debug mode CYM
+            if (debugMode) {
+                debug.moveCamera(context.renderer.camera);
+            };
+            
             this.sound.setListener(context.renderer.camera);
             this.renderer.render();
             //  console.log(context.renderer.camera.position);

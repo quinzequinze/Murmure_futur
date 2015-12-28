@@ -1,5 +1,5 @@
 ///debug
-var debugMode = true;
+var debugMode = false;
 var keyBoardDebug = (getMobileOperatingSystem() == "unknown"); //Automatic detection of mobil devices: CYM
 ///globals
 var context, debug = null,
@@ -50,7 +50,15 @@ if (keyBoardDebug) {
     window.addEventListener('keydown', function(ev) {
         switch (ev.keyCode) {
             case 'D'.charCodeAt(0):
-                debugHandler();
+                if (debugMode) {
+                    debugMode = false;
+                    delete debug;
+                    debugHandler();  
+                }else{
+                    debugMode = true;
+                    debugHandler();
+                };
+                
                 break;
         }
     }, false);

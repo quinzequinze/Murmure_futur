@@ -87,7 +87,6 @@ instal.mobilDebug = {
             camZ += vx * dt * speed;
             camX += -vz * dt * speed;
         }
-        console.log(camX);
         _camera.lookAt(_camera.target.position);
         _camera.position.set(camX, camY, camZ);
     },
