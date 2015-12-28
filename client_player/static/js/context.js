@@ -1,6 +1,7 @@
 var instal = instal || {};
 instal.context = {
     userNodeArray: [],
+    user3dObject: new THREE.Object3D(), // Needed beacuse Three.js ojects over node are not performing correcly, CYM
     soundNodeArray: [],
     scene: new THREE.Scene(),
     clock: new THREE.Clock(true),
@@ -9,15 +10,14 @@ instal.context = {
     render: true,
     userId: null,
     init: function(_myId) {
-        //this.scene.matrixAutoUpdate = false;
-
-        this.scene.translateOnAxis(new THREE.Vector3(1, 0, 1).normalize(), 20);
 
         var dir = new THREE.Vector3(1, 0, 0);
         var origin = new THREE.Vector3(0, 0, 0);
         var length = 1;
         var hex = 0xffff00;
         var arrowHelper = new THREE.ArrowHelper(dir, origin, length, hex);
+        //Initialize the userNodeArray table from the server
+        socket.emit('getUsers');
 
         this.scene.add(arrowHelper);
         this.userId = _myId;
@@ -25,7 +25,7 @@ instal.context = {
         if (this.render) {
             this.renderer = Object.create(instal.renderer);
             this.renderer.setup(this.scene);
-            this.room(10, 20);
+            this.room(-10, -20);
         }
     },
     room: function(_w, _l) {
@@ -79,13 +79,15 @@ instal.context = {
             audioNode.makeMesh();
         }
         if (this.soundNodeArray[_id]) {
-            console.log("cette audioNode existe deja");
+            console.log("cet audioNode existe deja");
             return;
         }
         audioNode.obj.name = _id;
         audioNode.id = _id;
         this.soundNodeArray[_id] = audioNode;
         this.scene.add(audioNode.obj);
+        // console.log(audioNode)
+        // console.log(audioNode.obj.position);
     },
     removeSoundNode: function(_id) {
         if (!soundNodeArray[id]) {
@@ -95,7 +97,43 @@ instal.context = {
         this.soundNodeArray[id] = null;
         scene.remove(getObjectByName(_id));
     },
-    updateUsers: function(_JSON) {},
+    updateUsers: function(_JSON) {
+        this.userNodeArray = _JSON;
+
+        nbUser = _JSON.length;
+
+        // Update 3D user object with the positions CYM
+        this.user3dObject.position.x = _JSON[this.userId].x;
+        this.user3dObject.position.y = _JSON[this.userId].y;
+        this.user3dObject.position.z = _JSON[this.userId].z;
+
+        console.log(this.user3dObject.position);
+        var camera = context.renderer.camera;
+
+        //Moved to rneder doesn't work
+        this.renderer.updateCameraTarget(camera, _JSON[this.userId]);
+
+        camera.lookAt(camera.target.position);
+
+        camera.position.set(
+            _JSON[this.userId].x,
+            _JSON[this.userId].y,
+            _JSON[this.userId].z);
+        this.sound.setListener(context.renderer.camera);
+
+        //from sandbox
+        // self.xangle = self.users[self.userId].angle;
+        // self.updateCameraTarget();
+        // self.camera.lookAt(self.camera.target.position);
+        // self.setListenerPosition(self.camera,
+        // users[self.userId].x,
+        // users[self.userId].y,
+        // users[self.userId].z,
+        // users[self.userId].dt / 1000);
+        //
+        // console.log(this.userNodeArray[this.userId].x + " " + context.userNodeArray[this.userId].z);
+        // console.log(this.sound.audio.context.listener.position);
+    },
     updateSounds: function(_JSON) {},
     updateRender: function() {
         if (this.render = true) {

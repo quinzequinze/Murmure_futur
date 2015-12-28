@@ -25,16 +25,16 @@ instal.debug = {
         window.addEventListener('mouseup', function() {
             self.down = false;
         }, false);
-        self.xangle = Math.PI;
+        self.xangle = 2 * Math.PI;
         self.yangle = 0;
         window.addEventListener('mousemove', function(ev) {
             if (self.down) {
                 var dx = ev.clientX - self.mx;
                 var dy = ev.clientY - self.my;
                 self.mx = ev.clientX;
-                self.my = ev.clientY;
+                // self.my = ev.clientY;
                 self.xangle -= dx / 100;
-                self.yangle = Math.min(Math.PI / 2, Math.max(-Math.PI / 2, self.yangle - dy / 100));
+                // self.yangle = Math.min(Math.PI / 2, Math.max(-Math.PI / 2, self.yangle - dy / 100));
             }
         }, false);
         window.addEventListener('keydown', function(ev) {
@@ -70,6 +70,18 @@ instal.debug = {
             }
         }, false);
     },
+
+    // updateCameraTarget: function(_camera) {
+    //     var lx = Math.sin(this.xangle);
+    //     var ly = Math.sin(this.yangle);
+    //     var lz = Math.cos(this.xangle);
+    //     _camera.target.position.set(
+    //         _camera.position.x + lx,
+    //         _camera.position.y + ly,
+    //         _camera.position.z + lz
+    //     );
+    // },
+
     moveCamera: function(_camera) {
         var lx = Math.sin(this.xangle);
         var ly = Math.sin(this.yangle);
@@ -99,9 +111,29 @@ instal.debug = {
             camZ += vx * dt * speed;
             camX += -vz * dt * speed;
         }
-        _camera.target.position.set(_camera.position.x + lx, _camera.position.y + ly, _camera.position.z + lz);
-        _camera.lookAt(_camera.target.position);
-        _camera.position.set(camX, camY, camZ);
+
+
+        // console.log("userNodeArray: ");
+        // console.log(context.userNodeArray);
+        // console.log("userId: " + context.userId);
+
+        //Send positions to server
+        // console.log(context.userNodeArray[context.userId]);
+        if (Object.keys(context.userNodeArray).length != 0) {
+            context.userNodeArray[context.userId].x = camX;
+            context.userNodeArray[context.userId].y = camY;
+            context.userNodeArray[context.userId].z = camZ;
+            context.userNodeArray[context.userId].angle = this.xangle;
+            context.userNodeArray[context.userId].dt = dt;
+
+            socket.emit('sendUsers', context.userNodeArray, context.userId);
+        };
+
+        //
+
+        // _camera.target.position.set(_camera.position.x + lx, _camera.position.y + ly, _camera.position.z + lz);
+        // _camera.lookAt(_camera.target.position);
+        // _camera.position.set(camX, camY, camZ);
     },
 
 };

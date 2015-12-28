@@ -4,6 +4,13 @@ var io = require('socket.io')(http);
 var express = require('express');
 var open = require('open');
 
+
+app.use(express.static(__dirname + '/static/css'));
+app.use(express.static(__dirname + '/static/js'));
+app.use(express.static(__dirname + '/static/img'));
+app.use(express.static(__dirname + '/static/fonts'));
+app.use(express.static(__dirname + '/static/samples'));
+
 var users = new Object();
 var sounds = new Object();
 
@@ -31,22 +38,19 @@ for (var i = 1; i <= numberOfTags; i++) {
     "isTagConnected": false
   };
 
-  user.id = "tagId" + i;
+  user.id = i;
   users[user.id] = user;
 
   delete user;
 };
 
+console.log(users);
 
 function randomInt(min, max) {
   return min + Math.floor(Math.random() * (max - min + 1));
 }
 
-app.use(express.static(__dirname + '/static/css'));
-app.use(express.static(__dirname + '/static/js'));
-app.use(express.static(__dirname + '/static/img'));
-app.use(express.static(__dirname + '/static/fonts'));
-app.use(express.static(__dirname + '/static/samples'));
+
 
 //////////////////////////AUTO RELOAD
 //In the terminal run cd */client_player where * is the root directory of the project

@@ -7,7 +7,7 @@ instal.renderer = {
         //camera
 
         this.scene=_scene;
-        console.log(this.scene.position);
+        // console.log(this.scene.position);
         this.camera.position.x = this.scene.position.x;
         this.camera.position.z = this.scene.position.z;
         this.camera.position.y = 0;
@@ -39,4 +39,20 @@ instal.renderer = {
         }
         this.webGlRenderer.render(this.scene, this.camera);
     },
+
+    updateCameraTarget: function(_camera, _angles) {
+        console.log(_angles.angle);
+
+        var lx = Math.sin(_angles.angle);
+        var lz = Math.cos(_angles.angle);
+        //not implemented yet, set to yangle = 0 CYM
+        // var ly = Math.sin(_angles.yangle);
+        var ly = Math.sin(0);
+
+        _camera.target.position.set(
+            _camera.position.x + lx,
+            _camera.position.y + ly,
+            _camera.position.z + lz
+        );
+    }
 };

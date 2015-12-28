@@ -29,7 +29,11 @@ socket.on('newClient', function(data) {
     idSelectInit();
 });
 socket.on('emitUsers', function(data) {
-    context.updateUsers(data);
+    
+    if(context){
+       context.updateUsers(data); 
+    }
+    
 });
 
 socket.on('emitSound', function(data) {
@@ -97,9 +101,10 @@ function startPlayer(_id) {
 
     // - envoi de l'id au serveur / ---> le slot est occupé / le slot n'est pas disponible / le slot est en debug
 
-    console.log("** player started, userId: " + _id);
+    console.log("** player started, userId:  " + _id);
     context = Object.create(instal.context);
     context.init(_id);
+
     //context.renderer = false;
     context.render = true;
     // - control devient debug, add event listener sur 'd' pour focer le debug
