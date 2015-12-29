@@ -1,7 +1,7 @@
 var instal = instal || {};
 instal.context = {
     userNodeArray: [],
-    user3dObject: new THREE.Object3D(), // Needed beacuse Three.js ojects over node are not performing correcly, CYM
+    camera: new THREE.PerspectiveCamera(45, this.width / this.height, 0.01, 1000), // Needed beacuse Three.js ojects over node are not performing correcly, CYM
     soundNodeArray: [],
     scene: new THREE.Scene(),
     clock: new THREE.Clock(true),
@@ -16,6 +16,8 @@ instal.context = {
         var length = 1;
         var hex = 0xffff00;
         var arrowHelper = new THREE.ArrowHelper(dir, origin, length, hex);
+
+        this.camera.target = new THREE.Object3D();
         //Initialize the userNodeArray table from the server
         socket.emit('getUsers');
 
@@ -24,7 +26,7 @@ instal.context = {
         this.sound.setup();
         if (this.render) {
             this.renderer = Object.create(instal.renderer);
-            this.renderer.setup(this.scene);
+            this.renderer.setup(this.scene, this.camera);
             this.room(-10, -20);
         }
     },
@@ -101,16 +103,9 @@ instal.context = {
         this.userNodeArray = _JSON;
 
         nbUser = _JSON.length;
-
-        // Update 3D user object with the positions CYM
-        this.user3dObject.position.x = _JSON[this.userId].x;
-        this.user3dObject.position.y = _JSON[this.userId].y;
-        this.user3dObject.position.z = _JSON[this.userId].z;
-
-        var camera = context.renderer.camera;
-
-        //Moved to rneder doesn't work
-        this.renderer.updateCameraTarget(camera, _JSON[this.userId]);
+        
+        var camera = this.camera;
+        this.updateUserTarget(camera, _JSON[this.userId]);
 
         camera.lookAt(camera.target.position);
 
@@ -118,31 +113,29 @@ instal.context = {
             _JSON[this.userId].x,
             _JSON[this.userId].y,
             _JSON[this.userId].z);
-        this.sound.setListener(context.renderer.camera);
+        this.sound.setListener(camera);
 
-        //from sandbox
-        // self.xangle = self.users[self.userId].angle;
-        // self.updateCameraTarget();
-        // self.camera.lookAt(self.camera.target.position);
-        // self.setListenerPosition(self.camera,
-        // users[self.userId].x,
-        // users[self.userId].y,
-        // users[self.userId].z,
-        // users[self.userId].dt / 1000);
-        //
-        // console.log(this.userNodeArray[this.userId].x + " " + context.userNodeArray[this.userId].z);
-        // console.log(this.sound.audio.context.listener.position);
     },
     updateSounds: function(_JSON) {},
+
+
+    updateUserTarget: function(_camera, _angles) {
+        var lx = Math.sin(_angles.angle);
+        var lz = Math.cos(_angles.angle);
+        //not implemented yet, set to yangle = 0 CYM
+        // var ly = Math.sin(_angles.yangle);
+        var ly = Math.sin(0);
+
+        _camera.target.position.set(
+            _camera.position.x + lx,
+            _camera.position.y + ly,
+            _camera.position.z + lz
+        );
+    },
+
     updateRender: function() {
         if (this.render = true) {
-            //Move camera is responsible for calculating the position from the keyboard action
-            //Only used if in debug mode CYM
-            if (debugMode) {
-                debug.moveCamera(context.renderer.camera);
-            };
-            
-            this.sound.setListener(context.renderer.camera);
+            // this.sound.setListener(context.renderer.camera);
             this.renderer.render();
             //  console.log(context.renderer.camera.position);
         }

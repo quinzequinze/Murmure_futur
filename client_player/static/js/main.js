@@ -29,11 +29,11 @@ socket.on('newClient', function(data) {
     idSelectInit();
 });
 socket.on('emitUsers', function(data) {
-    
-    if(context){
-       context.updateUsers(data); 
+
+    if (context) {
+        context.updateUsers(data);
     }
-    
+
 });
 
 socket.on('emitSound', function(data) {
@@ -45,30 +45,24 @@ socket.on('closeClient', function(data) {
 });
 
 //////////////////////////MANUAL ACTIONS
-if (keyBoardDebug) {
-    //Press 'D' to start debugging from a station
-    window.addEventListener('keydown', function(ev) {
-        switch (ev.keyCode) {
-            case 'D'.charCodeAt(0):
-                if (debugMode) {
-                    debugMode = false;
-                    delete debug;
-                    debugHandler();  
-                }else{
-                    debugMode = true;
-                    debugHandler();
-                };
-                
-                break;
-        }
-    }, false);
-} else {
-    //Press the screen to start debugging on a mobile
 
-    window.addEventListener('touchstart', function() {
-        debugHandler();
-    }, false);
-}
+//Press 'D' to start debugging from a station
+window.addEventListener('keydown', function(ev) {
+    switch (ev.keyCode) {
+        case 'D'.charCodeAt(0):
+            if (debugMode) {
+                debugMode = false;
+                delete debug;
+                debugHandler();
+            } else {
+                debugMode = true;
+                debugHandler();
+            };
+
+            break;
+    }
+}, false);
+
 
 
 //////////////////////////DEBUG
@@ -78,7 +72,7 @@ function debugHandler() {
             window.alert("Debug enabled!");
             debug = Object.create(instal.debug);
         } else {
-            window.alert("Debug enabled!");
+            window.alert("Debug mobil enabled!");
             debug = Object.create(instal.mobilDebug);
         }
         debug.setup();
@@ -114,7 +108,7 @@ function startPlayer(_id) {
     context.init(_id);
 
     //context.renderer = false;
-    context.render = true;
+    // context.render = true;
     // - control devient debug, add event listener sur 'd' pour focer le debug
     debugHandler()
         //
@@ -129,6 +123,13 @@ function loop() {
     if (context.renderer) {
         context.updateRender();
     }
+    if (debugMode) {
+        debug.moveCamera(context.camera);
+    };
+    
+    //Move camera is responsible for calculating the position from the keyboard action
+    //Only used if in debug mode CYM
+
     ///FONCTION À L'ÉTUDE
     /*
     for (var i = 0; i < context.soundNodeArray.length; i++) {

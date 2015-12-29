@@ -59,7 +59,6 @@ instal.mobilDebug = {
         var lx = Math.sin(this.xangle);
         var ly = Math.sin(this.yangle);
         var lz = Math.cos(this.xangle);
-        _camera.target.position.set(_camera.position.x + lx, _camera.position.y + ly, _camera.position.z + lz);
         /////////
         var cp = _camera.position;
         var camZ = cp.z,
@@ -87,7 +86,18 @@ instal.mobilDebug = {
             camZ += vx * dt * speed;
             camX += -vz * dt * speed;
         }
-        _camera.lookAt(_camera.target.position);
-        _camera.position.set(camX, camY, camZ);
+        //Send positions to server
+        if (Object.keys(context.userNodeArray).length != 0) {
+            context.userNodeArray[context.userId].x = camX;
+            context.userNodeArray[context.userId].y = camY;
+            context.userNodeArray[context.userId].z = camZ;
+            context.userNodeArray[context.userId].angle = this.xangle;
+            context.userNodeArray[context.userId].dt = dt;
+
+            socket.emit('sendUsers', context.userNodeArray, context.userId);
+        };
+
+        // _camera.lookAt(_camera.target.position);
+        // _camera.position.set(camX, camY, camZ);
     },
 };
