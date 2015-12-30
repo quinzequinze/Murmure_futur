@@ -58,7 +58,7 @@ instal.sound = {
         object.sound.panner.coneOuterGain = outerGain;
     },
     setPosition: function(sample, object) {
-        console.log(object);
+        // console.log(object);
         var q = new THREE.Vector3();
         object.updateMatrixWorld();
         q.setFromMatrixPosition(object.matrixWorld);

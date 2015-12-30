@@ -10,6 +10,7 @@ AudioNode.prototype = {
     },
     setPosition: function(_x, _y, _z) {
         this.obj.position.set(_x, _y, _z);
+        
         if (!this.AudioContext) {
             console.log("ERREUR : pas d'AudioContext!");
             return;
