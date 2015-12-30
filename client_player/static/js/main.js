@@ -60,6 +60,17 @@ window.addEventListener('keydown', function(ev) {
             };
 
             break;
+        case 'R'.charCodeAt(0):
+            if (context.render) {
+                context.render = false;
+                // delete debug;
+                renderHandler();
+            } else {
+                context.render = true;
+                renderHandler();
+            };
+
+            break;
     }
 }, false);
 
@@ -88,14 +99,44 @@ function debugHandler() {
     };
 
 }
+
+//////////////////////////RENDER
+function renderHandler() {
+    if (context.render && (context.renderer == null)) {
+
+        window.alert("Renderer enabled!");
+        context.renderer = Object.create(instal.renderer);
+        context.renderer.setup(context.scene, context.camera);
+        context.room(-10, -20);
+
+    } else {
+        if (context.renderer != null) {
+            window.alert("Renderer object already created!");
+        };
+        if (!context.render) {
+            window.alert("Renderer not enabled!");
+        };
+
+    };
+
+}
+
 //////////////////////////ID_SELECT
 function idSelectInit() {
     idSelect = Object.create(instal.idSelect);
     idSelect.buttonGrid(nbUser, startPlayer);
-    // 
+
     window.addEventListener("resize", function() {
-        idSelect.destroy();
-        idSelect.buttonGrid(nbUser, startPlayer);
+        console.log("la");
+        if (!context) {
+            idSelect.destroy();
+            idSelect.buttonGrid(nbUser, startPlayer);
+        } else {
+            if (context.renderer) {
+                context.renderer.ResizeRender();
+            };
+        }
+
     });
 }
 //////////////////////////PLAYER
@@ -126,7 +167,7 @@ function loop() {
     if (debugMode) {
         debug.moveCamera(context.camera);
     };
-    
+
     //Move camera is responsible for calculating the position from the keyboard action
     //Only used if in debug mode CYM
 

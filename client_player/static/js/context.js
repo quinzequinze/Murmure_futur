@@ -7,7 +7,7 @@ instal.context = {
     clock: new THREE.Clock(true),
     sound: Object.create(instal.sound),
     renderer: null,
-    render: true,
+    render: false,
     userId: null,
     init: function(_myId) {
 
@@ -24,11 +24,14 @@ instal.context = {
         this.scene.add(arrowHelper);
         this.userId = _myId;
         this.sound.setup();
-        if (this.render) {
-            this.renderer = Object.create(instal.renderer);
-            this.renderer.setup(this.scene, this.camera);
-            this.room(-10, -20);
-        }
+
+        renderHandler(); 
+        
+        // if (this.render) {
+        //     this.renderer = Object.create(instal.renderer);
+        //     this.renderer.setup(this.scene, this.camera);
+        //     this.room(-10, -20);
+        // }
     },
     room: function(_w, _l) {
 
@@ -103,7 +106,7 @@ instal.context = {
         this.userNodeArray = _JSON;
 
         nbUser = _JSON.length;
-        
+
         var camera = this.camera;
         this.updateUserTarget(camera, _JSON[this.userId]);
 
