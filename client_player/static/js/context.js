@@ -1,6 +1,7 @@
 var instal = instal || {};
 instal.context = {
     userNodeArray: [],
+    userShapeArray: [],
     camera: new THREE.PerspectiveCamera(45, this.width / this.height, 0.01, 1000), // Needed beacuse Three.js ojects over node are not performing correcly, CYM
     soundNodeArray: [],
     scene: new THREE.Scene(),
@@ -25,8 +26,8 @@ instal.context = {
         this.userId = _myId;
         this.sound.setup();
 
-        renderHandler(); 
-        
+        renderHandler();
+
         // if (this.render) {
         //     this.renderer = Object.create(instal.renderer);
         //     this.renderer.setup(this.scene, this.camera);
@@ -118,7 +119,40 @@ instal.context = {
             _JSON[this.userId].z);
         this.sound.setListener(camera);
 
+
+        // this.drawUsers(_JSON);
+
     },
+
+    // drawUsers: function(_JSON) {
+    //     //Remains to update the position of the object onces create
+    //     if (Object.keys(this.userShapeArray).length == 0) {
+    //         console.log(_JSON);
+    //         for (var i in _JSON) {
+    //             this.userShapeArray[i] = new THREE.Object3D();
+    //             this.userShapeArray[i].position.x = _JSON[i].x;
+    //             this.userShapeArray[i].position.y = _JSON[i].y;
+    //             this.userShapeArray[i].position.z = _JSON[i].z;
+
+
+    //             var geometry = new THREE.SphereGeometry(1, 32, 32);
+    //             var material = new THREE.MeshPhongMaterial({
+    //                 color: 0x000000,
+    //                 emissive: 0x111111,
+    //                 shading: THREE.SmoothShading,
+    //                 specular: 0x222222,
+    //                 shininess: 100,
+    //             });
+    //             var mesh = new THREE.Mesh(geometry, material);
+    //             mesh.castShadow = true;
+    //             mesh.receiveShadow = true;
+
+    //             this.userShapeArray[i].add(mesh);
+    //             this.scene.add(this.userShapeArray[i]);
+    //         }
+    //     };
+    // },
+
     updateSounds: function(_JSON) {},
 
 

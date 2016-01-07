@@ -2,7 +2,7 @@ var app = require('express')();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
 var express = require('express');
-var open = require('open');
+// var open = require('open');
 
 
 app.use(express.static(__dirname + '/static/css'));
@@ -60,8 +60,8 @@ function randomInt(min, max) {
 // 
 //Force opening of clients from the server, do not open manually from the browser
 //or the window.close() routine will not work on the client side
-open('http://localhost:3000/');
-open('http://localhost:3000/');
+// open('http://localhost:3000/');
+// open('http://localhost:3000/');
 
 process.once('SIGUSR2', function() {
   io.emit("closeClient");

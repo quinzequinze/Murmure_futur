@@ -108,6 +108,10 @@ function renderHandler() {
         context.renderer = Object.create(instal.renderer);
         context.renderer.setup(context.scene, context.camera);
         context.room(-10, -20);
+        //Create actors geometry
+        for (var i in context.soundNodeArray) {
+            context.soundNodeArray[i].makeMesh();
+        };
 
     } else {
         if (context.renderer != null) {
@@ -127,7 +131,6 @@ function idSelectInit() {
     idSelect.buttonGrid(nbUser, startPlayer);
 
     window.addEventListener("resize", function() {
-        console.log("la");
         if (!context) {
             idSelect.destroy();
             idSelect.buttonGrid(nbUser, startPlayer);
