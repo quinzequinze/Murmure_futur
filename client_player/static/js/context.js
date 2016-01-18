@@ -2,31 +2,28 @@ var instal = instal || {};
 instal.context = {
     userNodeArray: [],
     userShapeArray: [],
-    camera: new THREE.PerspectiveCamera(45, this.width / this.height, 0.01, 1000), // Needed beacuse Three.js ojects over node are not performing correcly, CYM
     soundNodeArray: [],
+    soundArray: [],
+    camera: new THREE.PerspectiveCamera(45, this.width / this.height, 0.01, 1000), // Needed beacuse Three.js ojects over node are not performing correcly, CYM
     scene: new THREE.Scene(),
     clock: new THREE.Clock(true),
     sound: Object.create(instal.sound),
     renderer: null,
     render: false,
     userId: null,
+    roomWidth: null,
+    roomLength: null,
     init: function(_myId) {
 
-        var dir = new THREE.Vector3(1, 0, 0);
-        var origin = new THREE.Vector3(0, 0, 0);
-        var length = 1;
-        var hex = 0xffff00;
-        var arrowHelper = new THREE.ArrowHelper(dir, origin, length, hex);
-
+    
         this.camera.target = new THREE.Object3D();
         //Initialize the userNodeArray table from the server
         socket.emit('getUsers');
-
-        this.scene.add(arrowHelper);
         this.userId = _myId;
         this.sound.setup();
 
         renderHandler();
+        socket.emit('getSounds');
 
         // if (this.render) {
         //     this.renderer = Object.create(instal.renderer);
@@ -77,10 +74,10 @@ instal.context = {
         blueLight.position.set(0, 50, 550);
         this.scene.add(blueLight);
     },
-    addSoundNode: function(_id, _path, _x, _y) {
+    addSoundNode: function(_id, _path, _x, _z) {
         var audioNode = new AudioNode(this.sound); //il faut passer le soundContext à l'objet audioNode
         audioNode.loadSound(_path);
-        audioNode.setPosition(0, 0, 0);
+        audioNode.setPosition(_x, 0, _z);
         if (this.render) {
             audioNode.makeMesh();
         }
@@ -96,12 +93,24 @@ instal.context = {
         // console.log(audioNode.obj.position);
     },
     removeSoundNode: function(_id) {
-        if (!soundNodeArray[id]) {
+        if (!this.soundNodeArray[_id]) {
             console.log("cette audioNode n'existe pas")
             return;
         }
-        this.soundNodeArray[id] = null;
-        scene.remove(getObjectByName(_id));
+        // this.soundNodeArray[_id] = null;
+        // console.log(this.scene.getObjectByName(_id));
+        // console.log(this.soundNodeArray[_id]);
+
+        ////TODO
+        //Remove 3D Obj
+        this.scene.remove(context.soundNodeArray[_id].obj);
+
+        //Remove Sound source
+        this.soundNodeArray[_id].sample.source.disconnect();
+
+        delete this.soundNodeArray[_id];
+
+
     },
     updateUsers: function(_JSON) {
         this.userNodeArray = _JSON;
@@ -121,6 +130,24 @@ instal.context = {
 
 
         // this.drawUsers(_JSON);
+
+    },
+
+    updateSounds: function(_JSON) {
+
+        for (var i in _JSON) {
+            console.log(_JSON)
+            if (Object.keys(_JSON).length != 0)
+            {
+                if (!this.soundNodeArray[i]) {
+                    this.addSoundNode(i,i,_JSON[i].x,_JSON[i].z);
+                };
+            }
+            
+        };
+        
+        //To do 
+        //call addSoundNode: function(_id, _path, _x, _y)
 
     },
 
@@ -152,9 +179,6 @@ instal.context = {
     //         }
     //     };
     // },
-
-    updateSounds: function(_JSON) {},
-
 
     updateUserTarget: function(_camera, _angles) {
         var lx = Math.sin(_angles.angle);

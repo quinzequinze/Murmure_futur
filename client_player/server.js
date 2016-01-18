@@ -21,10 +21,12 @@ var numberOfTags = 10;
 var config = {
   render: true,
   nbUserServer: numberOfTags,
-  roomWidth: 30,
-  roomLength: 50,
+  roomWidth: -30,
+  roomLength: -60,
+  nbSoundMax: 10,
 };
 
+var nbSounds = 0;
 
 for (var i = 1; i <= numberOfTags; i++) {
   var user = {
@@ -44,13 +46,27 @@ for (var i = 1; i <= numberOfTags; i++) {
   delete user;
 };
 
-console.log(users);
+// console.log(users);
 
-function randomInt(min, max) {
-  return min + Math.floor(Math.random() * (max - min + 1));
+function randomInt(_min, _max) {
+  return _min + Math.floor(Math.random() * (_max - _min + 1));
 }
 
-
+//This routine is responsible for avoid to number of sound on the scene to go 
+//over the nbSoundMax variable
+//If the number max of sound is over the limit the oldest sound is removed
+function soundsHandler(_table) {
+  console.log(Object.keys(_table).length);
+  if (Object.keys(_table).length > config.nbSoundMax) {
+    for (var i in _table) {
+      io.emit('removeSound', i);
+      delete _table[i]
+      return;
+    };
+    
+  };
+  return;
+}
 
 //////////////////////////AUTO RELOAD
 //In the terminal run cd */client_player where * is the root directory of the project
@@ -63,10 +79,10 @@ function randomInt(min, max) {
 // open('http://localhost:3000/');
 // open('http://localhost:3000/');
 
-process.once('SIGUSR2', function() {
-  io.emit("closeClient");
-  process.kill(process.pid, 'SIGUSR2');
-});
+// process.once('SIGUSR2', function() {
+//   io.emit("closeClient");
+//   process.kill(process.pid, 'SIGUSR2');
+// });
 
 //////////////////////////HANDLERS
 app.get('/', function(req, res) {
@@ -104,7 +120,10 @@ io.on('connection', function(socket) {
   });
 
   socket.on('sendNewSound', function(table, index) {
-    sounds[index] = table[index];
+    
+    sounds[index] = table;
+    soundsHandler(sounds);
+    console.log(sounds);
     io.emit("emitSounds", sounds);
   });
 
@@ -122,8 +141,6 @@ io.on('connection', function(socket) {
 
 });
 
-
-
-http.listen(3000, function() {
-  console.log('listening on *:3000' + __dirname);
+http.listen(4000, function() {
+  console.log('listening on *:4000' + __dirname);
 });

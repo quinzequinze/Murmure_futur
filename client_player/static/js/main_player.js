@@ -36,14 +36,20 @@ socket.on('emitUsers', function(data) {
 
 });
 
-socket.on('emitSound', function(data) {
-    context.updateSounds(data);
+socket.on('emitSounds', function(data) {
+    if (context) {
+      context.updateSounds(data);  
+    };
+    
 });
 
 socket.on('closeClient', function(data) {
     window.close();
 });
 
+socket.on('removeSound', function(data) {
+    context.removeSoundNode(data);
+});
 //////////////////////////MANUAL ACTIONS
 
 //Press 'D' to start debugging from a station
@@ -70,6 +76,12 @@ window.addEventListener('keydown', function(ev) {
                 renderHandler();
             };
 
+            break;
+        case 'P'.charCodeAt(0):
+            console.log(context.soundNodeArray);
+            console.log("");
+            context.soundNodeArray.shift()
+            console.log(context.soundNodeArray);
             break;
     }
 }, false);
@@ -104,10 +116,13 @@ function debugHandler() {
 function renderHandler() {
     if (context.render && (context.renderer == null)) {
 
+        context.roomWidth = roomWidth;
+        context.roomLength = roomLength;
         window.alert("Renderer enabled!");
         context.renderer = Object.create(instal.renderer);
         context.renderer.setup(context.scene, context.camera);
-        context.room(-10, -20);
+        context.room(context.roomWidth, context.roomLength);
+
         //Create actors geometry
         for (var i in context.soundNodeArray) {
             context.soundNodeArray[i].makeMesh();
@@ -156,8 +171,8 @@ function startPlayer(_id) {
     // - control devient debug, add event listener sur 'd' pour focer le debug
     debugHandler()
         //
-    var path = nf(1, 2) + ".mp3"
-    context.addSoundNode(1, path);
+    // var path = nf(1, 2) + ".mp3"
+    // context.addSoundNode(1, path);
     // console.log(instal);
     loop();
 }

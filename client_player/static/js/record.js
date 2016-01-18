@@ -50,8 +50,10 @@ instal.record = {
     },
 
     doneEncoding: function(blob) {
-        Recorder.setupDownload(blob, "myRecording" + ((this.recIndex < 10) ? "0" : "") + this.recIndex + ".wav");
-        this.recIndex++;
+        var self = record;
+        var index = ((self.recIndex < 10) ? "0" : "") + self.recIndex; 
+        Recorder.setupDownload(blob, "myRecording" + index + ".wav");
+        self.recIndex++;
     },
 
     toggleRecording: function(e) {
@@ -140,7 +142,6 @@ instal.record = {
 
     gotStream: function(stream) {
         var self = record;
-        console.log(self.audioContext);
         self.inputPoint = self.audioContext.createGain();
 
         // Create an AudioNode from the stream.
