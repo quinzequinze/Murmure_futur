@@ -53,7 +53,7 @@ instal.record = {
         var self = record;
         var index = ((self.recIndex < 10) ? "0" : "") + self.recIndex; 
         Recorder.setupDownload(blob, "myRecording" + index + ".wav");
-        self.recIndex++;
+        // self.recIndex++;
     },
 
     toggleRecording: function(e) {

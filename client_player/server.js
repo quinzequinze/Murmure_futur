@@ -17,6 +17,7 @@ var sounds = new Object();
 var connectCounter = 0;
 
 var numberOfTags = 10;
+var nbSounds = 0;
 
 var config = {
   render: true,
@@ -26,7 +27,7 @@ var config = {
   nbSoundMax: 10,
 };
 
-var nbSounds = 0;
+
 
 for (var i = 1; i <= numberOfTags; i++) {
   var user = {
@@ -56,6 +57,8 @@ function randomInt(_min, _max) {
 //over the nbSoundMax variable
 //If the number max of sound is over the limit the oldest sound is removed
 function soundsHandler(_table) {
+  nbSounds = nbSounds + 1;
+  io.emit('updateSoundNb', nbSounds);
   console.log(Object.keys(_table).length);
   if (Object.keys(_table).length > config.nbSoundMax) {
     for (var i in _table) {
@@ -63,7 +66,7 @@ function soundsHandler(_table) {
       delete _table[i]
       return;
     };
-    
+
   };
   return;
 }
@@ -114,13 +117,18 @@ io.on('connection', function(socket) {
     io.emit("emitSounds", sounds);
   });
 
+  socket.on('getSoundNb', function(msg) {
+    io.emit("updateSoundNb", nbSounds);
+  });
+  
+
   socket.on('sendUsers', function(table, index) {
     users[index] = table[index];
     io.emit("emitUsers", users);
   });
 
   socket.on('sendNewSound', function(table, index) {
-    
+
     sounds[index] = table;
     soundsHandler(sounds);
     console.log(sounds);

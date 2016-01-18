@@ -3,6 +3,7 @@ var record = Object.create(instal.record);
 var socket = io.connect();
 var config = null;
 
+
 function newSound(_filename) {
 	var sound = {
 		"id": _filename,
@@ -16,7 +17,7 @@ function newSound(_filename) {
     // 
 
 	window.setTimeout(
-		socket.emit('sendNewSound', sound, _filename), 100000);
+		socket.emit('sendNewSound', sound, _filename), 5000);
 
 }
 
@@ -26,8 +27,12 @@ socket.on('newClient', function(_data) {
 	recorderInit();
 
 });
+socket.on('updateSoundNb', function(_data) {
+	record.recIndex = _data;
+});
 //////////////////////////RECORDER INIT
 function recorderInit() {
+	socket.emit('getSoundNb');
 	recordButton = document.getElementById("record");
 	recordButton.onclick = function() {
 		record.toggleRecording(this);
