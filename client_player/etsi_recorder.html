@@ -48,6 +48,14 @@
 		justify-content: space-around;
 		align-items: center;
 	}
+	#scene {
+		height: 80%;
+		width: 100%;
+		display: flex;
+		flex-direction: column;
+		justify-content: space-around;
+		align-items: center;
+	}
 	@media (orientation: landscape) {
 		body { flex-direction: row;}
 		#controls { flex-direction: column; height: 100%; width: 10%;}
@@ -56,6 +64,7 @@
 
 	</style>
 </head>
+
 <body>
 	<div id="viz">
 		<canvas id="analyser" width="1024" height="500"></canvas>
@@ -65,12 +74,20 @@
 		<img id="record" src="mic128.png">
 		<a id="save" href="#"><img src="save.svg"></a>
 	</div>
+	<div id="scene">
+		<canvas id="canvas" ></canvas>
+	</div>
+	
 </body>
 
-	<script src="helpers.js"></script>
-	<script src="/socket.io/socket.io.js"></script>
-	<script src="recorder.js"></script>
-	<script src="record.js"></script>
-	<script src="main_record.js"></script>
+<script src="helpers.js"></script>
+<script src="/socket.io/socket.io.js"></script>
+<script src="recorder.js"></script>
+<script src="record.js"></script>
+<script src="paper-full.js"></script>
+<script type="text/paperscript" src="soundDispatcher.js" canvas="canvas"></script>
+<script src="main_record.js"></script>
+
+
 
 </html>

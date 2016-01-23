@@ -24,7 +24,7 @@ var config = {
   nbUserServer: numberOfTags,
   roomWidth: -30,
   roomLength: -60,
-  nbSoundMax: 10,
+  nbSoundMax: 3,
 };
 
 
