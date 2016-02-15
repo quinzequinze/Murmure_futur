@@ -13,6 +13,18 @@ instal.context = {
     userId: null,
     roomWidth: null,
     roomLength: null,
+    uniforms1: {
+        time: {
+            type: "f",
+            value: 1.0
+        },
+        resolution: {
+            type: "v2",
+            value: new THREE.Vector2()
+        }
+    },
+    loader: new THREE.JSONLoader(),
+    
     init: function(_myId) {
 
     
@@ -129,7 +141,7 @@ instal.context = {
         this.sound.setListener(camera);
 
 
-        // this.drawUsers(_JSON);
+        this.drawUsers(_JSON);
 
     },
 
@@ -145,40 +157,44 @@ instal.context = {
             }
             
         };
-        
-        //To do 
-        //call addSoundNode: function(_id, _path, _x, _y)
 
     },
 
-    // drawUsers: function(_JSON) {
-    //     //Remains to update the position of the object onces create
-    //     if (Object.keys(this.userShapeArray).length == 0) {
-    //         console.log(_JSON);
-    //         for (var i in _JSON) {
-    //             this.userShapeArray[i] = new THREE.Object3D();
-    //             this.userShapeArray[i].position.x = _JSON[i].x;
-    //             this.userShapeArray[i].position.y = _JSON[i].y;
-    //             this.userShapeArray[i].position.z = _JSON[i].z;
+    drawUsers: function(_JSON) {
+        //Remains to update the position of the object onces create
+        if (Object.keys(this.userShapeArray).length == 0) {
+            console.log(_JSON);
+            for (var i in _JSON) {
+                this.userShapeArray[i] = new THREE.Object3D();
+                this.userShapeArray[i].position.x = _JSON[i].x;
+                this.userShapeArray[i].position.y = _JSON[i].y;
+                this.userShapeArray[i].position.z = _JSON[i].z;
+                
 
+                var geometry = new THREE.SphereGeometry(1, 32, 32);
+                var material = new THREE.MeshPhongMaterial({
+                    color: 0x000000,
+                    emissive: 0x111111,
+                    shading: THREE.SmoothShading,
+                    specular: 0x222222,
+                    shininess: 100,
+                });
+                var mesh = new THREE.Mesh(geometry, material);
+                mesh.castShadow = true;
+                mesh.receiveShadow = true;
 
-    //             var geometry = new THREE.SphereGeometry(1, 32, 32);
-    //             var material = new THREE.MeshPhongMaterial({
-    //                 color: 0x000000,
-    //                 emissive: 0x111111,
-    //                 shading: THREE.SmoothShading,
-    //                 specular: 0x222222,
-    //                 shininess: 100,
-    //             });
-    //             var mesh = new THREE.Mesh(geometry, material);
-    //             mesh.castShadow = true;
-    //             mesh.receiveShadow = true;
-
-    //             this.userShapeArray[i].add(mesh);
-    //             this.scene.add(this.userShapeArray[i]);
-    //         }
-    //     };
-    // },
+                this.userShapeArray[i].add(mesh);
+                this.scene.add(this.userShapeArray[i]);
+            }
+        } else {
+            for (var i in _JSON) {
+                this.userShapeArray[i].position.x = _JSON[i].x;
+                this.userShapeArray[i].position.y = _JSON[i].y;
+                this.userShapeArray[i].position.z = _JSON[i].z;
+                
+            };
+        };
+    },
 
     updateUserTarget: function(_camera, _angles) {
         var lx = Math.sin(_angles.angle);
