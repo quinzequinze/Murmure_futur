@@ -14,7 +14,7 @@ app.use(express.static(__dirname + '/static/fonts'));
 app.use(express.static(__dirname + '/static/samples'));
 app.use(express.static(__dirname + '/static/obj'));
 
-var db = new pouchDB('http://localhost:5984/moutons');
+var db = new pouchDB(__dirname + '/moutons');
 
 
 var users = new Object();
@@ -141,7 +141,7 @@ function getSoundsFromDB() {
 }
 
 getSoundsFromDB();
-setInterval(uploadUsersInDB, 3000);
+// setInterval(uploadUsersInDB, 3000);
 
 //////////////////////////AUTO RELOAD
 //In the terminal run cd */client_player where * is the root directory of the project
