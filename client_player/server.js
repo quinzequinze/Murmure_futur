@@ -2,6 +2,8 @@ var app = require('express')();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
 var express = require('express');
+var pouchDB = require('pouchdb');
+
 // var open = require('open');
 
 
@@ -10,6 +12,10 @@ app.use(express.static(__dirname + '/static/js'));
 app.use(express.static(__dirname + '/static/img'));
 app.use(express.static(__dirname + '/static/fonts'));
 app.use(express.static(__dirname + '/static/samples'));
+app.use(express.static(__dirname + '/static/obj'));
+
+var db = new pouchDB('http://localhost:5984/moutons');
+
 
 var users = new Object();
 var sounds = new Object();
@@ -24,14 +30,14 @@ var config = {
   nbUserServer: numberOfTags,
   roomWidth: -30,
   roomLength: -60,
-  nbSoundMax: 3,
+  nbSoundMax: 40,
 };
-
 
 
 for (var i = 1; i <= numberOfTags; i++) {
   var user = {
-    "id": "x",
+    "_id": String(i), //Key for pouchDB, need to be a string
+    "id": i,
     "x": 0,
     "y": 0,
     "z": 0,
@@ -41,13 +47,36 @@ for (var i = 1; i <= numberOfTags; i++) {
     "isTagConnected": false
   };
 
-  user.id = i;
+
   users[user.id] = user;
 
   delete user;
 };
 
-// console.log(users);
+function initPouchDBObjects() {
+  var temp = {};
+
+  temp._id = "users";
+  temp.users = users;
+
+  db.put(temp).then(function(response) {
+    // handle response
+  }).catch(function(err) {
+    console.log(err);
+  });
+
+
+  temp._id = "sounds";
+  temp.sounds = sounds;
+
+  db.put(temp).then(function(response) {
+    // handle response
+  }).catch(function(err) {
+    console.log(err);
+  });
+}
+
+
 
 function randomInt(_min, _max) {
   return _min + Math.floor(Math.random() * (_max - _min + 1));
@@ -70,6 +99,49 @@ function soundsHandler(_table) {
   };
   return;
 }
+
+var i = 0;
+
+function uploadUsersInDB() {
+  // fetch users
+  db.get('users').then(function(doc) {
+    // update their age
+
+    doc.users = users;
+    // put them back
+    return db.put(doc);
+  });
+
+  return;
+}
+
+function uploadSoundsInDB() {
+  // fetch users
+  db.get('sounds').then(function(doc) {
+    // update their age
+
+    doc.sounds = sounds;
+    // put them back
+    return db.put(doc);
+  });
+
+  return;
+}
+
+function getSoundsFromDB() {
+  // fetch users
+  db.get('sounds').then(function(doc) {
+    // update their age
+    sounds = doc.sounds;
+    // put them back
+    return;
+  });
+
+  return;
+}
+
+getSoundsFromDB();
+setInterval(uploadUsersInDB, 3000);
 
 //////////////////////////AUTO RELOAD
 //In the terminal run cd */client_player where * is the root directory of the project
@@ -120,7 +192,7 @@ io.on('connection', function(socket) {
   socket.on('getSoundNb', function(msg) {
     io.emit("updateSoundNb", nbSounds);
   });
-  
+
 
   socket.on('sendUsers', function(table, index) {
     users[index] = table[index];
@@ -131,6 +203,7 @@ io.on('connection', function(socket) {
 
     sounds[index] = table;
     soundsHandler(sounds);
+    uploadSoundsInDB();
     console.log(sounds);
     io.emit("emitSounds", sounds);
   });

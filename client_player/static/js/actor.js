@@ -10,7 +10,7 @@ AudioNode.prototype = {
     },
     setPosition: function(_x, _y, _z) {
         this.obj.position.set(_x, _y, _z);
-        
+
         if (!this.AudioContext) {
             console.log("ERREUR : pas d'AudioContext!");
             return;
@@ -28,14 +28,17 @@ AudioNode.prototype = {
         return orientation;
     },
     makeMesh: function() {
+
         var geometry = new THREE.SphereGeometry(1, 32, 32);
-        var material = new THREE.MeshPhongMaterial({
-            color: 0x000000,
-            emissive: 0x111111,
-            shading: THREE.SmoothShading,
-            specular: 0x222222,
-            shininess: 100,
+
+        var material = new THREE.ShaderMaterial({
+
+            uniforms: context.uniforms1,
+            vertexShader: document.getElementById('vertexShader').textContent,
+            fragmentShader: document.getElementById('fragment_shader1').textContent
+
         });
+
         var mesh = new THREE.Mesh(geometry, material);
         mesh.castShadow = true;
         mesh.receiveShadow = true;
