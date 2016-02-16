@@ -160,10 +160,10 @@ getSoundsFromDB();
 // });
 
 //////////////////////////HANDLERS
-app.get('/', function(req, res) {
+app.get('/', function(req, res) {  
   res.sendfile(__dirname + '/etsi_player.html');
-  console.log("reload")
-    // res.sendfile('idSelec.html');
+  console.log("reload | id : "+req.param('id'));
+  //le param est passé dans l'url ->/?id=1
 });
 
 app.get('/record', function(req, res) {
