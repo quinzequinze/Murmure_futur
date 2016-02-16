@@ -14,7 +14,7 @@ app.use(express.static(__dirname + '/static/fonts'));
 app.use(express.static(__dirname + '/static/samples'));
 app.use(express.static(__dirname + '/static/obj'));
 
-var db = new pouchDB(__dirname + '/moutons');
+//var db = new pouchDB(__dirname + '/moutons');
 
 
 var users = new Object();
@@ -64,7 +64,6 @@ function initPouchDBObjects() {
   }).catch(function(err) {
     console.log(err);
   });
-
 
   temp._id = "sounds";
   temp.sounds = sounds;
@@ -140,7 +139,7 @@ function getSoundsFromDB() {
   return;
 }
 
-getSoundsFromDB();
+//getSoundsFromDB();
 // setInterval(uploadUsersInDB, 3000);
 
 //////////////////////////AUTO RELOAD
@@ -161,13 +160,13 @@ getSoundsFromDB();
 
 //////////////////////////HANDLERS
 app.get('/', function(req, res) {  
-  res.sendfile(__dirname + '/etsi_player.html');
+  res.sendfile(__dirname + '/client/player.html');
   console.log("reload | id : "+req.param('id'));
   //le param est passé dans l'url ->/?id=1
 });
 
 app.get('/record', function(req, res) {
-  res.sendfile(__dirname + '/etsi_recorder.html');
+  res.sendfile(__dirname + '/recorder/recorder.html');
   // res.sendfile('idSelec.html');
 });
 
@@ -223,5 +222,5 @@ io.on('connection', function(socket) {
 });
 
 http.listen(4000, function() {
-  console.log('listening on *:4000' + __dirname);
+  console.log('listening on *:4000');
 });
