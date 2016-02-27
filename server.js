@@ -1,226 +1,177 @@
-var app = require('express')();
-var http = require('http').Server(app);
-var io = require('socket.io')(http);
-var express = require('express');
-var pouchDB = require('pouchdb');
-
-// var open = require('open');
-
-
-app.use(express.static(__dirname + '/static/css'));
-app.use(express.static(__dirname + '/static/js'));
-app.use(express.static(__dirname + '/static/img'));
-app.use(express.static(__dirname + '/static/fonts'));
-app.use(express.static(__dirname + '/static/samples'));
-app.use(express.static(__dirname + '/static/obj'));
-
-//var db = new pouchDB(__dirname + '/moutons');
-
-
-var users = new Object();
-var sounds = new Object();
-
-var connectCounter = 0;
-
-var numberOfTags = 10;
-var nbSounds = 0;
-
+//modules 
+var express = require('express')
+var app = require('express')()
+var http = require('http').Server(app)
+var io = require('socket.io')(http)
+var fs = require('fs')
+var client = io.of('/client')
+var master = io.of('/master')
+var lps = io.of('/lps')
+var pouchDB = require('pouchdb')
+var colors = require('colors/safe')
+var low = require('lowdb')
+var storage = require('lowdb/file-sync')
+var db = low(__dirname + '/laridme.json', {
+    storage
+})
+var uuid = require('node-uuid');
+//var user = db('users').find({ name: 'typicode' })
+//var UUID = uuid();
+//db('session').push({uuid:UUID})
+//varantes
+const TAG_NUMBER = 8
+const ROOM_WIDTH = -30
+const ROOM_LENGTH = -60
+const SOUND_NUMBER = 3
+var users = []
+var tags = []
+var sounds = []
 var config = {
-  render: true,
-  nbUserServer: numberOfTags,
-  roomWidth: -30,
-  roomLength: -60,
-  nbSoundMax: 40,
-};
-
-
-for (var i = 1; i <= numberOfTags; i++) {
-  var user = {
-    "_id": String(i), //Key for pouchDB, need to be a string
-    "id": i,
-    "x": 0,
-    "y": 0,
-    "z": 0,
-    "dt": 0,
-    "angle": 0,
-    "isConnected": false,
-    "isTagConnected": false
-  };
-
-
-  users[user.id] = user;
-
-  delete user;
-};
-
-function initPouchDBObjects() {
-  var temp = {};
-
-  temp._id = "users";
-  temp.users = users;
-
-  db.put(temp).then(function(response) {
-    // handle response
-  }).catch(function(err) {
-    console.log(err);
-  });
-
-  temp._id = "sounds";
-  temp.sounds = sounds;
-
-  db.put(temp).then(function(response) {
-    // handle response
-  }).catch(function(err) {
-    console.log(err);
-  });
+    "TAG_NUMBER": TAG_NUMBER,
+    "SOUND_NUMBER": SOUND_NUMBER,
+    "ROOM_WIDTH": ROOM_WIDTH,
+    "ROOM_LENGTH": ROOM_LENGTH,
 }
-
-
-
-function randomInt(_min, _max) {
-  return _min + Math.floor(Math.random() * (_max - _min + 1));
-}
-
-//This routine is responsible for avoid to number of sound on the scene to go 
-//over the nbSoundMax variable
-//If the number max of sound is over the limit the oldest sound is removed
-function soundsHandler(_table) {
-  nbSounds = nbSounds + 1;
-  io.emit('updateSoundNb', nbSounds);
-  console.log(Object.keys(_table).length);
-  if (Object.keys(_table).length > config.nbSoundMax) {
-    for (var i in _table) {
-      io.emit('removeSound', i);
-      delete _table[i]
-      return;
-    };
-
-  };
-  return;
-}
-
-var i = 0;
-
-function uploadUsersInDB() {
-  // fetch users
-  db.get('users').then(function(doc) {
-    // update their age
-
-    doc.users = users;
-    // put them back
-    return db.put(doc);
-  });
-
-  return;
-}
-
-function uploadSoundsInDB() {
-  // fetch users
-  db.get('sounds').then(function(doc) {
-    // update their age
-
-    doc.sounds = sounds;
-    // put them back
-    return db.put(doc);
-  });
-
-  return;
-}
-
-function getSoundsFromDB() {
-  // fetch users
-  db.get('sounds').then(function(doc) {
-    // update their age
-    sounds = doc.sounds;
-    // put them back
-    return;
-  });
-
-  return;
-}
-
-//getSoundsFromDB();
-// setInterval(uploadUsersInDB, 3000);
-
-//////////////////////////AUTO RELOAD
-//In the terminal run cd */client_player where * is the root directory of the project
-//Open the server with the following command "nodemon server.js"
-//This will trigger a restart of the server on any file change in the project, avoid 
-//using ctrl+c and refresh of the client 
-// 
-//Force opening of clients from the server, do not open manually from the browser
-//or the window.close() routine will not work on the client side
-// open('http://localhost:3000/');
-// open('http://localhost:3000/');
-
-// process.once('SIGUSR2', function() {
-//   io.emit("closeClient");
-//   process.kill(process.pid, 'SIGUSR2');
-// });
-
-//////////////////////////HANDLERS
-app.get('/', function(req, res) {  
-  res.sendfile(__dirname + '/client/player.html');
-  console.log("reload | id : "+req.param('id'));
-  //le param est passé dans l'url ->/?id=1
-});
-
-app.get('/record', function(req, res) {
-  res.sendfile(__dirname + '/recorder/recorder.html');
-  // res.sendfile('idSelec.html');
-});
-
-io.on('connection', function(socket) {
-  connectCounter++;
-  console.log("connection: " + connectCounter);
-  socket.emit('newClient', config);
-
-  socket.on('getListener', function(index) {
-    io.emit("startListener", index);
-    console.log("startListener: " + index);
-  });
-
-  socket.on('getUsers', function(msg) {
-    io.emit("emitUsers", users);
-  });
-
-  socket.on('getSounds', function(msg) {
-    io.emit("emitSounds", sounds);
-  });
-
-  socket.on('getSoundNb', function(msg) {
-    io.emit("updateSoundNb", nbSounds);
-  });
-
-
-  socket.on('sendUsers', function(table, index) {
-    users[index] = table[index];
-    io.emit("emitUsers", users);
-  });
-
-  socket.on('sendNewSound', function(table, index) {
-
-    sounds[index] = table;
-    soundsHandler(sounds);
-    uploadSoundsInDB();
-    console.log(sounds);
-    io.emit("emitSounds", sounds);
-  });
-
-  socket.on('sendRemoveSound', function(table) {
-    sounds = table;
-    io.emit("emitSounds", sounds);
-  });
-
-  socket.on('disconnect', function(socket) {
-    connectCounter--;
-
-    console.log("disconnect: " + socket);
-
-  });
-
-});
-
+colors.setTheme({
+    server: ['cyan', 'bold'],
+    client: ['yellow', 'bold'],
+    error: 'red'
+})
+app.use(express.static(__dirname + '/static/css'))
+app.use(express.static(__dirname + '/static/js'))
+app.use(express.static(__dirname + '/static/img'))
+app.use(express.static(__dirname + '/static/font'))
+app.use(express.static(__dirname + '/static/sample'))
+app.use(express.static(__dirname + '/static/obj'))
+app.use(express.static(__dirname + '/static/lib'))
+init()
+app.get('/', function(req, res) {
+    res.sendFile(__dirname + '/client.html')
+})
 http.listen(4000, function() {
-  console.log('listening on *:4000');
+    console.log(colors.server('#server [listening] localhost:4000'))
 });
+///////////////////////////////////////////////////////////////////////////////////////
+//                                                                                   //
+//                                                                                   //
+//                                                                                   // 
+///////////////////////////////////////////////////////////////////////////////////////
+client.on('connection', function(socket) {
+    console.log(colors.server("#server [new client] " + io.sockets.sockets.length + "/" + TAG_NUMBER))
+    socket.emit('newConfig', config)
+    socket.on('requestSession', function(data) {
+        console.log(data)
+        tags[data] = {}
+        tags[data].session = uuid()
+            //push -> session bd
+        socket.emit('newSession', tags[data].session)
+        socket.emit('initSounds', sounds)
+        console.log(colors.server('#server new session [' + tags[data].session + ']'))
+    })
+    socket.on('uploadSound', function(data) {
+        fs.writeFile(__dirname + '/' + Math.random() * 10 + data.session, data.buffer, 'hex', function(err) {
+                if (err) throw err
+            })
+            //sound -> push
+        var id = data.id;
+        var newSound = {}
+        newSound.session = tags[id].session
+        newSound.position = tags[id].position
+        sounds.push(newSound)
+        while (sounds.length > SOUND_NUMBER) {
+            sounds.shift()
+        }
+        console.log(sounds)
+        console.log(colors.client("#client new sound"))
+    })
+    socket.on('disconnect', function(socket) {
+        console.log(colors.client("#client disconnected"))
+    })
+});
+///////////////////////////////////////////////////////////////////////////////////////
+//                                                                                   //
+//                                                                                   //
+//                                                                                   // 
+///////////////////////////////////////////////////////////////////////////////////////
+master.on('connection', function(socket) {
+    console.log(colors.server("#server [new master]"))
+    socket.on('disconnect', function(socket) {})
+});
+///////////////////////////////////////////////////////////////////////////////////////
+//                                                                                   //
+//                                                                                   //
+//                                                                                   // 
+///////////////////////////////////////////////////////////////////////////////////////
+lps.on('connection', function(socket) {
+    console.log(colors.server("#server [new lps]"))
+    socket.on('sendPosition', function(data) {
+        console.log(data)
+        client.emit("updateUsers",data)
+            }) 
+    socket.on('disconnect', function(socket) {})
+});
+///////////////////////////////////////////////////////////////////////////////////////
+//                                                                                   //
+//                                                                                   //
+//                                                                                   // 
+///////////////////////////////////////////////////////////////////////////////////////
+
+function getSession() {
+    var status = 1;
+    return status
+}
+
+function updateSession() {
+    master.emit('updateUsers', users)
+}
+
+function getLastSound() {
+    //query = sounds from right WHERE sounds.path!=null 
+    var status;
+    return status
+}
+
+function init() {
+    //chercher dans la base de donnée les valeurs
+}
+///////////////////////////////////////////////////////////////////////////////////////
+//                                                                                   //
+//                                                                                   //
+//                                                                                   // 
+///////////////////////////////////////////////////////////////////////////////////////
+/*
+function soundsHandler(_table) {
+    nbSounds = nbSounds + 1
+    io.emit('updateSoundNb', nbSounds)
+    console.log(Object.keys(_table).length)
+    if (Object.keys(_table).length > config.nbSoundMax) {
+        for (var i in _table) {
+            io.emit('removeSound', i)
+            delete _table[i]
+            return
+        }
+    }
+    return
+}
+*/
+//var uuid = uuid() 
+/*
+        db('session').push({uuid:UUID})
+        var s = db('session').find({uuid:'style'})
+        s.name = data
+        s.tag = 'unmp3.mp3'
+        console.log(s);
+        }
+*/
+//users[data].socket = this
+//users[data].connected = true
+// socket.emit('initUsers', tags)
+/*
+1 - user request session, [tag] -> server [tag] status = ready -> to master [tag]
+2 - from master enable session [uuid][tag]  -> to server -> [tagId][uuid] -> to db
+
+-> session ? ready ? undefined ? active
+-> moderation enregistrement (on écouter pas ecouter)                                            
+-> event docling station -> close session
+oui / non / trop court /  
+*/

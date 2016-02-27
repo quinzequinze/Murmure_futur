@@ -1,12 +1,11 @@
-function AudioNode(AudioContext) {
+function AudioNode(WebAudioContext) {
     this.obj = new THREE.Object3D();
     this.source = "";
-    this.AudioContext = AudioContext; //soundContext
-    this.sample = null;
+    this.AudioContext = WebAudioContext;
 }
 AudioNode.prototype = {
-    setId: function(_id) {
-        this.id = _id;
+    setUuid: function(_uuid) {
+        this.uuid = _uuid;
     },
     setPosition: function(_x, _y, _z) {
         this.obj.position.set(_x, _y, _z);
@@ -26,23 +25,6 @@ AudioNode.prototype = {
         var orientation = new THREE.Vector3(0, 0, 1);
         orientation = matrix.multiplyVector3(direction);
         return orientation;
-    },
-    makeMesh: function() {
-
-        var geometry = new THREE.SphereGeometry(1, 32, 32);
-
-        var material = new THREE.ShaderMaterial({
-
-            uniforms: context.uniforms1,
-            vertexShader: document.getElementById('vertexShader').textContent,
-            fragmentShader: document.getElementById('fragment_shader1').textContent
-
-        });
-
-        var mesh = new THREE.Mesh(geometry, material);
-        mesh.castShadow = true;
-        mesh.receiveShadow = true;
-        this.obj.add(mesh);
     },
     loadSound: function(_source) {
         if (!this.AudioContext) {
