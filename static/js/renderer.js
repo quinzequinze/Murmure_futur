@@ -53,7 +53,6 @@ instal.renderer = (function(window, undefined) {
         };
 
         function initSounds(data) {
-            console.log("initSounds | renderer");
             for (var i in data) {
                 mesh[i] = geometry.sound();
                 mesh[i].position.set(data[i].x, data[i].y, data[i].z);

@@ -11,10 +11,8 @@ var pouchDB = require('pouchdb')
 var colors = require('colors/safe')
 var low = require('lowdb')
 var storage = require('lowdb/file-sync')
-var db = low(__dirname + '/laridme.json', {
-    storage
-})
-var uuid = require('node-uuid');
+var db = low(__dirname + '/laridme.json', storage)
+var uuid = require('node-uuid')
 //var user = db('users').find({ name: 'typicode' })
 //var UUID = uuid();
 //db('session').push({uuid:UUID})
@@ -45,6 +43,8 @@ app.use(express.static(__dirname + '/static/sample'))
 app.use(express.static(__dirname + '/static/obj'))
 app.use(express.static(__dirname + '/static/lib'))
 init()
+
+
 app.get('/', function(req, res) {
     res.sendFile(__dirname + '/client.html')
 })
@@ -69,19 +69,28 @@ client.on('connection', function(socket) {
         console.log(colors.server('#server new session [' + tags[data].session + ']'))
     })
     socket.on('uploadSound', function(data) {
-        fs.writeFile(__dirname + '/' + Math.random() * 10 + data.session, data.buffer, 'hex', function(err) {
+        fs.writeFile(__dirname + '/static/sample/' + data.session, data.buffer, 'hex', function(err) {
                 if (err) throw err
             })
             //sound -> push
         var id = data.id;
         var newSound = {}
         newSound.session = tags[id].session
+                if(tags[id].position){
         newSound.position = tags[id].position
+}else{
+
+  newSound.position = {'x':0,'y':0,'z':0}
+//change bizard
+  }  
+
         sounds.push(newSound)
         while (sounds.length > SOUND_NUMBER) {
             sounds.shift()
         }
         console.log(sounds)
+            //client.emit("newSound",sounds)
+            //        console.log(sounds)
         console.log(colors.client("#client new sound"))
     })
     socket.on('disconnect', function(socket) {
@@ -105,17 +114,29 @@ master.on('connection', function(socket) {
 lps.on('connection', function(socket) {
     console.log(colors.server("#server [new lps]"))
     socket.on('sendPosition', function(data) {
-        console.log(data)
-        client.emit("updateUsers",data)
-            }) 
-    socket.on('disconnect', function(socket) {})
+               // console.log(data)
+        for (var i in data) {
+            if (data[i]) {
+                tags[data[i].id].position = {
+                        x: data[i].x,
+                        y: data[i].y,
+                        z: data[i].z,
+                        angle: data[i].angle
+                    }
+                    // console.log(data[i])
+                    // console.log(tags)
+            }
+        }
+
+        client.emit("updateUsers", tags)
+    });
+    socket.on('disconnect', function(socket) {});
 });
 ///////////////////////////////////////////////////////////////////////////////////////
 //                                                                                   //
 //                                                                                   //
 //                                                                                   // 
 ///////////////////////////////////////////////////////////////////////////////////////
-
 function getSession() {
     var status = 1;
     return status

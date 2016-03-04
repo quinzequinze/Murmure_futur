@@ -16,12 +16,10 @@ instal.client = (function(window, undefined) {
         function newConfig(data) {
             config = data
             socket.emit('requestSession', TAG_ID)
-            console.log(data)
         }
 
         function newSession(data) {
             session = data
-            console.log(data)
         }
 
         function newSound(data) {
@@ -34,7 +32,7 @@ instal.client = (function(window, undefined) {
         }
 
         function initSounds(data) {
-            console.log(data)
+
         }
 
         function bind(_extentions) {

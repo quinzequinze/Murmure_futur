@@ -94,11 +94,12 @@ instal.audio = (function(window, undefined) {
         }
 
         function initSounds(data) {
+                            console.log(data)
             for (var i in data) {
-                sample[i] = loadSound(data[i].path)
-                sample[i].panner.setPosition(data[i].x, data[i].y, data[i].z)
+
+                sample[i] = loadSound(data[i].session+'.m4a')
+                sample[i].panner.setPosition(data[i].position.x, data[i].position.y, data[i].position.z)
             }
-            console.log('initSounds | audio')
         }
 
         function initUsers(data) {
@@ -110,11 +111,17 @@ instal.audio = (function(window, undefined) {
 
         function newSound(data) {
             console.log("audio | new sound")
+           // for(var i in sample){
+
+            ///}
         }
         function updateUsers(data) {
-            a.context.listener.setPosition(data[TAG_ID].x, data[TAG_ID].y, data[TAG_ID].z)
-console.log("listener x:"+data[TAG_ID].x+" y:"+data[TAG_ID].y+" z:"+data[TAG_ID].z)
-           // console.log(data)
+        var position = data[TAG_ID].position
+        if(data[TAG_ID]){
+        a.context.listener.setPosition(position.x,position.y,position.z)
+       // console.log("listener x:"+position.x.toFixed(2)+" y:"+position.y.toFixed(2)+" z:"+position.z.toFixed(2))
+        //console.log(data)
+        }
         }
 
         return {
