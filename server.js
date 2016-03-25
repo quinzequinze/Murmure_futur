@@ -1,38 +1,34 @@
 //modules 
 var express = require('express')
 var app = require('express')()
-var http = require('http').Server(app)
-var io = require('socket.io')(http)
+var http = require('http')
+var server = http.Server(app)
+var io = require('socket.io')(server)
 var fs = require('fs')
 var client = io.of('/client')
 var master = io.of('/master')
 var lps = io.of('/lps')
-var pouchDB = require('pouchdb')
 var colors = require('colors/safe')
-var low = require('lowdb')
-var storage = require('lowdb/file-sync')
-var db = low(__dirname + '/laridme.json', storage)
 var uuid = require('node-uuid')
-//var user = db('users').find({ name: 'typicode' })
-//var UUID = uuid();
-//db('session').push({uuid:UUID})
-//varantes
 const TAG_NUMBER = 8
 const ROOM_WIDTH = -30
 const ROOM_LENGTH = -60
 const SOUND_NUMBER = 3
-var users = []
-var tags = []
-var sounds = []
+const LPSfreq = 400
+var user = {}
+var tag = {}
+var sound = {}
 var config = {
-    "TAG_NUMBER": TAG_NUMBER,
-    "SOUND_NUMBER": SOUND_NUMBER,
-    "ROOM_WIDTH": ROOM_WIDTH,
-    "ROOM_LENGTH": ROOM_LENGTH,
+    'TAG_NUMBER': TAG_NUMBER,
+    'SOUND_NUMBER': SOUND_NUMBER,
+    'ROOM_WIDTH': ROOM_WIDTH,
+    'ROOM_LENGTH': ROOM_LENGTH,
 }
 colors.setTheme({
     server: ['cyan', 'bold'],
-    client: ['yellow', 'bold'],
+    master: ['green', 'bold'],
+    lps: ['blue', 'bold'],
+    client: ['magenta', 'bold'],
     error: 'red'
 })
 app.use(express.static(__dirname + '/static/css'))
@@ -42,157 +38,176 @@ app.use(express.static(__dirname + '/static/font'))
 app.use(express.static(__dirname + '/static/sample'))
 app.use(express.static(__dirname + '/static/obj'))
 app.use(express.static(__dirname + '/static/lib'))
-init()
-
-
+    //
 app.get('/', function(req, res) {
     res.sendFile(__dirname + '/client.html')
 })
-http.listen(4000, function() {
-    console.log(colors.server('#server [listening] localhost:4000'))
-});
-///////////////////////////////////////////////////////////////////////////////////////
-//                                                                                   //
-//                                                                                   //
-//                                                                                   // 
-///////////////////////////////////////////////////////////////////////////////////////
+app.get('/debug', function(req, res) {
+    res.sendFile(__dirname + '/debug.html')
+})
+server.listen(4000, function() {
+        console.log(colors.server('#server [listening : localhost:4000]'))
+    })
+    /*
+       _|_|_|  _|        _|_|_|  _|_|_|_|  _|      _|  _|_|_|_|_|  
+     _|        _|          _|    _|        _|_|    _|      _|      
+     _|        _|          _|    _|_|_|    _|  _|  _|      _|      
+     _|        _|          _|    _|        _|    _|_|      _|      
+       _|_|_|  _|_|_|_|  _|_|_|  _|_|_|_|  _|      _|      _|      
+    */
+var active = new Map()
 client.on('connection', function(socket) {
-    console.log(colors.server("#server [new client] " + io.sockets.sockets.length + "/" + TAG_NUMBER))
-    socket.emit('newConfig', config)
-    socket.on('requestSession', function(data) {
-        console.log(data)
-        tags[data] = {}
-        tags[data].session = uuid()
-            //push -> session bd
-        socket.emit('newSession', tags[data].session)
-        socket.emit('initSounds', sounds)
-        console.log(colors.server('#server new session [' + tags[data].session + ']'))
-    })
-    socket.on('uploadSound', function(data) {
-        fs.writeFile(__dirname + '/static/sample/' + data.session, data.buffer, 'hex', function(err) {
-                if (err) throw err
-            })
-            //sound -> push
-        var id = data.id;
-        var newSound = {}
-        newSound.session = tags[id].session
-                if(tags[id].position){
-        newSound.position = tags[id].position
-}else{
+    console.log(colors.client('#client [connected]'))
+    socket.emit('init', config)
+    socket.on('requestSession', getUUID)
+    socket.on('uploadSound', writeSound)
+    socket.on('disconnect', disconnected)
+})
 
-  newSound.position = {'x':0,'y':0,'z':0}
-//change bizard
-  }  
+function getUUID(id) {
+    user[id] = uuid()
+    active.set(this.id, user[id])
+    client.emit('updateUser', user)
+    client.emit('updateSound', sound)
+    master.emit('updateUser', user)
+    console.log(colors.client('#client [tag : ' + id + '] => [uuid : ' + user[id] + ']'))
+}
 
-        sounds.push(newSound)
-        while (sounds.length > SOUND_NUMBER) {
-            sounds.shift()
+function writeSound(data) {
+    var id = data.id;
+    if (user[id] && tag[id]) {
+        fs.writeFile(__dirname + '/static/sample/' + user[id] + '.m4a', data.buffer, 'hex')
+        if (sound[user[id]]) {
+            client.emit('removeSound', user[id])
+             console.log(colors.client('#client [override sound]'))
+        } 
+            sound[user[id]] = tag[id]
+            client.emit('updateSound', sound)
+        console.log(colors.client('#client [new sound]'))
+    }
+}
+
+function disconnected() {
+    for (var key in user) {
+        if (user[key] === active.get(this.id)) {
+            delete user[key]
+            delete tag[key]
         }
-        console.log(sounds)
-            //client.emit("newSound",sounds)
-            //        console.log(sounds)
-        console.log(colors.client("#client new sound"))
-    })
-    socket.on('disconnect', function(socket) {
-        console.log(colors.client("#client disconnected"))
-    })
-});
-///////////////////////////////////////////////////////////////////////////////////////
-//                                                                                   //
-//                                                                                   //
-//                                                                                   // 
-///////////////////////////////////////////////////////////////////////////////////////
-master.on('connection', function(socket) {
-    console.log(colors.server("#server [new master]"))
-    socket.on('disconnect', function(socket) {})
-});
-///////////////////////////////////////////////////////////////////////////////////////
-//                                                                                   //
-//                                                                                   //
-//                                                                                   // 
-///////////////////////////////////////////////////////////////////////////////////////
-lps.on('connection', function(socket) {
-    console.log(colors.server("#server [new lps]"))
-    socket.on('sendPosition', function(data) {
-               // console.log(data)
-        for (var i in data) {
-            if (data[i]) {
-                tags[data[i].id].position = {
-                        x: data[i].x,
-                        y: data[i].y,
-                        z: data[i].z,
-                        angle: data[i].angle
-                    }
-                    // console.log(data[i])
-                    // console.log(tags)
-            }
-        }
-
-        client.emit("updateUsers", tags)
-    });
-    socket.on('disconnect', function(socket) {});
-});
-///////////////////////////////////////////////////////////////////////////////////////
-//                                                                                   //
-//                                                                                   //
-//                                                                                   // 
-///////////////////////////////////////////////////////////////////////////////////////
-function getSession() {
-    var status = 1;
-    return status
+        console.log(colors.client('#client [disconnected] [tag : ' + key + ']'))
+    }
+    client.emit('updateUser', user)
+    master.emit('updateUser', user)
 }
-
-function updateSession() {
-    master.emit('updateUsers', users)
-}
-
-function getLastSound() {
-    //query = sounds from right WHERE sounds.path!=null 
-    var status;
-    return status
-}
-
-function init() {
-    //chercher dans la base de donnée les valeurs
-}
-///////////////////////////////////////////////////////////////////////////////////////
-//                                                                                   //
-//                                                                                   //
-//                                                                                   // 
-///////////////////////////////////////////////////////////////////////////////////////
 /*
-function soundsHandler(_table) {
-    nbSounds = nbSounds + 1
-    io.emit('updateSoundNb', nbSounds)
-    console.log(Object.keys(_table).length)
-    if (Object.keys(_table).length > config.nbSoundMax) {
-        for (var i in _table) {
-            io.emit('removeSound', i)
-            delete _table[i]
-            return
+ _|      _|    _|_|      _|_|_|  _|_|_|_|_|  _|_|_|_|  _|_|_|    
+ _|_|  _|_|  _|    _|  _|            _|      _|        _|    _|  
+ _|  _|  _|  _|_|_|_|    _|_|        _|      _|_|_|    _|_|_|    
+ _|      _|  _|    _|        _|      _|      _|        _|    _|  
+ _|      _|  _|    _|  _|_|_|        _|      _|_|_|_|  _|    _|  
+*/
+master.on('connection', function(socket) {
+        socket.emit('init', config)
+        console.log(colors.master('#master [connected]'))
+        socket.on('disconnect', function() {
+            console.log(colors.master('#master [disconnected]'))
+        })
+    })
+    /*                        
+     _|        _|_|_|      _|_|_|  
+     _|        _|    _|  _|        
+     _|        _|_|_|      _|_|    
+     _|        _|              _|  
+     _|_|_|_|  _|        _|_|_|    
+    */
+lps.on('connection', function(socket) {
+        console.log(colors.lps('#lps    [connected]'))
+        socket.on('sendPosition', function(data) {
+            var position = {
+                x: data.x,
+                y: data.y,
+                z: data.z,
+                angle: data.angle
+            }
+            tag[data.id] = position
+            client.emit('updateTag', tag)
+            master.emit('updateTag', tag)
+        })
+        socket.on('disconnect', function() {});
+    })
+    //////////////////////////
+var options = {
+    host: '192.168.1.21',
+    path: '/mdwui/lpsdemo_json.php',
+    json: true
+}
+
+function getLPS() {
+    var req = http.get(options, function(res) {
+        var result = ''
+        res.on('data', function(chunk) {
+            result += chunk
+        })
+        res.on('end', function() {
+            try {
+                result = result.replace(/\0/g, '')
+                var data = JSON.parse(result)
+                parseLPS(data)
+            } catch (e) {
+                console.log(e)
+            }
+        })
+    })
+    req.on('error', function(e) {
+        console.log('problem with request: ' + e.message)
+    })
+}
+for (var RA = []; RA.push([]) < TAG_NUMBER;) {}
+
+function parseLPS(data) {
+    for (var key in data) {
+        var tagKey = key.replace('Anchor0', '')
+        if (user[tagKey]) {
+            var position = {
+                x: data[key].location[1],
+                y: data[key].location[0],
+                z: data[key].location[2],
+                angle: data[key].location[3]
+            }
+            RA[tagKey].push(position)
+            if (RA[tagKey].length > 3) {
+                RA[tagKey].shift()
+                var av = average(RA[tagKey])
+                position.x = av.x
+                position.y = av.y
+                position.angle = av.angle
+            }
+            tag[tagKey] = position
         }
     }
-    return
+    client.emit('updateTag', tag)
+    master.emit('updateTag', tag)
 }
-*/
-//var uuid = uuid() 
-/*
-        db('session').push({uuid:UUID})
-        var s = db('session').find({uuid:'style'})
-        s.name = data
-        s.tag = 'unmp3.mp3'
-        console.log(s);
-        }
-*/
-//users[data].socket = this
-//users[data].connected = true
-// socket.emit('initUsers', tags)
-/*
-1 - user request session, [tag] -> server [tag] status = ready -> to master [tag]
-2 - from master enable session [uuid][tag]  -> to server -> [tagId][uuid] -> to db
 
--> session ? ready ? undefined ? active
--> moderation enregistrement (on écouter pas ecouter)                                            
--> event docling station -> close session
-oui / non / trop court /  
-*/
+function average(arr) {
+    var aX = 0
+    var aY = 0
+    var aA = 0
+    for (var i = 0; i < arr.length; i++) {
+        aX = aX + parseFloat(arr[i].x)
+        aY = aY + parseFloat(arr[i].y)
+        aA = aA + parseFloat(arr[i].angle)
+    }
+    aX = aX / arr.length
+    aY = aY / arr.length
+    aA = aA / arr.length
+    return {
+        x: aX,
+        y: aY,
+        angle: aA
+    }
+}
+setInterval(function() {
+        getLPS()
+    }, LPSfreq)
+    //var myFuncs = require('my-Funcs');
+    //console.log(myFuncs(__dirname + '/static/js/map.js'));

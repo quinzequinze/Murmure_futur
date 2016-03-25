@@ -1,27 +1,164 @@
-body {
-    background: blue;
-    font-family: Calibri, Candara, Segoe, 'Segoe UI', Optima, Arial, sans-serif;
+@font-face {
+    font-family: 'Mark';
+    src: url('MarkBold.otf') format('opentype');
+    font-weight: 400;
+    font-style: normal;
 }
 
+@font-face {
+    font-family: 'Mark';
+    src: url('MarkLight.otf') format('opentype');
+    font-weight: 200;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Mark';
+    src: url('MarkBlack.otf') format('opentype');
+    font-weight: 600;
+}
+
+body {
+    background: #F3EFE0;
+    font-family: Mark;
+    font-size: 124px;
+    font-weight: 200;
+    -webkit-user-select: none;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+}
+
+
+/*
+ _|      _|    _|_|    _|_|_|    
+ _|_|  _|_|  _|    _|  _|    _|  
+ _|  _|  _|  _|_|_|_|  _|_|_|    
+ _|      _|  _|    _|  _|        
+ _|      _|  _|    _|  _|        
+*/
+
+
+#mapWarp {
+    height: 90%;
+    width: 100%;
+    border-bottom: 2px solid black;
+}
+
+canvas {
+    height: 100%;
+    width: 100%;
+}
+
+#infoWarp {
+    height: 90%;
+    width: 100%;
+    overflow: hidden;
+    color: black;
+    border-bottom: 2px solid black;
+}
+
+#info {
+    height: 100%;
+    width: 100%;
+    font-size: 48px;
+}
+
+#info h1 {
+    font-weight: 200;
+    margin-bottom: 20px;
+}
+
+.recording {
+    background: blue;
+    -webkit-transition: background 200ms;
+    /* Safari */
+    transition: background 200ms;
+}
+
+.row {
+    padding: 50px;
+}
+
+.field {
+    color: blue;
+    font-weight: 200;
+    display: block;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+#recorder {
+    height: 100%;
+    width: 100%;
+}
+
+#recordWarp {
+    height: 90%;
+    width: 100%;
+    border-bottom: 2px solid black;
+    background: #F3EFE0;
+}
+
+nav {
+    width: 100%;
+    display: table;
+    height: 10%;
+}
+
+nav img {
+    max-height: 100%;
+}
+
+nav div {
+    display: table-cell;
+    height: 100%;
+    text-align: center;
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size: contain;
+    background: black;
+}
+
+#infoButton {
+    -webkit-mask: url(infos.svg) no-repeat 50% 50%;
+    mask: url(infos.svg) no-repeat 50% 50%;
+}
+
+#mapButton {
+    -webkit-mask: url(map.svg) no-repeat 50% 50%;
+    mask: url(map.svg) no-repeat 50% 50%;
+}
+
+#recordButton {
+    -webkit-mask: url(record.svg) no-repeat 50% 50%;
+    mask: url(record.svg) no-repeat 50% 50%;
+}
+
+.selected {
+    background-color: blue;
+}
+
+.hidden {
+    display: none;
+}
+
+
+/*
+ _|      _|    _|_|      _|_|_|  _|_|_|_|_|  _|_|_|_|  _|_|_|    
+ _|_|  _|_|  _|    _|  _|            _|      _|        _|    _|  
+ _|  _|  _|  _|_|_|_|    _|_|        _|      _|_|_|    _|_|_|    
+ _|      _|  _|    _|        _|      _|      _|        _|    _|  
+ _|      _|  _|    _|  _|_|_|        _|      _|_|_|_|  _|    _|  
+*/
+
 #infos {
-    width: 90%;
+    width: 100%;
     height: 100%;
     z-index: 1000;
     position: absolute;
     left: 0;
     top: 0;
-    -webkit-user-select: none;
-    /* Chrome/Safari */
-    -moz-user-select: none;
-    /* Firefox */
-    -ms-user-select: none;
-    /* IE10+ */
-    /* Rules below not implemented in browsers yet */
-    -o-user-select: none;
-    user-select: none;
     overflow: hidden;
-
-
 }
 
 .name {
@@ -29,51 +166,26 @@ body {
     font-size: 150%;
     margin-right: 20px;
     display: inline-block;
-    display: -webkit-inline-flex;
-    display: -ms-inline-flexbox;
     display: inline-flex;
     -webkit-flex-pack: center;
     -webkit-justify-content: center;
-    -moz-justify-content: center;
-    -ms-flex-pack: center;
-    justify-content: center;
     -webkit-flex-line-pack: center;
-    -ms-flex-line-pack: center;
     -webkit-align-content: center;
-    align-content: center;
     -webkit-flex-direction: column;
-    -moz-flex-direction: column;
-    -ms-flex-direction: column;
-    flex-direction: column;
-    background: #30343C ;
+    background: #30343C;
     padding-left: 20px;
     padding-right: 20px;
-
-
-
 }
 
 .position {
-	    height: 100%;
-
+    height: 100%;
     display: inline-block;
     display: -webkit-inline-flex;
-    display: -ms-inline-flexbox;
-    display: inline-flex;
     -webkit-flex-pack: center;
     -webkit-justify-content: center;
-    -moz-justify-content: center;
-    -ms-flex-pack: center;
-    justify-content: center;
     -webkit-flex-line-pack: center;
-    -ms-flex-line-pack: center;
     -webkit-align-content: center;
-    align-content: center;
     -webkit-flex-direction: column;
-    -moz-flex-direction: column;
-    -ms-flex-direction: column;
-    flex-direction: column;
-
 }
 
 .tag {
@@ -82,9 +194,8 @@ body {
     font-size: 14px;
     z-index: 1000;
     cursor: default;
-                opacity: 0.5;
 }
 
-.tag:hover { 
-opacity: 0.9;
+.tag:hover {
+    opacity: 0.9;
 }

@@ -1,10 +1,12 @@
 var instal = instal || {}
 instal.audio = (function(window, undefined) {
     function audio() {
-        var sample = []
+        'use strict';
+        var sample = {}
+        var defaultGain = 0
         var a = {}
         window.AudioContext = window.AudioContext || window.webkitAudioContext
-        a.context = new AudioContext()
+        a.context = new window.AudioContext()
         a.convolver = a.context.createConvolver()
         a.volume = a.context.createGain()
         a.mixer = a.context.createGain()
@@ -17,119 +19,108 @@ instal.audio = (function(window, undefined) {
         a.flatGain.connect(a.volume)
         a.convolverGain.connect(a.volume)
         a.volume.connect(a.context.destination)
-        window.addEventListener('blur', function(event) {
-            stop()
-        }, false)
-        window.addEventListener('focus', function(event) {
-            play()
-        }, false)
-        if (getMobileOperatingSystem() == 'iOS') {
-            console.log('[AudioContext] waiting for user event to unlock (iOS)')
-                //  window.addEventListener('touchend', iosUnlockSound, false)
-        }
-
-        function iosUnlockSound(event) {
-            var buffer = a.context.createBuffer(1, 1, 22050)
-            var source = a.context.createBufferSource()
-            source.buffer = buffer
-            source.connect(a.context.destination)
-            if (source.play) {
-                source.play(0)
-                source.disconnect()
-            } else if (source.noteOn) {
-                source.noteOn(0)
-                source.disconnect()
-            }
-            window.removeEventListener("touchend", iosUnlockSound, false)
-            console.log("[AudioContext] unlocked")
-        }
-
-        function play() {
-            a.volume.connect(a.context.destination)
-        }
-
-        function stop() {
+        window.addEventListener('blur', function() {
             a.volume.disconnect()
-        }
-        /*
-        function setListener(object) {
-        object.updateMatrixWorld()
-        var q = new THREE.Vector3()
-        q.setFromMatrixPosition(object.matrixWorld)
-        this.audio.context.listener.setPosition(q.x, q.y, q.z)
-        }
-        */
+        }, false)
+        window.addEventListener('focus', function() {
+            a.volume.connect(a.context.destination)
+        }, false)
+
         function loadBuffer(soundFileName, callback) {
             var request = new XMLHttpRequest()
-            request.open("GET", soundFileName, true)
-            request.responseType = "arraybuffer"
+            request.open('GET', soundFileName, true)
+            request.responseType = 'arraybuffer'
             request.onload = function() {
                 a.context.decodeAudioData(request.response, callback, function() {
-                    console.error("Decoding the audio buffer failed")
+                    console.error('Decoding the audio buffer failed')
                 })
             }
             request.send()
             return request
         }
 
-        function loadSound(soundFileName) {
+        function loadSound3D(soundFileName) {
             var s = {}
-            s.source = a.context.createBufferSource()
-            s.source.loop = true
+            s.randomLooping = true
             s.panner = a.context.createPanner()
+            s.panner.refDistance = 1
+            s.panner.distanceModel = 'exponential';
+            s.panner.rolloffFactor = 3
             s.volume = a.context.createGain()
+            s.volume.gain.value = defaultGain
             s.biquadFilter = a.context.createBiquadFilter()
-            s.biquadFilter.type = "lowpass"
+            s.biquadFilter.type = 'lowpass'
             s.biquadFilter.frequency.value = 10000 //filtre orientation
-            s.source.connect(s.volume)
             s.volume.connect(s.biquadFilter)
             s.biquadFilter.connect(s.panner)
             s.panner.connect(a.destination)
             loadBuffer(soundFileName, function(buffer) {
                 s.buffer = buffer
-                s.source.buffer = s.buffer
-                s.source.start(0)
+                randomLoop(s)
             })
             return s
         }
 
-        function initSounds(data) {
-                            console.log(data)
-            for (var i in data) {
+        function randomLoop(audioNode) {
+            var delay = randomInt(0,100)
+            audioNode.source = a.context.createBufferSource()
+            audioNode.source.buffer = audioNode.buffer
+            audioNode.source.connect(audioNode.volume)
+            audioNode.source.start(a.context.currentTime + delay/1000)
+            audioNode.timeOut = setTimeout(function() {
+                randomLoop(audioNode)
+            }, (audioNode.source.buffer.duration * 1000) + delay)
+            
+        }
 
-                sample[i] = loadSound(data[i].session+'.m4a')
-                sample[i].panner.setPosition(data[i].position.x, data[i].position.y, data[i].position.z)
+        function fadeOut(duration) {
+            defaultGain = 0
+            for (var key in sample) {
+                var currentTime = a.context.currentTime
+                var fadeTime = currentTime + duration
+                sample[key].volume.gain.setValueAtTime(sample[key].volume.gain.value, currentTime)
+                sample[key].volume.gain.linearRampToValueAtTime(0, fadeTime)
             }
         }
 
-        function initUsers(data) {
-            console.log(data)
-            if (data[TAG_ID]) {
-                a.context.listener.setPosition(data[TAG_ID].x, data[TAG_ID].y, data[TAG_ID].z)
+        function fadeIn(duration) {
+            defaultGain = 1
+            for (var key in sample) {
+                var currentTime = a.context.currentTime
+                var fadeTime = currentTime + duration
+                sample[key].volume.gain.setValueAtTime(sample[key].volume.gain.value, currentTime)
+                sample[key].volume.gain.linearRampToValueAtTime(1, fadeTime)
             }
         }
 
-        function newSound(data) {
-            console.log("audio | new sound")
-           // for(var i in sample){
-
-            ///}
-        }
-        function updateUsers(data) {
-        var position = data[TAG_ID].position
-        if(data[TAG_ID]){
-        a.context.listener.setPosition(position.x,position.y,position.z)
-       // console.log("listener x:"+position.x.toFixed(2)+" y:"+position.y.toFixed(2)+" z:"+position.z.toFixed(2))
-        //console.log(data)
-        }
+        function loadSound(soundFileName, callback) {
+            var s = {}
+            s.source = a.context.createBufferSource()
+            s.source.loop = false
+            s.source.onended = function() {}
+            s.volume = a.context.createGain()
+            s.source.connect(s.volume)
+            s.volume.connect(a.destination)
+            loadBuffer(soundFileName, function(buffer) {
+                s.buffer = buffer
+                s.source.buffer = s.buffer
+                s.source.start(a.context.currentTime + 1)
+                var delay = s.buffer.duration ? Math.ceil(s.buffer.duration * 1000) + 1000 : 1000
+                if (callback) {
+                    setTimeout(callback, delay)
+                }
+            })
+            return s
         }
 
         return {
+            sample:sample,
+            listener:a.context.listener,
+            fadeIn: fadeIn,
+            fadeOut: fadeOut,
             loadSound: loadSound,
-            initSounds: initSounds,
-            initUsers: initUsers,
-            newSound:newSound,
-            updateUsers:updateUsers
+            loadSound3D: loadSound3D,
+            randomLoop:randomLoop
         }
     }
     return audio
