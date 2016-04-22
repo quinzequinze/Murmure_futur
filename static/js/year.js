@@ -12,12 +12,10 @@ instal.year = (function(window, undefined) {
         }
 
         function loadSound() {
-            for (var i=0;i<list.length ;i++) {
-                /*
+            for (var i = 0; i < list.length; i++) {
                 sample[key] = audio.loadSound(list[i] + '.m4a')
                 sample[key].source.loop = true
-                sample[key].volume.gain.value = 1
-                */
+                sample[key].volume.gain.value = 0
             }
         }
 
@@ -25,7 +23,7 @@ instal.year = (function(window, undefined) {
             var y = {}
             if (typeof tag[TAG_ID] != 'undefined') {
                 var annee = document.getElementById('annee')
-                annee.textContent = Math.floor(list.length * (tag[TAG_ID].x/length) + 1)
+                annee.textContent = Math.floor(list.length * (tag[TAG_ID].x / length) + 1)
             }
             return y
         }
