@@ -3,14 +3,16 @@ instal.theme = (function(window, undefined) {
     function theme() {
         var sample = {}
         var list = {
+            /*
             Argent: {
                 x: 1,
                 y: 1
             },
             Guerre: {
-                x: 0,
+                x: 1,
                 y: 0
             },
+            
             Temps: {
                 x: 0.5,
                 y: 0.5
@@ -39,14 +41,17 @@ instal.theme = (function(window, undefined) {
                 x: 0,
                 y: 0
             },
+            */
             Mode: {
-                x: 0,
-                y: 0
+                x: 0.5,
+                y: 0.4
             },
+
             Mort: {
                 x: 0,
                 y: 0
             }
+            
         }
 
         function init() {
@@ -59,7 +64,7 @@ instal.theme = (function(window, undefined) {
         function loadSound() {
             for (var key in list) {
                 sample[key] = audio.loadSound3D(key + '.m4a', true)
-                sample[key].panner.setPosition(list[key].x * config.ROOM_WIDTH, list[key].y * config.ROOM_LENGTH, 0)
+                sample[key].panner.setPosition(list[key].x, list[key].y, 0)
                 sample[key].volume.gain.value = 1
             }
         }

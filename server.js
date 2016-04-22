@@ -23,11 +23,13 @@ const raspberry = true
 var active = new Map()
 var active_tag_id = [
     1,
-    8,
+    2,
     3,
     4,
     5,
-    6
+    6,
+    7,
+    8
 ]
 var db = require('origindb')(__dirname + '/static/db')
 const persistence = true
