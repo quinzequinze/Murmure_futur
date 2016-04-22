@@ -7,13 +7,13 @@ var user = {}
 var inited = false
 var tag = {}
 var sound = {}
-var canRecord = false
 var logicItems = {}
     //modules 
 var audio = instal.audio()
 var map = instal.map()
 var theme = instal.theme()
 var year = instal.year()
+var exploration = instal.exploration()
 var deviceOrientation = instal.deviceOrientation()
     //var ui = instal.ui()
 var socket = io.connect(root + '/client')

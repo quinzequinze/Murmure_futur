@@ -37,3 +37,17 @@ AudioNode.prototype = {
         //this.createSoundCone(audioNode, 1.0, 3.8, 0.1);
     },
 };
+
+
+
+function addTuto(_soundName) {
+    audio.tutoriel = audio.loadSound3D(_soundName + '.m4a', true)
+    audio.tutoriel.volume.gain.value = 1
+    audio.tutoriel.position = {
+        x: randomInt(0, config.ROOM_WIDTH),
+        y: randomInt(0, config.ROOM_LENGTH),
+        z: 0
+    }
+    audio.tutoriel.panner.setPosition(audio.tutoriel.position.x, audio.tutoriel.position.y, 0)
+    hasTuto = true
+}
