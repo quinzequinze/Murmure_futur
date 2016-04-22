@@ -2,7 +2,7 @@
 var instal = instal || {};
 instal.lps = (function(window, undefined) {
     function lps() {
-        var socket = io.connect('vigo.local:4000/lps')
+        var socket = io.connect('breal.local:4000/lps')
 
         function sendPosition(data) {
             var position = {

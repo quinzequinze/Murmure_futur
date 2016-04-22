@@ -4,4 +4,6 @@ node_modules
 
 *.json
 
-/db
+/static/db
+
+static/js/theme.js
