@@ -1,90 +1,42 @@
+//VJM:
 var instal = instal || {}
-instal.theme = (function(window, undefined) {
-    function theme() {
+instal.year = (function(window, undefined) {
+    function year() {
         var sample = {}
-        var list = {
-            Argent: {
-                x: 1,
-                y: 1
-            },
-            Guerre: {
-                x: 0,
-                y: 0
-            },
-            Temps: {
-                x: 0.5,
-                y: 0.5
-            },
-            TonFuture: {
-                x: 0,
-                y: 0
-            },
-            Transport: {
-                x: 0,
-                y: 0
-            },
-            Heritage: {
-                x: 0,
-                y: 0
-            },
-            Imortalite: {
-                x: 0,
-                y: 0
-            },
-            Liberte: {
-                x: 0,
-                y: 0
-            },
-            Loisir: {
-                x: 0,
-                y: 0
-            },
-            Mode: {
-                x: 0,
-                y: 0
-            },
-            Mort: {
-                x: 0,
-                y: 0
-            }
-        }
+        var length
+        var list = ['2017.m4a', '2027.m4a', '2100.m4a', '3000.m4a']
 
         function init() {
-            for (var key in list) {
-                list[key].x = list[key].x * config.ROOM_WIDTH
-                list[key].y = list[key].y * config.ROOM_LENGTH
-            }
+            length = config.ROOM_WIDTH < config.ROOM_LENGTH ? config.ROOM_LENGTH : config.ROOM_WIDTH
+            console.log(length)
         }
 
         function loadSound() {
             for (var key in list) {
-                sample[key] = audio.loadSound3D(key + '.m4a', true)
-                sample[key].panner.setPosition(list[key].x * config.ROOM_WIDTH, list[key].y * config.ROOM_LENGTH, 0)
+                /*
+                sample[key] = audio.loadSound(key + '.m4a')
+                //sample[key].panner.setPosition(list[key].x * config.ROOM_WIDTH, list[key].y * config.ROOM_LENGTH, 0)
+                sample[key].source.loop = true
                 sample[key].volume.gain.value = 1
+                */
             }
         }
 
-        function closest() {
-            var t = {}
-            for (var key in list) {
-                if (typeof tag[TAG_ID] !== 'undefined') {
-                    var distance = dist(tag[TAG_ID].x, tag[TAG_ID].y, list[key].x, list[key].y)
-                    if (distance < t.dist || typeof t.dist == 'undefined') {
-                        t.dist = distance
-                        t.name = key
-                    }
-                }
+        function active() {
+            var y = {}
+            var annee = document.getElementById('annee')
+            if(typeof tag[TAG_ID] != 'undefined'){
+            annee.textContent = tag[TAG_ID].x%(length/list.length);
+            //console.log(length/tag[TAG_ID].y%list.length)
             }
-            var thematique = document.getElementById('thematique')
-            thematique.textContent = t.name
-            return t
+            return y
         }
         return {
             loadSound: loadSound,
             list: list,
-            closest: closest,
+            active: active,
             init: init
         }
     }
-    return theme
+    return year
 })(window)

@@ -1,6 +1,6 @@
 //http://patorjk.com/software/taag/#p=display&v=0&f=Block&t=SOMETHING`
 //constantes
-const root = 'vigo.local:4000'
+const root = 'breal.local:4000'
     //globals
 var TAG_ID = TAG_ID || 0;
 var battery, init, config
@@ -14,6 +14,7 @@ var logicItems = {}
 var audio = instal.audio()
 var map = instal.map()
 var theme = instal.theme()
+var year = instal.year()
 var deviceOrientation = instal.deviceOrientation()
     //var ui = instal.ui()
 var socket = io.connect(root + '/client')
@@ -56,6 +57,9 @@ function setState(_state) {
             break;
         case "introduction":
             state.toIntroduction()
+            break;
+        case "year":
+            state.toYear()
             break;
     }
 }
