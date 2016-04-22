@@ -16,7 +16,7 @@ var state = StateMachine.create({
         from: '*',
         to: 'theme'
     },{
-            name: 'toPrompt',
+        name: 'toPrompt',
         from: '*',
         to: 'prompt'
     }],
