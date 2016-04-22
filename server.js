@@ -54,6 +54,7 @@ app.use(express.static(__dirname + '/static/sample'))
 app.use(express.static(__dirname + '/static/lib'))
 app.use(express.static(__dirname + '/static/sound'))
 app.use(express.static(__dirname + '/static/theme'))
+app.use(express.static(__dirname + '/static/year'))
     //
 app.get('/', function(req, res) {
     res.sendFile(__dirname + '/laridme.html')
