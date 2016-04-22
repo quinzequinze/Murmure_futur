@@ -15,10 +15,14 @@ var state = StateMachine.create({
         name: 'toTheme',
         from: '*',
         to: 'theme'
-    },{
+    }, {
         name: 'toPrompt',
         from: '*',
         to: 'prompt'
+    }, {
+        name: 'toYear',
+        from: '*',
+        to: 'year'
     }],
     callbacks: {
         onenterwait: function() {
@@ -40,14 +44,33 @@ var state = StateMachine.create({
         onentertheme: function() {
             theme.init()
             theme.loadSound()
-            map.drawTheme()
-            logicItems.themeCheck = theme.closest
-            document.body.addEventListener("mousedown", chooseTheme, false)
-            document.body.addEventListener("touchstart", chooseTheme, false)
+            if (map) {
+                map.drawTheme()
+            }
+            logicItems.theme = theme.closest
+            document.body.addEventListener("mousedown", getTheme, false)
+            document.body.addEventListener("touchstart", getTheme, false)
         },
         onleavetheme: function() {
             if (theme) {
                 delete theme
+                delete logicItems.theme
+            }
+        },
+        onenteryear: function() {
+            year.init()
+            year.loadSound()
+            if (map) {
+                //map.drawYear()
+            }
+            logicItems.year = year.active
+            document.body.addEventListener("mousedown", getYear, false)
+            document.body.addEventListener("touchstart", getYear, false)
+        },
+        onleaveyear: function() {
+            if (year) {
+                delete year
+                delete logicItems.year
             }
         },
         onenterexploration: function() {
@@ -71,28 +94,6 @@ var state = StateMachine.create({
         }
     }
 })
-
-function tutorielCheck() {
-    if (!hasTuto && tutoCounter < maxTuto) {
-        addTuto(tutoCounter)
-    }
-    if (typeof tag[TAG_ID] !== 'undefined' && audio.tutoriel.position) {
-        if (dist(tag[TAG_ID].x, tag[TAG_ID].y, audio.tutoriel.position.x, audio.tutoriel.position.y) < minDist) {
-            clearTimeout(audio.tutoriel.timeOut)
-            if (typeof audio.tutoriel.source !== 'undefined') {
-                audio.tutoriel.source.disconnect()
-                audio.tutoriel = {}
-                audio.loadSound('found.m4a', function() {
-                    hasTuto = false
-                    tutoCounter += 1
-                    if (tutoCounter == maxTuto) {
-                        //state.explore()
-                    }
-                })
-            }
-        }
-    }
-}
 var soundCollection = new Set()
 var minDist = 1.5
 var maxTuto = 10
@@ -153,14 +154,12 @@ function endRecord() {
     event.preventDefault();
 }
 
-function chooseTheme(){
+function getTheme() {
     console.log(theme.closest())
     toPrompt()
 }
-/*
-        onentertuto: function() {
-            logicItems.tutorielCheck = tutorielCheck
-        },
-        onleavetuto: function() {
-            delete logicItems.tutorielCheck
-        },*/
+
+function getYear() {
+    console.log(year.active())
+    toPrompt()
+}

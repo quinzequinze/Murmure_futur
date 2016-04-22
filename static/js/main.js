@@ -57,6 +57,9 @@ function setState(_state) {
         case "introduction":
             state.toIntroduction()
             break;
+                    case "year":
+            state.toYear()
+            break;
     }
 }
 
