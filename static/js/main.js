@@ -14,6 +14,7 @@ var logicItems = {}
 var audio = instal.audio()
 var map = instal.map()
 var theme = instal.theme()
+var year = instal.year()
 var deviceOrientation = instal.deviceOrientation()
     //var ui = instal.ui()
 var socket = io.connect(root + '/client')
@@ -57,7 +58,7 @@ function setState(_state) {
         case "introduction":
             state.toIntroduction()
             break;
-                    case "year":
+        case "year":
             state.toYear()
             break;
     }
