@@ -69,6 +69,9 @@ var state = StateMachine.create({
                 socket.emit('stateChange', status)
             }
         }
+        onenterprompt: function() {
+            ///CYMMMM
+        }
     }
 })
 
