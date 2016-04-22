@@ -12,10 +12,9 @@ instal.year = (function(window, undefined) {
         }
 
         function loadSound() {
-            for (var key in list) {
+            for (var i=0;i<list.length ;i++) {
                 /*
-                sample[key] = audio.loadSound(key + '.m4a')
-                //sample[key].panner.setPosition(list[key].x * config.ROOM_WIDTH, list[key].y * config.ROOM_LENGTH, 0)
+                sample[key] = audio.loadSound(list[i] + '.m4a')
                 sample[key].source.loop = true
                 sample[key].volume.gain.value = 1
                 */
@@ -24,10 +23,9 @@ instal.year = (function(window, undefined) {
 
         function active() {
             var y = {}
-            var annee = document.getElementById('annee')
-            if(typeof tag[TAG_ID] != 'undefined'){
-            annee.textContent = tag[TAG_ID].x%(length/list.length);
-            //console.log(length/tag[TAG_ID].y%list.length)
+            if (typeof tag[TAG_ID] != 'undefined') {
+                var annee = document.getElementById('annee')
+                annee.textContent = Math.floor(list.length * (tag[TAG_ID].x/length) + 1)
             }
             return y
         }
