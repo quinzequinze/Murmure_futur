@@ -2,7 +2,7 @@ var config = {
         'TAG_NUMBER': 6,
         'SOUND_NUMBER': 12,
         'ROOM_WIDTH': 6.1,
-        'ROOM_LENGTH':  4.5,
+        'ROOM_LENGTH': 4.5,
         'ORIENTATION_OFFSET': -42,
         'MAX_COLLECTION': 0
     }
@@ -142,10 +142,11 @@ function identify(id) {
     } else {
         console.log(colors.client('#client [new guy]'))
         user[id] = uuid()
-        db('user').set(id, user[id])
+        if (persistence) {
+            db('user').set(id, user[id])
+        }
         client.to(id).emit('setState', 'wait')
         state[id] = 'wait'
-
     }
     active.set(this.id, user[id])
     client.emit('updateUser', user)
@@ -156,9 +157,11 @@ function identify(id) {
 }
 
 function stateChange(data) {
-    db('state').set(data.id, data.state)
+    if (persistence) {
+        db('state').set(data.id, data.state)
+    }
     state[data.id] = data.state
-    master.emit("updateState",state)
+    master.emit("updateState", state)
 }
 
 function writeSound(data) {
@@ -199,8 +202,7 @@ master.on('connection', function(socket) {
     socket.emit('init', config)
     socket.emit('updateSound', sound)
     socket.emit('updateUser', user)
-    socket.emit('updateState',state)
-
+    socket.emit('updateState', state)
     console.log(colors.master('#master [connected]'))
     socket.on('disconnect', function() {
         console.log(colors.master('#master [disconnected]'))
@@ -223,8 +225,10 @@ function invalidate(_UUID) {
 }
 
 function endSession(data) {
-    db('user').set(data.id, null)
-    db('state').set(data.id, 'wait')
+    if (persistence) {
+        db('user').set(data.id, null)
+        db('state').set(data.id, 'wait')
+    }
     state[data.id] = 'wait'
     delete user[data.id]
         //delete tag[key]

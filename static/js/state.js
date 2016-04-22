@@ -83,7 +83,7 @@ var state = StateMachine.create({
         },
         onenterexploration: function() {
             audio.fadeIn(3)
-            logicItems.collectionCheck = collectionCheck
+            logicItems.collect = exploration.collect
         },
         onleaveexploration: function() {
             if (logicItems.collectionCheck) {
@@ -104,65 +104,7 @@ var state = StateMachine.create({
         
     }
 })
-var soundCollection = new Set()
-var minDist = 1.5
-var maxTuto = 10
-var tutoCounter = 0
-var hasTuto = false
 
-function addTuto(_soundName) {
-    audio.tutoriel = audio.loadSound3D(_soundName + '.m4a', true)
-    audio.tutoriel.volume.gain.value = 1
-    audio.tutoriel.position = {
-        x: randomInt(0, config.ROOM_WIDTH),
-        y: randomInt(0, config.ROOM_LENGTH),
-        z: 0
-    }
-    audio.tutoriel.panner.setPosition(audio.tutoriel.position.x, audio.tutoriel.position.y, 0)
-    hasTuto = true
-}
-
-function collectionCheck() {
-    var c = closestSound()
-    if (c.dist < minDist && !soundCollection.has(c.id)) {
-        soundCollection.add(c.id)
-        var collection = document.getElementById('collection')
-        collection.textContent = soundCollection.size
-    }
-    if (soundCollection.size >= config.MAX_COLLECTION && canRecord == false) {
-        //state.recordTuto()
-    }
-}
-
-function allowRecording() {
-    canRecord = true
-    document.body.addEventListener("mousedown", beginRecord, false)
-    document.body.addEventListener("touchstart", beginRecord, false)
-    document.body.addEventListener("touchstart", beginRecord, false);
-    document.body.addEventListener("touchend", endRecord, false);
-}
-
-function disallowRecording() {
-    canRecord = false
-    document.body.removeEventListener("mousedown", beginRecord, false)
-    document.body.removeEventListener("touchstart", beginRecord, false)
-    document.body.removeEventListener("touchstart", beginRecord, false);
-    document.body.removeEventListener("touchend", endRecord, false);
-}
-
-function beginRecord() {
-    audio.fadeOut(0.4)
-    document.body.style.background = '#FFBB00'
-    window.webkit.messageHandlers.scriptMessageHandler.postMessage('beginRecord')
-    event.preventDefault();
-}
-
-function endRecord() {
-    audio.fadeIn(0.4)
-    document.body.style.background = '#F3EFE0'
-    window.webkit.messageHandlers.scriptMessageHandler.postMessage('endRecord')
-    event.preventDefault();
-}
 
 function getTheme() {
     //put in theme module
