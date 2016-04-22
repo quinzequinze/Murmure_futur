@@ -100,42 +100,19 @@ var state = StateMachine.create({
                 socket.emit('stateChange', status)
             }
         },
-        onenterprompt: function() {
-            var validator = document.getElementById("validator")
-            validator.classList.remove('hidden')
-            var yes = document.getElementById("yes")
-            var no = document.getElementById("no")
-            console.log(validator)
-            yes.onclick = function() {
-                console.log("yes")
-                console.log(theme.closest())
-                state.toYear()
-                // socket.emit('validate', player.dataset.sound)
-                // var valid = document.getElementById(player.dataset.sound)
-                // validator.classList.add('hidden')
-            }
-            no.onclick = function() {
-                console.log("no")
-                console.log(theme.closest())
-                state.toTheme()
-                // socket.emit('invalidate', player.dataset.sound)
-                // validator.classList.add('hidden')
-            }
-        },
-        onleaveprompt: function() {
-            var validator = document.getElementById("validator")
-            validator.classList.add('hidden')
-        }
+        
         
     }
 })
 
 
 function getTheme() {
-    console.log(theme.closest())
-    document.body.removeEventListener("mousedown", getTheme, false)
-    document.body.removeEventListener("touchstart", getTheme, false)
-    state.toPrompt()
+    //put in theme module
+    // console.log(theme.closest())
+    // document.body.removeEventListener("mousedown", getTheme, false)
+    // document.body.removeEventListener("touchstart", getTheme, false)
+    
+    prompt("theme",theme.closest(),"ThemeYep.m4a","ThemeBof.m4a")
 }
 
 function getYear() {
