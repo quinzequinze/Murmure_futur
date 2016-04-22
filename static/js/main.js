@@ -60,6 +60,9 @@ function setState(_state) {
         case "year":
             state.toYear()
             break;
+        case "prompt":
+            state.toPrompt()
+            break;
     }
 }
 
