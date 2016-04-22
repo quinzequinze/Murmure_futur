@@ -49,6 +49,15 @@ instal.year = (function(window, undefined) {
             }
             return y
         }
+
+        function clear() {
+            for (var key in sample) {
+                if (sample[key].source) {
+                    sample[key].source.disconnect()
+                }
+                clearTimeout(sample[key].timeOut)
+            }
+        }
         return {
             loadSound: loadSound,
             setGain: setGain,
