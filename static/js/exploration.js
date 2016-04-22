@@ -4,47 +4,59 @@ instal.exploration = (function(window, undefined) {
     function exploration() {
         var collected = new Set()
         var minDist = 1.5
+        var canRecord = false
 
         function collect() {
             var c = closestSound()
             if (c.dist < minDist && !collected.has(c.id)) {
                 collected.add(c.id)
                 var collection = document.getElementById('collection')
-                collection.textContent = collected.size
+                collection.textContent = "collection: " + collected.size
             }
             if (collected.size >= config.MAX_COLLECTION && canRecord == false) {
-                allowRecording()
+                console.log(config.MAX_COLLECTION)
+                console.log(collected.size)
+                audio.fadeOut(2)
+                canRecord = true
+                audio.sfx.instruction = audio.loadSound('record.m4a', function() {
+                    allowRecording()
+                })
             }
         }
 
         function allowRecording() {
             document.body.addEventListener("mousedown", beginRecord, false)
             document.body.addEventListener("touchstart", beginRecord, false)
-            document.body.addEventListener("touchstart", beginRecord, false);
-            document.body.addEventListener("touchend", endRecord, false);
+            document.body.addEventListener("mouseup", endRecord, false)
+            document.body.addEventListener("touchend", endRecord, false)
+            audio.fadeIn(2)
         }
 
         function disallowRecording() {
             document.body.removeEventListener("mousedown", beginRecord, false)
             document.body.removeEventListener("touchstart", beginRecord, false)
-            document.body.removeEventListener("touchstart", beginRecord, false);
-            document.body.removeEventListener("touchend", endRecord, false);
+            document.body.removeEventListener("mouseup", endRecord, false)
+            document.body.removeEventListener("touchend", endRecord, false)
+            canRecord = false
         }
 
         function beginRecord() {
             audio.fadeOut(0.4)
-            document.body.style.background = '#FFBB00'
+            document.body.style.background = 'white'
             window.webkit.messageHandlers.scriptMessageHandler.postMessage('beginRecord')
-            event.preventDefault();
+            event.preventDefault()
         }
 
         function endRecord() {
-            audio.fadeIn(0.4)
+            audio.fadeIn(2)
             document.body.style.background = '#F3EFE0'
             window.webkit.messageHandlers.scriptMessageHandler.postMessage('endRecord')
-            event.preventDefault();
+            event.preventDefault()
         }
-        return {}
+        return {
+            collect: collect,
+            init: init
+        }
     }
     return exploration
 })(window)

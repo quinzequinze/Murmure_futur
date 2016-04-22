@@ -192,7 +192,6 @@ function reset() {
         clearTimeout(audio.sfx[key].timeOut)
     }
     audio.sfx = {}
-    disallowRecording()
     state.toWait()
     audio.fadeOut(0.5)
 }
