@@ -12,7 +12,7 @@ var logicItems = {}
 var audio = instal.audio()
 var map = instal.map()
 var theme = instal.theme()
-var year
+var year = instal.year()
 var exploration = instal.exploration()
 var deviceOrientation = instal.deviceOrientation()
     //var ui = instal.ui()
