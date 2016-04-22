@@ -44,6 +44,7 @@ var state = StateMachine.create({
             logicItems.themeCheck = theme.closest
             document.body.addEventListener("mousedown", chooseTheme, false)
             document.body.addEventListener("touchstart", chooseTheme, false)
+            console.log("onentertheme-cym")
         },
         onleavetheme: function() {
             if (theme) {
@@ -68,7 +69,7 @@ var state = StateMachine.create({
                 status.state = state.current
                 socket.emit('stateChange', status)
             }
-        }
+        },
         onenterprompt: function() {
             ///CYMMMM
         }
