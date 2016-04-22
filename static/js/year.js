@@ -32,18 +32,26 @@ instal.year = (function(window, undefined) {
 
         function active() {
             var y = {}
-                if (typeof tag[TAG_ID] != 'undefined') {
-                    y.step = Math.floor(list.length * (tag[TAG_ID].x / length) + 1)
-                    y.value = (list.length * (tag[TAG_ID].x / length) + 1) - y.step
-                    y.name = list[y.step]
-                    var annee = document.getElementById('annee')
-                    annee.textContent = y.step
+            if (typeof tag[TAG_ID] != 'undefined') {
+                y.step = Math.floor(list.length * (tag[TAG_ID].x / length) + 1)
+                y.value = (list.length * (tag[TAG_ID].x / length) + 1) - y.step
+                y.name = list[y.step]
+                if (y.step < 1) {
+                    y.step = 1
+                    y.value = 0
                 }
+                if (y.step > list.length) {
+                    y.step = list.length
+                    y.value = 1
+                }
+                var annee = document.getElementById('annee')
+                annee.textContent = y.step
+            }
             return y
         }
         return {
             loadSound: loadSound,
-            setGain:setGain,
+            setGain: setGain,
             list: list,
             active: active,
             init: init
