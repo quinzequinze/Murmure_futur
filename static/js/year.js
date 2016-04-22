@@ -4,7 +4,7 @@ instal.year = (function(window, undefined) {
     function year() {
         var sample = {}
         var length
-        var list = ['2017.m4a', '2027.m4a', '2100.m4a', '3000.m4a']
+        var list = ['2017', '2027', '2100', '3000']
 
         function init() {
             length = config.ROOM_WIDTH < config.ROOM_LENGTH ? config.ROOM_LENGTH : config.ROOM_WIDTH
@@ -12,25 +12,38 @@ instal.year = (function(window, undefined) {
         }
 
         function loadSound() {
-            for (var i=0;i<list.length ;i++) {
-                /*
-                sample[key] = audio.loadSound(list[i] + '.m4a')
-                sample[key].source.loop = true
-                sample[key].volume.gain.value = 1
-                */
+            for (var i = 0; i < list.length; i++) {
+                sample[i] = audio.loadSound(list[i] + '.m4a')
+                sample[i].source.loop = true
+                sample[i].volume.gain.value = 0
+            }
+        }
+
+        function setGain() {
+            var s = active().step
+            for (var i = 0; i < list.length; i++) {
+                if (i == active().step - 1) {
+                    sample[i].volume.gain.value = active().value
+                } else {
+                    sample[i].volume.gain.value = 0
+                }
             }
         }
 
         function active() {
             var y = {}
-            if (typeof tag[TAG_ID] != 'undefined') {
-                var annee = document.getElementById('annee')
-                annee.textContent = Math.floor(list.length * (tag[TAG_ID].x/length) + 1)
-            }
+                if (typeof tag[TAG_ID] != 'undefined') {
+                    y.step = Math.floor(list.length * (tag[TAG_ID].x / length) + 1)
+                    y.value = (list.length * (tag[TAG_ID].x / length) + 1) - y.step
+                    y.name = list[y.step]
+                    var annee = document.getElementById('annee')
+                    annee.textContent = y.step
+                }
             return y
         }
         return {
             loadSound: loadSound,
+            setGain:setGain,
             list: list,
             active: active,
             init: init
