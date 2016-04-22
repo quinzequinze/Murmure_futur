@@ -7,8 +7,11 @@ instal.year = (function(window, undefined) {
         var list = ['2017', '2027', '2100', '3000']
 
         function init() {
-            length = config.ROOM_WIDTH < config.ROOM_LENGTH ? config.ROOM_LENGTH : config.ROOM_WIDTH
-            console.log(length)
+            audio.sfx.introduction = audio.loadSound('year.m4a', function() {
+                length = config.ROOM_WIDTH < config.ROOM_LENGTH ? config.ROOM_LENGTH : config.ROOM_WIDTH
+                console.log(length)
+            })
+
         }
 
         function loadSound() {

@@ -53,6 +53,7 @@ instal.theme = (function(window, undefined) {
         }
 
         function init() {
+            console.log("closest()")
             for (var key in list) {
                 list[key].x = list[key].x * config.ROOM_WIDTH
                 list[key].y = list[key].y * config.ROOM_LENGTH
@@ -86,7 +87,7 @@ instal.theme = (function(window, undefined) {
             loadSound: loadSound,
             list: list,
             closest: closest,
-            init: init
+            init: init,
         }
     }
     return theme
