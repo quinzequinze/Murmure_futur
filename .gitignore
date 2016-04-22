@@ -4,4 +4,4 @@ node_modules
 
 *.json
 
-/db
+/static/db
