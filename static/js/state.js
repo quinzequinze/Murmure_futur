@@ -69,7 +69,8 @@ var state = StateMachine.create({
             if (map) {
                 //map.drawYear()
             }
-            logicItems.year = year.active
+            logicItems.active = year.active
+            logicItems.setGain = year.setGain
             document.body.addEventListener("mousedown", getYear, false)
             document.body.addEventListener("touchstart", getYear, false)
         },
@@ -77,6 +78,7 @@ var state = StateMachine.create({
             if (year) {
                 delete year
                 delete logicItems.year
+                delete logicItems.setGain
             }
         },
         onenterexploration: function() {
