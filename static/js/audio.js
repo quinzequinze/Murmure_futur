@@ -120,7 +120,6 @@ instal.audio = (function(window, undefined) {
         }
         return {
             sample: sample,
-            theme: theme,
             listener: a.context.listener,
             fadeIn: fadeIn,
             fadeOut: fadeOut,

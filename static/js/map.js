@@ -72,19 +72,23 @@ instal.map = (function(window, undefined) {
 
         function drawTheme() {
             for (var key in theme.list) {
-                
                 display.theme[key] = document.createElement("div")
                 display.theme[key].classList.add('circle')
                 display.theme[key].classList.add('theme')
-                display.theme[key].style.top = webUnit(theme.list[key]).y+ 'px'
-                display.theme[key].style.left = webUnit(theme.list[key]).x+ 'px'
+                display.theme[key].style.top = webUnit(theme.list[key]).y + 'px'
+                display.theme[key].style.left = webUnit(theme.list[key]).x + 'px'
                 mapElement.appendChild(display.theme[key])
-
             }
         }
 
-        function webUnit(_tag) {
+        function removeTheme() {
+            for (var key in display.theme) {
+                display.theme[key].parentElement.removeChild(display.theme[key]);
+            }
+            display.theme = {}
+        }
 
+        function webUnit(_tag) {
             var roomW = config.ROOM_WIDTH > config.ROOM_LENGTH ? config.ROOM_WIDTH : config.ROOM_LENGTH
             var roomL = config.ROOM_WIDTH > config.ROOM_LENGTH ? config.ROOM_LENGTH : config.ROOM_WIDTH
             if (mapElement.offsetWidth < mapElement.offsetHeight) {
@@ -100,7 +104,6 @@ instal.map = (function(window, undefined) {
                     y: _tag.y * mapElement.offsetHeight / roomL,
                     z: 170,
                     angle: tag.angle
-
                 }
             }
         }
@@ -108,7 +111,8 @@ instal.map = (function(window, undefined) {
             init: init,
             drawTag: drawTag,
             drawSound: drawSound,
-            drawTheme:drawTheme
+            drawTheme: drawTheme,
+            removeTheme: removeTheme
         }
     }
     return map

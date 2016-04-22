@@ -56,6 +56,9 @@ var state = StateMachine.create({
                 delete theme
                 delete logicItems.theme
             }
+            if(map){
+                map.removeTheme()
+            }
         },
         onenteryear: function() {
             year.init()
