@@ -2,19 +2,24 @@
 <html lang="fr">
     <head>
         <meta content="width=device-width, initial-scale=1" name="viewport">
-            <title>
-                LARIDME INTERFACE
-            </title>
-            <link href="style.css" rel="stylesheet" type="text/css"/>
-            <link href="interface.css" rel="stylesheet" type="text/css"/>
-
+        <title>
+        LARIDME INTERFACE
+        </title>
+        <link href="style.css" rel="stylesheet" type="text/css"/>
+        <link href="interface.css" rel="stylesheet" type="text/css"/>
         </meta>
     </head>
     <body>
-<div id='status'>initial</div>
-<div id='thematique'>null</div>
-<div id='collection'>null</div>
-<div id='annee'>null</div>
+        <div id='status'>initial</div>
+        <div id='thematique'>null</div>
+        <div id='collection'>null</div>
+        <div id='annee'>null</div>
+        <div class="hidden" id="validator">
+            <div id="yes">KEEP
+            </div>
+            <div id="no">TRASH
+            </div>
+        </div>
     </body>
 </html>
 <script src="/socket.io/socket.io.js" type="text/javascript">
