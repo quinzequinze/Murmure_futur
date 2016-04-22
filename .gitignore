@@ -7,3 +7,5 @@ node_modules
 /static/db
 
 static/js/theme.js
+
+*.json
