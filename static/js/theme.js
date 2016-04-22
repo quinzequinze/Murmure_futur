@@ -88,6 +88,7 @@ instal.theme = (function(window, undefined) {
             list: list,
             closest: closest,
             init: init,
+            sample:sample
         }
     }
     return theme

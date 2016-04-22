@@ -69,7 +69,7 @@ instal.audio = (function(window, undefined) {
         }
 
         function randomLoop(audioNode) {
-            var delay = randomInt(0, 1000)
+            var delay = randomInt(1000, 4000)
             audioNode.source = a.context.createBufferSource()
             audioNode.source.buffer = audioNode.buffer
             audioNode.source.connect(audioNode.volume)
@@ -79,23 +79,23 @@ instal.audio = (function(window, undefined) {
             }, (audioNode.source.buffer.duration * 1000) + delay)
         }
 
-        function fadeOut(duration) {
+        function fadeOut(duration, _sample) {
             defaultGain = 0
-            for (var key in sample) {
+            for (var key in _sample) {
                 var currentTime = a.context.currentTime
                 var fadeTime = currentTime + duration
-                sample[key].volume.gain.setValueAtTime(sample[key].volume.gain.value, currentTime)
-                sample[key].volume.gain.linearRampToValueAtTime(0, fadeTime)
+                _sample[key].volume.gain.setValueAtTime(_sample[key].volume.gain.value, currentTime)
+                _sample[key].volume.gain.linearRampToValueAtTime(0, fadeTime)
             }
         }
 
-        function fadeIn(duration) {
+        function fadeIn(duration,_sample) {
             defaultGain = 1
-            for (var key in sample) {
+            for (var key in _sample) {
                 var currentTime = a.context.currentTime
                 var fadeTime = currentTime + duration
-                sample[key].volume.gain.setValueAtTime(sample[key].volume.gain.value, currentTime)
-                sample[key].volume.gain.linearRampToValueAtTime(1, fadeTime)
+                _sample[key].volume.gain.setValueAtTime(_sample[key].volume.gain.value, currentTime)
+                _sample[key].volume.gain.linearRampToValueAtTime(1, fadeTime)
             }
         }
 

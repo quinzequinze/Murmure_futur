@@ -66,17 +66,17 @@ var state = StateMachine.create({
             document.body.removeEventListener("touchstart", getTheme, false)
         },
         onenteryear: function() {
-            year.init()
-            year.loadSound()
-            if (map) {
-                //map.drawYear()
-            }
-            logicItems.active = year.active
-            logicItems.setGain = year.setGain
-            document.body.addEventListener("mousedown", getYear, false)
-            document.body.addEventListener("touchstart", getYear, false)
-
-
+            audio.sfx.introduction = audio.loadSound('year.m4a', function() {
+                year.init()
+                year.loadSound()
+                if (map) {
+                    //map.drawYear()
+                }
+                logicItems.active = year.active
+                logicItems.setGain = year.setGain
+                document.body.addEventListener("mousedown", getYear, false)
+                document.body.addEventListener("touchstart", getYear, false)
+            })
         },
         onleaveyear: function() {
             if (year) {
@@ -88,7 +88,7 @@ var state = StateMachine.create({
             document.body.removeEventListener("touchstart", getYear, false)
         },
         onenterexploration: function() {
-            audio.fadeIn(3)
+            audio.fadeIn(3, audio.sample)
             exploration.init()
             logicItems.collect = exploration.collect
         },
@@ -96,6 +96,8 @@ var state = StateMachine.create({
             if (logicItems.collect) {
                 delete logicItems.collect
             }
+                        audio.fadeOut(3, audio.sample)
+
             exploration.disallowRecording()
         },
         onenterstate: function() {
@@ -108,20 +110,18 @@ var state = StateMachine.create({
                 socket.emit('stateChange', status)
             }
         },
-
     }
 })
 
 function getTheme() {
+
     document.body.removeEventListener("mousedown", getTheme, false)
     document.body.removeEventListener("touchstart", getTheme, false)
-
     prompt("theme", theme.closest(), "ThemeYep.m4a", "ThemeBof.m4a")
 }
 
 function getYear() {
     document.body.removeEventListener("mousedown", getYear, false)
     document.body.removeEventListener("touchstart", getYear, false)
-
     prompt("year", year.active().name, "Exploration.m4a", "EpoqueBof.m4a")
 }
