@@ -8,12 +8,13 @@ node_modules
 
 static/js/theme.js
 
-*.json
-
 static/db/user.json
 
 static/db/theme.json
 
 static/db/sound.json
+
+static/db/state.json
+
 
 static/db/state.json
