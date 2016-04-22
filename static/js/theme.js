@@ -9,15 +9,9 @@ instal.theme = (function(window, undefined) {
                 y: 1
             },
             Guerre: {
-<<<<<<< HEAD
-                x: 0.2,
-                y: 0.9
-=======
                 x: 1,
                 y: 0
->>>>>>> years
             },
-            
             Temps: {
                 x: 0.3,
                 y: 0.8
@@ -48,11 +42,6 @@ instal.theme = (function(window, undefined) {
             },
             */
             Mode: {
-<<<<<<< HEAD
-                x: 1,
-                y: 0.1
-            },
-=======
                 x: 0.5,
                 y: 0.4
             },
@@ -61,8 +50,6 @@ instal.theme = (function(window, undefined) {
                 x: 0,
                 y: 0
             }
-            
->>>>>>> years
         }
 
         function init() {

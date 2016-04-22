@@ -44,27 +44,21 @@ var state = StateMachine.create({
         onentertheme: function() {
             theme.init()
             theme.loadSound()
-<<<<<<< HEAD
-            map.drawTheme()
-            logicItems.themeCheck = theme.closest
-            document.body.addEventListener("mousedown", chooseTheme, false)
-            document.body.addEventListener("touchstart", chooseTheme, false)
-            console.log("onentertheme-cym")
-=======
+
             if (map) {
                 map.drawTheme()
             }
             logicItems.theme = theme.closest
             document.body.addEventListener("mousedown", getTheme, false)
             document.body.addEventListener("touchstart", getTheme, false)
->>>>>>> years
+
         },
         onleavetheme: function() {
             if (theme) {
                 delete theme
                 delete logicItems.theme
             }
-            if(map){
+            if (map) {
                 map.removeTheme()
             }
         },
