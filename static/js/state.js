@@ -17,7 +17,7 @@ var state = StateMachine.create({
         to: 'theme'
     }, {
         name: 'toPrompt',
-        from: 'theme',
+        from: '*',
         to: 'prompt'
     }, {
         name: 'toYear',
@@ -63,6 +63,7 @@ var state = StateMachine.create({
             }
         },
         onenteryear: function() {
+            console.log("onenteryear")
             year.init()
             year.loadSound()
             if (map) {
@@ -106,18 +107,23 @@ var state = StateMachine.create({
             yes.onclick = function() {
                 console.log("yes")
                 console.log(theme.closest())
+                state.toYear()
                 // socket.emit('validate', player.dataset.sound)
                 // var valid = document.getElementById(player.dataset.sound)
                 // validator.classList.add('hidden')
             }
             no.onclick = function() {
-                console.log("yes")
+                console.log("no")
                 console.log(theme.closest())
+                state.toTheme()
                 // socket.emit('invalidate', player.dataset.sound)
                 // validator.classList.add('hidden')
             }
-            console.log(theme.closest())
         },
+        onleaveprompt: function() {
+            var validator = document.getElementById("validator")
+            validator.classList.add('hidden')
+        }
         
     }
 })
@@ -183,10 +189,12 @@ function endRecord() {
 
 function getTheme() {
     console.log(theme.closest())
+    document.body.removeEventListener("mousedown", getYear, false)
+    document.body.removeEventListener("touchstart", getYear, false)
     state.toPrompt()
 }
 
 function getYear() {
     console.log(year.active())
-    toPrompt()
+    state.toPrompt()
 }
