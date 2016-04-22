@@ -1,4 +1,3 @@
-const root = 'breal.local:4000'
 var config
 var inited = false
 var user = {}
