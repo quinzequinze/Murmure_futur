@@ -1,0 +1,113 @@
+#status {
+    font-size: 30px;
+    text-align: center;
+    color: #FFBB00;
+    margin: auto;
+    vertical-align: middle;
+}
+#collection {
+    font-size: 30px;
+    text-align: center;
+    color: #FFBB00;
+    margin: auto;
+    vertical-align: middle;
+}
+
+#thematique {
+    font-size: 30px;
+    text-align: center;
+    color: #FFBB00;
+    margin: auto;
+    vertical-align: middle;
+}
+
+#map {
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    margin: 0;
+    position: absolute;
+    left: 0;
+    top:0;
+
+}
+
+.user {
+    width: 40px;
+    height: 40px;
+    background: #ccc;
+    position: absolute;
+    font-size: 20px;
+    text-align: center;
+    line-height: 40px;
+    color: #F3EFE0;
+    left: 0;
+    top: 0;
+    overflow: hidden;
+    transform: translate(-50%, -50%);
+    z-index: 100;
+    transition: background 400ms;
+    cursor: pointer;
+}
+
+
+
+
+.active {
+    background: #FFBB00;
+}
+
+.sound {
+    width: 130px;
+    height: 130px;
+    position: absolute;
+    left: 0;
+    top: 0;
+    transform: translate(-50%, -50%);
+    background: url(sound.svg);
+    background-position: center;
+    transition: opacity 400ms;
+       cursor: pointer;
+}
+
+.sound:hover {
+    opacity: 0.5;
+    transition: opacity 400ms;
+}
+
+.angle{
+    width: 8px;
+    height: 8px;
+    background: #ccc;
+    position: absolute;
+    color: #F3EFE0;
+    left: 0;
+    top: 0;
+    overflow: hidden;
+    transform: translate(-50%, -50%);
+    z-index: 100;
+    transition: background 400ms;
+    cursor: pointer;
+}
+
+.circle {
+    border-radius: 50%;
+}
+
+
+
+.theme {
+    width: 10px;
+    height: 10px;
+    background: red;
+    position: absolute;
+    font-size: 20px;
+    text-align: center;
+    line-height: 40px;
+    color: #F3EFE0;
+    left: 0;
+    top: 0;
+    transform: translate(-50%, -50%);
+    z-index: 99999;
+    transition: background 400ms;
+}

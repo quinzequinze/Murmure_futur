@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta content="width=device-width, initial-scale=1" name="viewport">
+            <title>
+                LARIDME MASTER
+            </title>
+            <link href="style.css" rel="stylesheet" type="text/css"/>
+            <link href="master.css" rel="stylesheet" type="text/css"/>
+        </meta>
+    </head>
+    <body>
+        <div id="masterMap">
+        </div>
+        <progress id="seekbar" max="1" value="0">
+        </progress>
+        <audio autoplay="" id="player" ontimeupdate="udpateProgress()" src="">
+        </audio>
+        <div class="hidden" id="validator">
+            <div id="yes">KEEP
+            </div>
+            <div id="no">TRASH
+            </div>
+        </div>
+        <div class="hidden" id="manager">
+        <span>tag id </span>
+            <div id="id" class='mfield'>
+            </div>
+               <span>uuid </span>
+            <div id="uuid" class='mfield'>
+            </div>
+                   <span>sample</span>
+            <div id="hasSound" class='mfield'>
+            </div>
+            <div id="end">END SESSION
+            </div>
+        </div>
+    </body>
+</html>
+<script src="/socket.io/socket.io.js" type="text/javascript">
+</script>
+<script src="audio.js">
+</script>
+<script src="master.js">
+</script>
