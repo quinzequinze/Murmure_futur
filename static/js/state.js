@@ -44,19 +44,21 @@ var state = StateMachine.create({
         onentertheme: function() {
             theme.init()
             theme.loadSound()
+
             if (map) {
                 map.drawTheme()
             }
             logicItems.theme = theme.closest
             document.body.addEventListener("mousedown", getTheme, false)
             document.body.addEventListener("touchstart", getTheme, false)
+
         },
         onleavetheme: function() {
             if (theme) {
                 delete theme
                 delete logicItems.theme
             }
-            if(map){
+            if (map) {
                 map.removeTheme()
             }
         },
@@ -94,6 +96,9 @@ var state = StateMachine.create({
                 status.state = state.current
                 socket.emit('stateChange', status)
             }
+        },
+        onenterprompt: function() {
+            ///CYMMMM
         }
     }
 })

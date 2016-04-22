@@ -1,6 +1,6 @@
 //http://patorjk.com/software/taag/#p=display&v=0&f=Block&t=SOMETHING`
 //constantes
-const root = 'vigo.local:4000'
+const root = 'breal.local:4000'
     //globals
 var TAG_ID = TAG_ID || 0;
 var battery, init, config

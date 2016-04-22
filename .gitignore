@@ -5,3 +5,14 @@ node_modules
 *.json
 
 /static/db
+
+static/js/theme.js
+
+static/db/user.json
+
+static/db/theme.json
+
+static/db/sound.json
+
+static/db/state.json
+
