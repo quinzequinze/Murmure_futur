@@ -4,7 +4,6 @@ instal.audio = (function(window, undefined) {
         'use strict';
         var sample = {}
         var sfx = {}
-        var theme = {}
         var defaultGain = 0
         var a = {}
         window.AudioContext = window.AudioContext || window.webkitAudioContext
@@ -121,7 +120,6 @@ instal.audio = (function(window, undefined) {
         }
         return {
             sample: sample,
-            theme: theme,
             listener: a.context.listener,
             fadeIn: fadeIn,
             fadeOut: fadeOut,
