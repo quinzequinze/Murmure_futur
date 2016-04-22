@@ -63,7 +63,6 @@ var state = StateMachine.create({
             }
         },
         onenteryear: function() {
-            console.log("onenteryear")
             year.init()
             year.loadSound()
             if (map) {
@@ -73,6 +72,8 @@ var state = StateMachine.create({
             logicItems.setGain = year.setGain
             document.body.addEventListener("mousedown", getYear, false)
             document.body.addEventListener("touchstart", getYear, false)
+
+
         },
         onleaveyear: function() {
             if (year) {
@@ -100,22 +101,21 @@ var state = StateMachine.create({
                 socket.emit('stateChange', status)
             }
         },
-        
-        
+
+
     }
 })
 
-
 function getTheme() {
-    //put in theme module
-    // console.log(theme.closest())
-    // document.body.removeEventListener("mousedown", getTheme, false)
-    // document.body.removeEventListener("touchstart", getTheme, false)
-    
-    prompt("theme",theme.closest(),"ThemeYep.m4a","ThemeBof.m4a")
+    document.body.removeEventListener("mousedown", getTheme, false)
+    document.body.removeEventListener("touchstart", getTheme, false)
+
+    prompt("theme", theme.closest(), "ThemeYep.m4a", "ThemeBof.m4a")
 }
 
 function getYear() {
-    console.log(year.active())
-    state.toPrompt()
+    document.body.removeEventListener("mousedown", getYear, false)
+    document.body.removeEventListener("touchstart", getYear, false)
+
+    prompt("year", year.active().name, "Exploration.m4a", "EpoqueBof.m4a")
 }
