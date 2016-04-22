@@ -4,8 +4,7 @@ node_modules
 
 *.json
 
-*.json
-
 static/db/user.json
 
 static/db/state.json
+I
