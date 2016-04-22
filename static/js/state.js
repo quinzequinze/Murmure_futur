@@ -30,7 +30,10 @@ var state = StateMachine.create({
             document.body.addEventListener("mousedown", starter, false)
             document.body.addEventListener("touchstart", starter, false)
         },
-        onleavewait: function() {},
+        onleavewait: function() {
+            document.body.removeEventListener("mousedown", starter, false)
+            document.body.removeEventListener("touchstart", starter, false)
+        },
         onenterintroduction: function() {
             audio.sfx.introduction = audio.loadSound('introduction.m4a', function() {
                 state.toTheme()
@@ -44,14 +47,12 @@ var state = StateMachine.create({
         onentertheme: function() {
             theme.init()
             theme.loadSound()
-
             if (map) {
                 map.drawTheme()
             }
             logicItems.theme = theme.closest
             document.body.addEventListener("mousedown", getTheme, false)
             document.body.addEventListener("touchstart", getTheme, false)
-
         },
         onleavetheme: function() {
             if (theme) {
@@ -61,6 +62,8 @@ var state = StateMachine.create({
             if (map) {
                 map.removeTheme()
             }
+            document.body.removeEventListener("mousedown", getTheme, false)
+            document.body.removeEventListener("touchstart", getTheme, false)
         },
         onenteryear: function() {
             console.log("onenteryear")
@@ -76,19 +79,23 @@ var state = StateMachine.create({
         },
         onleaveyear: function() {
             if (year) {
-                delete year
+                year.clear()
                 delete logicItems.year
                 delete logicItems.setGain
             }
+            document.body.removeEventListener("mousedown", getYear, false)
+            document.body.removeEventListener("touchstart", getYear, false)
         },
         onenterexploration: function() {
             audio.fadeIn(3)
+            exploration.init()
             logicItems.collect = exploration.collect
         },
         onleaveexploration: function() {
-            if (logicItems.collectionCheck) {
-                delete logicItems.collectionCheck
+            if (logicItems.collect) {
+                delete logicItems.collect
             }
+            exploration.disallowRecording()
         },
         onenterstate: function() {
             if (state) {
@@ -110,26 +117,24 @@ var state = StateMachine.create({
                 console.log("yes")
                 console.log(theme.closest())
                 state.toYear()
-                // socket.emit('validate', player.dataset.sound)
-                // var valid = document.getElementById(player.dataset.sound)
-                // validator.classList.add('hidden')
+                    // socket.emit('validate', player.dataset.sound)
+                    // var valid = document.getElementById(player.dataset.sound)
+                    // validator.classList.add('hidden')
             }
             no.onclick = function() {
                 console.log("no")
                 console.log(theme.closest())
                 state.toTheme()
-                // socket.emit('invalidate', player.dataset.sound)
-                // validator.classList.add('hidden')
+                    // socket.emit('invalidate', player.dataset.sound)
+                    // validator.classList.add('hidden')
             }
         },
         onleaveprompt: function() {
             var validator = document.getElementById("validator")
             validator.classList.add('hidden')
         }
-        
     }
 })
-
 
 function getTheme() {
     console.log(theme.closest())

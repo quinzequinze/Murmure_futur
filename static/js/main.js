@@ -12,7 +12,7 @@ var logicItems = {}
 var audio = instal.audio()
 var map = instal.map()
 var theme = instal.theme()
-var year = instal.year()
+var year
 var exploration = instal.exploration()
 var deviceOrientation = instal.deviceOrientation()
     //var ui = instal.ui()
@@ -192,7 +192,6 @@ function reset() {
         clearTimeout(audio.sfx[key].timeOut)
     }
     audio.sfx = {}
-    disallowRecording()
     state.toWait()
     audio.fadeOut(0.5)
 }

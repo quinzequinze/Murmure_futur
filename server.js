@@ -4,7 +4,7 @@ var config = {
         'ROOM_WIDTH': 6.1,
         'ROOM_LENGTH': 4.5,
         'ORIENTATION_OFFSET': -42,
-        'MAX_COLLECTION': 0
+        'MAX_COLLECTION': 2
     }
     //modules 
 const express = require('express')
