@@ -120,7 +120,7 @@ function updateSound(_sound) {
             delete audio.sample[key]
         }
     }
-    if (map) {
+    if (map && state.current == 'exploration') {
         map.drawSound()
     }
 }
