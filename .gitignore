@@ -9,3 +9,5 @@ node_modules
 static/js/theme.js
 
 *.json
+
+static/db/user.json
