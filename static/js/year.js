@@ -8,9 +8,6 @@ instal.year = (function(window, undefined) {
 
         function init() {
             length = config.ROOM_WIDTH < config.ROOM_LENGTH ? config.ROOM_LENGTH : config.ROOM_WIDTH
-        }
-
-        function loadSound() {
             for (var i = 0; i < list.length; i++) {
                 sample[i] = audio.loadSound(list[i] + '.m4a')
                 sample[i].source.loop = true
@@ -49,7 +46,7 @@ instal.year = (function(window, undefined) {
             return y
         }
 
-        function clear() {
+        function kill() {
             for (var key in sample) {
                 if (sample[key].source) {
                     sample[key].source.disconnect()
@@ -57,15 +54,14 @@ instal.year = (function(window, undefined) {
                 clearTimeout(sample[key].timeOut)
             }
         }
-
         return {
             loadSound: loadSound,
             setGain: setGain,
             list: list,
             active: active,
             init: init,
-            clear: clear,
-            sample:sample
+            kill: kill,
+            sample: sample
         }
     }
     return year

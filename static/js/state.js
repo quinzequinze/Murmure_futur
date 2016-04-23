@@ -46,7 +46,6 @@ var state = StateMachine.create({
         },
         onentertheme: function() {
             theme.init()
-            theme.loadSound()
             if (map) {
                 map.drawTheme()
             }
@@ -80,7 +79,7 @@ var state = StateMachine.create({
         },
         onleaveyear: function() {
             if (year) {
-                year.clear()
+                year.kill()
                 delete logicItems.year
                 delete logicItems.setGain
             }
