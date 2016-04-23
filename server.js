@@ -50,11 +50,11 @@ app.use(express.static(__dirname + '/static/css'))
 app.use(express.static(__dirname + '/static/js'))
 app.use(express.static(__dirname + '/static/img'))
 app.use(express.static(__dirname + '/static/font'))
-app.use(express.static(__dirname + '/static/sample'))
 app.use(express.static(__dirname + '/static/lib'))
-app.use(express.static(__dirname + '/static/sound'))
-app.use(express.static(__dirname + '/static/theme'))
-app.use(express.static(__dirname + '/static/year'))
+app.use(express.static(__dirname + '/static/sound/sfx'))
+app.use(express.static(__dirname + '/static/sound/sample'))
+app.use(express.static(__dirname + '/static/sound/theme'))
+app.use(express.static(__dirname + '/static/sound/year'))
     //
 app.get('/', function(req, res) {
     res.sendFile(__dirname + '/laridme.html')
@@ -129,9 +129,14 @@ client.on('connection', function(socket) {
     socket.on('uploadSound', writeSound)
     socket.on('identify', identify)
     socket.on('stateChange', stateChange)
+    socket.on('choice', choice)
     socket.on('disconnect', disconnected)
 })
 
+function choice(_choice){
+db('choice').set(user[_choice.id],{theme:_choice.theme, year:_choice.year})
+console.log(_choice)
+}
 function identify(id) {
     this.join(id)
     var p = {}
@@ -167,7 +172,7 @@ function stateChange(data) {
 function writeSound(data) {
     var id = data.id;
     if (user[id] && tag[id]) {
-        fs.writeFile(__dirname + '/static/sample/' + user[id] + '.m4a', data.buffer, 'hex')
+        fs.writeFile(__dirname + '/static/sound/sample/' + user[id] + '.m4a', data.buffer, 'hex')
         if (sound[user[id]]) {
             client.emit('removeSound', user[id])
             console.log(colors.client('#client [override sound]'))

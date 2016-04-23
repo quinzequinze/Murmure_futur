@@ -20,7 +20,7 @@
 
 body {
     height:100%;
-    background: #F3EFE0;
+    background: black;
     font-family: Mark;
     font-size: 124px;
     font-weight: 200;
@@ -30,6 +30,8 @@ body {
     -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
     overflow: hidden;
     cursor: default;
+        transition: background 800ms;
+
 }
 
 html{

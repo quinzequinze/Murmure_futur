@@ -1,6 +1,6 @@
 //http://patorjk.com/software/taag/#p=display&v=0&f=Block&t=SOMETHING`
 //constantes
-    //globals
+//globals
 var TAG_ID = TAG_ID || 0;
 var battery, init, config
 var user = {}
@@ -8,6 +8,7 @@ var inited = false
 var tag = {}
 var sound = {}
 var logicItems = {}
+var choice = {}
     //modules 
 var audio = instal.audio()
 var map = instal.map()
@@ -71,11 +72,10 @@ function init(_data) {
     if (inited) return
     config = _data
     deviceOrientation.setOffset(config.ORIENTATION_OFFSET)
-    if (map) {
+    if (typeof map !== 'undefined') {
         map.init()
     }
     inited = true
-
 }
 
 function updateBattery() {
@@ -88,7 +88,7 @@ function updateTag(_tag) {
     if (typeof tag[TAG_ID] !== 'undefined') {
         audio.listener.setPosition(tag[TAG_ID].x, tag[TAG_ID].y, tag[TAG_ID].z)
     }
-    if (map) {
+    if (typeof map !== 'undefined') {
         map.drawTag(_tag)
     }
 }
@@ -120,7 +120,7 @@ function updateSound(_sound) {
             delete audio.sample[key]
         }
     }
-    if (map && state.current == 'exploration') {
+    if (typeof map !== 'undefined' && state.current == 'exploration') {
         map.drawSound()
     }
 }

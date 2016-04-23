@@ -5,10 +5,12 @@ instal.exploration = (function(window, undefined) {
         var collected = new Set()
         var minDist = 1.5
         var canRecord = false
+        var MaxCollection = 1
+                    allowRecording()
 
-function init(){
-    collected = new Set()
-}
+        function init() {
+            collected = new Set()
+        }
 
         function collect() {
             var c = closestSound()
@@ -17,12 +19,10 @@ function init(){
                 var collection = document.getElementById('collection')
                 collection.textContent = "collection: " + collected.size
             }
-            if (collected.size >= config.MAX_COLLECTION && canRecord == false) {
-                console.log(config.MAX_COLLECTION)
-                console.log(collected.size)
-                audio.fadeOut(2,audio.sample)
+            if (collected.size >= MaxCollection && canRecord == false) {
+                audio.fadeOut(2, audio.sample)
                 canRecord = true
-                audio.sfx.instruction = audio.loadSound('record.m4a', function() {
+                audio.sfx.instruction = audio.loadSound('record.m4a', false, function() {
                     allowRecording()
                 })
             }
@@ -52,7 +52,7 @@ function init(){
         }
 
         function endRecord() {
-            audio.fadeIn(2,audio.sample)
+            audio.fadeIn(2, audio.sample)
             document.body.style.background = '#F3EFE0'
             window.webkit.messageHandlers.scriptMessageHandler.postMessage('endRecord')
             event.preventDefault()
@@ -60,7 +60,7 @@ function init(){
         return {
             collect: collect,
             init: init,
-            disallowRecording:disallowRecording
+            disallowRecording: disallowRecording
         }
     }
     return exploration

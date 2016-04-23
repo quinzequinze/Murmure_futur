@@ -119,3 +119,9 @@
     z-index: 99999;
     transition: background 400ms;
 }
+
+
+.light{
+    background: white;
+    transition: background 800ms;
+}
