@@ -42,6 +42,7 @@ instal.audio = (function(window, undefined) {
 
         function loadSound3D(soundFileName, loop, callback) {
             var s = {}
+            s.maxDelay = 1000
             s.randomLooping = loop
             s.panner = a.context.createPanner()
             s.panner.refDistance = 1
@@ -69,7 +70,7 @@ instal.audio = (function(window, undefined) {
         }
 
         function randomLoop(audioNode) {
-            var delay = randomInt(1000, 4000)
+            var delay = randomInt(1000, audioNode.maxDelay)
             audioNode.source = a.context.createBufferSource()
             audioNode.source.buffer = audioNode.buffer
             audioNode.source.connect(audioNode.volume)
@@ -89,7 +90,7 @@ instal.audio = (function(window, undefined) {
             }
         }
 
-        function fadeIn(duration,_sample) {
+        function fadeIn(duration, _sample) {
             defaultGain = 1
             for (var key in _sample) {
                 var currentTime = a.context.currentTime
@@ -99,8 +100,14 @@ instal.audio = (function(window, undefined) {
             }
         }
 
-        function loadSound(soundFileName, callback) {
+        function loadSound(soundFileName, loop , callback) {
             var s = {}
+            s.maxDelay = 1000
+            if (!loop) {
+                s.randomLooping = false
+            } else {
+                s.randomLooping = loop
+            }
             s.source = a.context.createBufferSource()
             s.source.loop = false
             s.source.onended = function() {}
@@ -114,6 +121,9 @@ instal.audio = (function(window, undefined) {
                 var delay = s.buffer.duration ? Math.ceil(s.buffer.duration * 1000) + 1000 : 1000
                 if (callback) {
                     s.timeOut = setTimeout(callback, delay)
+                }
+                if (s.randomLooping) {
+                    randomLoop(s)
                 }
             })
             return s

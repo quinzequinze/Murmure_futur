@@ -105,7 +105,6 @@ function init(_config) {
         display.user[i].classList.add('user')
         display.user[i].onclick = function(e) {
             manager.classList.remove('hidden')
-
             manager.dataset.user = this.id
             manager.dataset.uuid = user[this.id]
                console.log(manager.dataset.user)
