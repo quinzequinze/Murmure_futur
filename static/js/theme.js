@@ -55,8 +55,7 @@ instal.theme = (function(window, undefined) {
 
         function init() {
             for (var key in list) {
-                            audio.fadeOut(0.01, audio.sample)
-
+                audio.fadeOut(0.01, audio.sample)
                 list[key].x = list[key].x * config.ROOM_WIDTH
                 list[key].y = list[key].y * config.ROOM_LENGTH
             }
@@ -91,12 +90,11 @@ instal.theme = (function(window, undefined) {
                 }
             }
             if (t.dist > minDist) {
-                document.body.classList.remove('light')
                 thematique.textContent = 'undefined'
+                //document.body.classList.remove('thema')
                 return false
-            } else {
-                document.body.classList.add('light')
             }
+            //document.body.classList.add('thema')
             thematique.textContent = t.name
             return t
         }

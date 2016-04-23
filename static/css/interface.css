@@ -38,6 +38,7 @@
     position: absolute;
     left: 0;
     top: 0;
+    z-index: 99;
 }
 
 .user {
@@ -126,33 +127,75 @@ video::-webkit-media-controls-start-playback-button {
     display: none;
 }
 
-.light {
-    background: white;
-    transition: background 800ms;
+body {
+    background: black;
+    transition: background 1000ms;
 }
 
 #mask {
     position: fixed;
     top: 0;
     left: 0;
+    z-index: 99999999
 }
 
-@keyframes example {
+#light {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    transition: background 1000ms;
+}
+
+.wait {
+    background-color: black;
+    animation-name: wait;
+    animation-duration: 4s;
+    animation-direction: alternate;
+    animation-iteration-count: infinite;
+}
+
+.thema {
+    background: yellow;
+    transition: background 1000ms;
+}
+
+@keyframes wait {
     from {
-        background-color: red;
+        background-color: white;
     }
     to {
-        background-color: yellow;
+        background-color: darkgrey;
     }
 }
 
-
-/* The element to apply the animation to */
-
-body {
-    background-color: red;
-    animation-name: example;
-    animation-duration: 1s;
-     animation-direction: alternate;
+.introduction {
+    animation-name: introduction;
+    animation-duration: 36s;
     animation-iteration-count: infinite;
+}
+
+@keyframes introduction {
+    0% {
+        background: white;
+    }
+    5% {
+        background: black;
+    }
+    90% {
+        background: blue;
+    }
+    95% {
+        background: darkblue;
+    }
+    97% {
+        background: white;
+    }
+    99% {
+        background: darkblue;
+    }
+    100% {
+        background: white;
+    }
 }
