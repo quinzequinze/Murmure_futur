@@ -11,12 +11,12 @@ var logicItems = {}
 var choice = {}
     //modules 
 var audio = instal.audio()
-var map = instal.map()
+var ui = instal.ui()
+//var map = instal.map()
 var theme = instal.theme()
 var year = instal.year()
 var exploration = instal.exploration()
 var deviceOrientation = instal.deviceOrientation()
-    //var ui = instal.ui()
 var socket = io.connect(root + '/client')
     //socket events
 socket.on('init', init)
@@ -105,11 +105,13 @@ function setOrientation(_angles) {
 
 function updateSound(_sound) {
     sound = _sound
+    console.log(sound)
         //load sound if necessary
     for (var key in sound) {
         if (!audio.sample.hasOwnProperty(key)) {
             audio.sample[key] = audio.loadSound3D(key + '.m4a', true)
-            audio.sample[key].panner.setPosition(sound[key].x, sound[key].y, sound[key].z)
+            audio.sample[key].maxDelay = 4000
+            audio.sample[key].panner.setPosition(sound[key].x * config.ROOM_WIDTH, sound[key].y * config.ROOM_LENGTH, 1.70)
         }
     }
     //remove sound that should not be there anymore

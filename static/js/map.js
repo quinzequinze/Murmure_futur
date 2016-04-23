@@ -54,14 +54,18 @@ instal.map = (function(window, undefined) {
             for (var key in display.sound) {
                 display.sound[key].parentNode.removeChild(display.sound[key]);
             }
+            display.sound = {}
             for (var key in sound) {
                 if (!document.getElementById(key)) {
                     display.sound[key] = document.createElement("div")
                     display.sound[key].id = key
                     display.sound[key].classList.add('circle')
                     display.sound[key].classList.add('sound')
-                    display.sound[key].style.top = webUnit(sound[key]).y + 'px'
-                    display.sound[key].style.left = webUnit(sound[key]).x + 'px'
+                    var normal = {}
+                    normal.x = sound[key].x * config.ROOM_WIDTH //UGLY
+                    normal.y = sound[key].y * config.ROOM_LENGTH //UGLY
+                    display.sound[key].style.top = webUnit(normal).y + 'px'
+                    display.sound[key].style.left = webUnit(normal).x + 'px'
                     if (sound[key].valid == true) {
                         display.sound[key].style.backgroundImage = 'url("valid_sound.svg")';
                     }

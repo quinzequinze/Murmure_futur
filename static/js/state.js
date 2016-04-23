@@ -26,7 +26,7 @@ var state = StateMachine.create({
     }],
     callbacks: {
         onenterwait: function() {
-            audio.fadeOut(0.5)
+            audio.fadeOut(0.01, audio.sample)
             document.body.addEventListener("mousedown", starter, false)
             document.body.addEventListener("touchstart", starter, false)
         },
@@ -45,6 +45,7 @@ var state = StateMachine.create({
             }
         },
         onentertheme: function() {
+            
             theme.init()
             if (typeof map !== 'undefined') {
                 map.drawTheme()
@@ -97,6 +98,7 @@ var state = StateMachine.create({
                 delete logicItems.collect
             }
             audio.fadeOut(3, audio.sample)
+
             exploration.disallowRecording()
         },
         onenterstate: function() {

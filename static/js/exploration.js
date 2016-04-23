@@ -6,7 +6,6 @@ instal.exploration = (function(window, undefined) {
         var minDist = 1.5
         var canRecord = false
         var MaxCollection = 1
-                    allowRecording()
 
         function init() {
             collected = new Set()
@@ -20,8 +19,9 @@ instal.exploration = (function(window, undefined) {
                 collection.textContent = "collection: " + collected.size
             }
             if (collected.size >= MaxCollection && canRecord == false) {
-                audio.fadeOut(2, audio.sample)
+                audio.fadeOut(0.01, audio.sample)
                 canRecord = true
+
                 audio.sfx.instruction = audio.loadSound('record.m4a', false, function() {
                     allowRecording()
                 })

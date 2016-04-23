@@ -55,6 +55,8 @@ instal.theme = (function(window, undefined) {
 
         function init() {
             for (var key in list) {
+                            audio.fadeOut(0.01, audio.sample)
+
                 list[key].x = list[key].x * config.ROOM_WIDTH
                 list[key].y = list[key].y * config.ROOM_LENGTH
             }
