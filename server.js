@@ -1,10 +1,9 @@
 var config = {
         'TAG_NUMBER': 6,
-        'SOUND_NUMBER': 12,
-        'ROOM_WIDTH': 6.1,
-        'ROOM_LENGTH': 4.5,
+        'SOUND_NUMBER': 6,
+        'ROOM_WIDTH': 6.1, //grande longueur
+        'ROOM_LENGTH': 4.5, //petite longueur
         'ORIENTATION_OFFSET': -42,
-        'MAX_COLLECTION': 2
     }
     //modules 
 const express = require('express')
@@ -50,11 +49,13 @@ app.use(express.static(__dirname + '/static/css'))
 app.use(express.static(__dirname + '/static/js'))
 app.use(express.static(__dirname + '/static/img'))
 app.use(express.static(__dirname + '/static/font'))
-app.use(express.static(__dirname + '/static/sample'))
 app.use(express.static(__dirname + '/static/lib'))
-app.use(express.static(__dirname + '/static/sound'))
-app.use(express.static(__dirname + '/static/theme'))
-app.use(express.static(__dirname + '/static/year'))
+app.use(express.static(__dirname + '/static/video'))
+app.use(express.static(__dirname + '/static/sound/sfx'))
+app.use(express.static(__dirname + '/static/sound/sample'))
+app.use(express.static(__dirname + '/static/sound/theme'))
+app.use(express.static(__dirname + '/static/sound/year'))
+app.use(express.static(__dirname + '/static/sound/debug'))
     //
 app.get('/', function(req, res) {
     res.sendFile(__dirname + '/laridme.html')
@@ -79,7 +80,7 @@ function querySound() {
     var q = db('sound').keys()
     var s = {}
     if (q.length >= config.SOUND_NUMBER) {
-        for (var i = config.SOUND_NUMBER; i != 0; i--) {
+        for (var i = config.SOUND_NUMBER; i > 0; i--) {
             s[q[q.length - i].toString()] = db('sound').get(q[q.length - i])
         }
     } else {
@@ -129,8 +130,17 @@ client.on('connection', function(socket) {
     socket.on('uploadSound', writeSound)
     socket.on('identify', identify)
     socket.on('stateChange', stateChange)
+    socket.on('choice', choice)
     socket.on('disconnect', disconnected)
 })
+
+function choice(_choice) {
+    db('choice').set(user[_choice.id], {
+        theme: _choice.theme,
+        year: _choice.year
+    })
+    console.log(_choice)
+}
 
 function identify(id) {
     this.join(id)
@@ -167,13 +177,20 @@ function stateChange(data) {
 function writeSound(data) {
     var id = data.id;
     if (user[id] && tag[id]) {
-        fs.writeFile(__dirname + '/static/sample/' + user[id] + '.m4a', data.buffer, 'hex')
+        fs.writeFile(__dirname + '/static/sound/sample/' + user[id] + '.m4a', data.buffer, 'hex')
         if (sound[user[id]]) {
             client.emit('removeSound', user[id])
             console.log(colors.client('#client [override sound]'))
         }
-        sound[user[id]] = tag[id]
+        sound[user[id]] = {
+            x: tag[id].x / config.ROOM_WIDTH,
+            y: tag[id].y / config.ROOM_LENGTH,
+            z: 1.7
+        }
         sound[user[id]].valid = false
+            //
+            console.log('now')
+        soundHandler()
         client.emit('updateSound', sound)
         master.emit('updateSound', sound)
         console.log(colors.client('#client [new sound]'))
@@ -182,6 +199,27 @@ function writeSound(data) {
             db('sound').set([user[id], 'time'], unixTime())
         }
     }
+}
+
+function soundHandler() {
+    while (Object.keys(sound).length > config.SOUND_NUMBER) {
+        console.log('remove')
+        var k = oldestSound()
+        console.log(k)
+        delete sound[k]
+    }
+}
+
+function oldestSound() {
+    var age = null
+    var oldest = {}
+    for (var key in sound) {
+        if (sound[key].time < age || age == null) {
+            age = sound[key].time
+            oldest = key
+        }
+    }
+    return oldest
 }
 
 function disconnected() {

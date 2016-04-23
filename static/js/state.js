@@ -26,7 +26,7 @@ var state = StateMachine.create({
     }],
     callbacks: {
         onenterwait: function() {
-            audio.fadeOut(0.5)
+            audio.fadeOut(0.01, audio.sample)
             document.body.addEventListener("mousedown", starter, false)
             document.body.addEventListener("touchstart", starter, false)
         },
@@ -35,7 +35,7 @@ var state = StateMachine.create({
             document.body.removeEventListener("touchstart", starter, false)
         },
         onenterintroduction: function() {
-            audio.sfx.introduction = audio.loadSound('introduction.m4a', function() {
+            audio.sfx.introduction = audio.loadSound('introduction.m4a',false, function() {
                 state.toTheme()
             })
         },
@@ -45,9 +45,9 @@ var state = StateMachine.create({
             }
         },
         onentertheme: function() {
+            
             theme.init()
-            theme.loadSound()
-            if (map) {
+            if (typeof map !== 'undefined') {
                 map.drawTheme()
             }
             logicItems.theme = theme.closest
@@ -55,32 +55,33 @@ var state = StateMachine.create({
             document.body.addEventListener("touchstart", getTheme, false)
         },
         onleavetheme: function() {
+            console.log("leave theme")
             if (theme) {
+                theme.kill()
                 delete theme
                 delete logicItems.theme
             }
-            if (map) {
+            if (typeof map !== 'undefined') {
                 map.removeTheme()
             }
             document.body.removeEventListener("mousedown", getTheme, false)
             document.body.removeEventListener("touchstart", getTheme, false)
         },
         onenteryear: function() {
-            audio.sfx.introduction = audio.loadSound('year.m4a', function() {
+            //audio.sfx.introduction = audio.loadSound('year.m4a', false, function() {
                 year.init()
-                year.loadSound()
-                if (map) {
+                if (typeof map !== 'undefined') {
                     //map.drawYear()
                 }
                 logicItems.active = year.active
                 logicItems.setGain = year.setGain
                 document.body.addEventListener("mousedown", getYear, false)
                 document.body.addEventListener("touchstart", getYear, false)
-            })
+           // })
         },
         onleaveyear: function() {
             if (year) {
-                year.clear()
+                year.kill()
                 delete logicItems.year
                 delete logicItems.setGain
             }
@@ -96,7 +97,7 @@ var state = StateMachine.create({
             if (logicItems.collect) {
                 delete logicItems.collect
             }
-                        audio.fadeOut(3, audio.sample)
+            audio.fadeOut(3, audio.sample)
 
             exploration.disallowRecording()
         },
@@ -114,10 +115,11 @@ var state = StateMachine.create({
 })
 
 function getTheme() {
-
-    document.body.removeEventListener("mousedown", getTheme, false)
-    document.body.removeEventListener("touchstart", getTheme, false)
-    prompt("theme", theme.closest(), "ThemeYep.m4a", "ThemeBof.m4a")
+    if (theme.closest()) {
+        prompt("theme", theme.closest().name, "ThemeYep.m4a", "ThemeBof.m4a")
+        document.body.removeEventListener("mousedown", getTheme, false)
+        document.body.removeEventListener("touchstart", getTheme, false)
+    }
 }
 
 function getYear() {

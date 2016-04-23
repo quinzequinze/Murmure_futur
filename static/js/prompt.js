@@ -14,7 +14,7 @@ function prompt(_type, _choice, _ackSound, _cancelSound) {
         } else if (_type == "theme") {
             audio.fadeOut(1, theme.sample)
         }
-        audio.sfx.prompt = audio.loadSound('Choix.m4a', function() {
+        audio.sfx.prompt = audio.loadSound('Choix.m4a',false, function() {
             validator.classList.remove('hidden')
             yes.addEventListener("mousedown", validate, false)
             yes.addEventListener("touchstart", validate, false)
@@ -35,11 +35,15 @@ function prompt(_type, _choice, _ackSound, _cancelSound) {
         console.log("yes")
         exit()
             //Emit the validated choice to the server to be written in BD
-        audio.sfx.prompt = audio.loadSound('Validate.m4a', function() {
-            audio.sfx.prompt = audio.loadSound(_ackSound, function() {
+        audio.sfx.prompt = audio.loadSound('Validate.m4a',false, function() {
+            audio.sfx.prompt = audio.loadSound(_ackSound,false, function() {
                 if (_type == "theme") {
+                    choice.theme = _choice
                     state.toYear()
                 } else if (_type == "year") {
+                    choice.year = _choice
+                    choice.id = TAG_ID
+                    socket.emit('choice', choice)
                     state.toExploration()
                 }
             })
@@ -49,8 +53,8 @@ function prompt(_type, _choice, _ackSound, _cancelSound) {
     function cancel() {
         console.log("no")
         exit()
-        audio.sfx.prompt = audio.loadSound('Cancel.m4a', function() {
-            audio.sfx.prompt = audio.loadSound(_cancelSound, function() {
+        audio.sfx.prompt = audio.loadSound('Cancel.m4a',false, function() {
+            audio.sfx.prompt = audio.loadSound(_cancelSound, false, function() {
                 if (_type == "theme") {
                     audio.fadeIn(1, theme.sample)
                     document.body.addEventListener("mousedown", getTheme, false)
@@ -62,5 +66,6 @@ function prompt(_type, _choice, _ackSound, _cancelSound) {
                 }
             })
         })
+    console.log(_choice)
     }
 }

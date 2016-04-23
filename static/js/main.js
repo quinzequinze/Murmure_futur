@@ -1,6 +1,6 @@
 //http://patorjk.com/software/taag/#p=display&v=0&f=Block&t=SOMETHING`
 //constantes
-    //globals
+//globals
 var TAG_ID = TAG_ID || 0;
 var battery, init, config
 var user = {}
@@ -8,14 +8,15 @@ var inited = false
 var tag = {}
 var sound = {}
 var logicItems = {}
+var choice = {}
     //modules 
 var audio = instal.audio()
-var map = instal.map()
+var ui = instal.ui()
+//var map = instal.map()
 var theme = instal.theme()
 var year = instal.year()
 var exploration = instal.exploration()
 var deviceOrientation = instal.deviceOrientation()
-    //var ui = instal.ui()
 var socket = io.connect(root + '/client')
     //socket events
 socket.on('init', init)
@@ -71,11 +72,10 @@ function init(_data) {
     if (inited) return
     config = _data
     deviceOrientation.setOffset(config.ORIENTATION_OFFSET)
-    if (map) {
+    if (typeof map !== 'undefined') {
         map.init()
     }
     inited = true
-
 }
 
 function updateBattery() {
@@ -88,7 +88,7 @@ function updateTag(_tag) {
     if (typeof tag[TAG_ID] !== 'undefined') {
         audio.listener.setPosition(tag[TAG_ID].x, tag[TAG_ID].y, tag[TAG_ID].z)
     }
-    if (map) {
+    if (typeof map !== 'undefined') {
         map.drawTag(_tag)
     }
 }
@@ -105,11 +105,13 @@ function setOrientation(_angles) {
 
 function updateSound(_sound) {
     sound = _sound
+    console.log(sound)
         //load sound if necessary
     for (var key in sound) {
         if (!audio.sample.hasOwnProperty(key)) {
             audio.sample[key] = audio.loadSound3D(key + '.m4a', true)
-            audio.sample[key].panner.setPosition(sound[key].x, sound[key].y, sound[key].z)
+            audio.sample[key].maxDelay = 4000
+            audio.sample[key].panner.setPosition(sound[key].x * config.ROOM_WIDTH, sound[key].y * config.ROOM_LENGTH, 1.70)
         }
     }
     //remove sound that should not be there anymore
@@ -120,7 +122,7 @@ function updateSound(_sound) {
             delete audio.sample[key]
         }
     }
-    if (map) {
+    if (typeof map !== 'undefined' && state.current == 'exploration') {
         map.drawSound()
     }
 }
