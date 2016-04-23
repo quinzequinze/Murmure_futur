@@ -7,14 +7,7 @@ instal.year = (function(window, undefined) {
         var list = ['2017', '2027', '2100', '3000']
 
         function init() {
-            audio.sfx.introduction = audio.loadSound('year.m4a', function() {
-                length = config.ROOM_WIDTH < config.ROOM_LENGTH ? config.ROOM_LENGTH : config.ROOM_WIDTH
-                console.log(length)
-            })
-
-        }
-
-        function loadSound() {
+            length = config.ROOM_WIDTH < config.ROOM_LENGTH ? config.ROOM_LENGTH : config.ROOM_WIDTH
             for (var i = 0; i < list.length; i++) {
                 sample[i] = audio.loadSound(list[i] + '.m4a')
                 sample[i].source.loop = true
@@ -53,7 +46,7 @@ instal.year = (function(window, undefined) {
             return y
         }
 
-        function clear() {
+        function kill() {
             for (var key in sample) {
                 if (sample[key].source) {
                     sample[key].source.disconnect()
@@ -66,7 +59,9 @@ instal.year = (function(window, undefined) {
             setGain: setGain,
             list: list,
             active: active,
-            init: init
+            init: init,
+            kill: kill,
+            sample: sample
         }
     }
     return year

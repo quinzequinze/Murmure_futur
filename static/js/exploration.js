@@ -6,6 +6,10 @@ instal.exploration = (function(window, undefined) {
         var minDist = 1.5
         var canRecord = false
 
+function init(){
+    collected = new Set()
+}
+
         function collect() {
             var c = closestSound()
             if (c.dist < minDist && !collected.has(c.id)) {
@@ -16,7 +20,7 @@ instal.exploration = (function(window, undefined) {
             if (collected.size >= config.MAX_COLLECTION && canRecord == false) {
                 console.log(config.MAX_COLLECTION)
                 console.log(collected.size)
-                audio.fadeOut(2)
+                audio.fadeOut(2,audio.sample)
                 canRecord = true
                 audio.sfx.instruction = audio.loadSound('record.m4a', function() {
                     allowRecording()
@@ -29,7 +33,7 @@ instal.exploration = (function(window, undefined) {
             document.body.addEventListener("touchstart", beginRecord, false)
             document.body.addEventListener("mouseup", endRecord, false)
             document.body.addEventListener("touchend", endRecord, false)
-            audio.fadeIn(2)
+            audio.fadeIn(2, audio.sample)
         }
 
         function disallowRecording() {
@@ -41,21 +45,22 @@ instal.exploration = (function(window, undefined) {
         }
 
         function beginRecord() {
-            audio.fadeOut(0.4)
+            audio.fadeOut(0.4, audio.sample)
             document.body.style.background = 'white'
             window.webkit.messageHandlers.scriptMessageHandler.postMessage('beginRecord')
             event.preventDefault()
         }
 
         function endRecord() {
-            audio.fadeIn(2)
+            audio.fadeIn(2,audio.sample)
             document.body.style.background = '#F3EFE0'
             window.webkit.messageHandlers.scriptMessageHandler.postMessage('endRecord')
             event.preventDefault()
         }
         return {
             collect: collect,
-            init: init
+            init: init,
+            disallowRecording:disallowRecording
         }
     }
     return exploration
