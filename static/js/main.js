@@ -14,7 +14,7 @@ var choice = {}
     //modules 
 var audio = instal.audio()
 var ui = instal.ui()
-    //var map = instal.map()
+    var map = instal.map()
 var theme = instal.theme()
 var year = instal.year()
 var exploration = instal.exploration()

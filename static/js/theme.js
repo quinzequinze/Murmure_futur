@@ -57,19 +57,15 @@ instal.theme = (function(window, undefined) {
 
         function init() {
             for (var key in list) {
-                audio.fadeOut(0.01, audio.sample)
-                list[key].x = list[key].x * config.ROOM_WIDTH
-                list[key].y = list[key].y * config.ROOM_LENGTH
-            }
-            for (var key in list) {
                 sample[key] = audio.loadSound3D(key + '.m4a', true)
                 sample[key].maxDelay = 4000
-                sample[key].panner.setPosition(list[key].x, list[key].y, 0)
+                sample[key].panner.setPosition(list[key].x * config.ROOM_WIDTH, list[key].y * config.ROOM_LENGTH, 0)
                 sample[key].volume.gain.value = 1
             }
         }
 
         function kill() {
+            console.log(sample)
             for (var key in sample) {
                 if (sample[key].source) {
                     sample[key].source.disconnect()
@@ -93,7 +89,7 @@ instal.theme = (function(window, undefined) {
             var thematique = document.getElementById('thematique')
             for (var key in list) {
                 if (typeof tag[TAG_ID] !== 'undefined') {
-                    var distance = dist(tag[TAG_ID].x, tag[TAG_ID].y, list[key].x, list[key].y)
+                    var distance = dist(tag[TAG_ID].x, tag[TAG_ID].y, list[key].x * config.ROOM_WIDTH, list[key].y * config.ROOM_LENGTH)
                     if (distance < t.dist || typeof t.dist == 'undefined') {
                         t.dist = distance
                         t.name = key

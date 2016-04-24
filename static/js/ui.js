@@ -4,7 +4,7 @@ instal.ui = (function(window, undefined) {
         light.id = 'light'
         document.body.appendChild(light)
         var mask = document.getElementById('mask')
-        mask.display = 'none'
+        mask.style.display = 'none'
 
         function ui() {
             function wait(boolean) {
@@ -48,8 +48,7 @@ instal.ui = (function(window, undefined) {
                         light.classList.remove('exploration')
                     }
                 } else if (_boolean) {
-                    light.style.backgroundColor = 'hsl(194,' + _sound * 100 + '%,' + _tag * 100 + '%)'
-                    console.log('azfazf')
+                    //light.style.backgroundColor = 'hsl(194,' + _sound * 100 + '%,' + _tag * 100 + '%)'
                 }
             }
 

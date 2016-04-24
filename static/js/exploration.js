@@ -5,7 +5,7 @@ instal.exploration = (function(window, undefined) {
         var collected = new Set()
         var minDist = 1.5
         var canRecord = false
-        var MaxCollection = 0
+        var MaxCollection = 3
         var instruction = false
 
         function init() {

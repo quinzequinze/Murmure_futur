@@ -3,8 +3,9 @@ var config = {
         'SOUND_NUMBER': 6,
         'ROOM_WIDTH': 6.1, //grande longueur
         'ROOM_LENGTH': 4.5, //petite longueur
-        'ORIENTATION_OFFSET': -42,
+        'ORIENTATION_OFFSET': 48 ,
     }
+    //-42 + 90
     //modules 
 const express = require('express')
 const app = require('express')()
@@ -31,7 +32,7 @@ var active_tag_id = [
     8
 ]
 var db = require('origindb')(__dirname + '/static/db')
-const persistence = false
+const persistence = true
     //var piIp = '192.168.1.21'
 const piIp = '192.168.1.88'
 var state = persistence ? queryState() : {}
