@@ -66,6 +66,7 @@ app.get('/debug', function(req, res) {
 app.get('/master', function(req, res) {
     res.sendFile(__dirname + '/master.html')
 })
+
 server.listen(4000, function() {
         console.log(colors.server('#server [listening : localhost:4000]'))
     })
@@ -187,7 +188,7 @@ function writeSound(data) {
             y: tag[id].y / config.ROOM_LENGTH,
             z: 1.7
         }
-        sound[user[id]].valid = false
+        sound[user[id]].valid = null
             //
         console.log('now')
         soundHandler()
@@ -248,9 +249,11 @@ master.on('connection', function(socket) {
     socket.on('validate', validate)
     socket.on('invalidate', invalidate)
     socket.on('endSession', endSession)
+    socket.on('reloadSession', reloadSession)
 })
 
 function validate(_UUID) {
+    console.log(_UUID)
     sound[_UUID].valid = true
     master.emit('updateSound', sound)
     if (persistence) {
@@ -260,6 +263,12 @@ function validate(_UUID) {
 
 function invalidate(_UUID) {
     console.log(_UUID)
+    sound[_UUID].valid = false
+    client.emit('removeSound', _UUID)
+    master.emit('updateSound', sound)
+    if (persistence) {
+        db('sound').set([_UUID, 'valid'], false)
+    }
 }
 
 function endSession(data) {
@@ -275,6 +284,12 @@ function endSession(data) {
     master.emit('updateUser', user)
     master.emit('updateState', state)
 }
+
+function reloadSession(data) {
+    console.log(data)
+    client.to(data.id).emit('reloadSession')
+}
+
 /*                        
  _|        _|_|_|      _|_|_|  
  _|        _|    _|  _|        

@@ -1,18 +1,30 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <meta content="width=device-width, initial-scale=1" name="viewport">
-            <title>
-                LARIDME MASTER
-            </title>
-            <link href="style.css" rel="stylesheet" type="text/css"/>
-            <link href="master.css" rel="stylesheet" type="text/css"/>
+        <!-- <meta content="width=device-width, initial-scale=1" name="viewport"> -->
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="black">
+        <meta name="apple-mobile-web-app-title" content="Full Screen">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, minimal-ui">
+        <title>
+        LARIDME MASTER
+        </title>
+        <link href="style.css" rel="stylesheet" type="text/css"/>
+        <link href="master.css" rel="stylesheet" type="text/css"/>
         </meta>
     </head>
+    <script src="/socket.io/socket.io.js" type="text/javascript">
+    </script>
+    <script src="root.js">
+    </script>
+    <script src="audio.js">
+    </script>
+    <script src="master.js">
+    </script>
     <body>
-        <div id="masterMap">
+        <div class="hidden" id="masterMap">
         </div>
-        <progress id="seekbar" max="1" value="0">
+        <progress class="hidden" id="seekbar" max="1" value="0">
         </progress>
         <audio autoplay="" id="player" ontimeupdate="udpateProgress()" src="">
         </audio>
@@ -22,26 +34,45 @@
             <div id="no">TRASH
             </div>
         </div>
+        <div class ="hidden" id="previous">Previous
+        </div>
         <div class="hidden" id="manager">
-        <span>tag id </span>
+            <span>tag id </span>
             <div id="id" class='mfield'>
             </div>
-               <span>uuid </span>
+            <span>uuid </span>
             <div id="uuid" class='mfield'>
             </div>
-                   <span>sample</span>
+            <span>sample</span>
             <div id="hasSound" class='mfield'>
             </div>
             <div id="end">END SESSION
             </div>
+            <div id="reload">RELOAD SESSION
+            </div>
         </div>
+        <div id="masterSelector">
+            <div id="map"> MAP
+            </div>
+            <div id="user"> USER
+            </div>
+            <div id="sound"> SOUND
+            </div>
+        </div>
+        <script type="text/javascript">
+
+
+            var d = document.getElementById("map")
+            d.onclick = initMap
+
+            d = document.getElementById("user")
+            d.onclick = initUser
+
+            d = document.getElementById("sound")
+            d.onclick = initSound
+
+            d = document.getElementById("previous")
+            d.onclick = getMasterSelector
+        </script>
     </body>
 </html>
-<script src="/socket.io/socket.io.js" type="text/javascript">
-</script>
-<script src="root.js">
-</script>
-<script src="audio.js">
-</script>
-<script src="master.js">
-</script>

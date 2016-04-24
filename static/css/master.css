@@ -2,7 +2,17 @@
     width: 100vw;
     height: 100vh;
     overflow: hidden;
-    margin: 0
+    margin: 0;
+}
+#masterMap #mode{
+    text-align: center;
+    font-size: 16px;
+    color:#FFBB00;
+    top:3%;
+    left:50%;
+    position: absolute;
+    font-size: 24px;
+    font-weight: 600;
 }
 
 .user {
@@ -27,10 +37,10 @@
     background: #FFBB00;
 }
 
-.user:hover {
+/*.user:hover {
     background: #FFAA00;
     transition: background 400ms;
-}
+}*/
 
 .sound {
     width: 130px;
@@ -111,6 +121,85 @@ progress[value]::-webkit-progress-value {
     background: #BBBB00;
 }
 
+#manager #reload {
+    position: relative;
+    color: white;
+    margin: 0;
+    padding: 20px;
+    background: #FFBB00;
+    margin: 20px auto;
+    text-align: center;
+    cursor: pointer;
+}
+
+#manager #reload:hover {
+    background: #BBBB00;
+}
+
+#masterSelector {
+    /*box-shadow: 0p    x 3px 10px 0px #656565;*/
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: left;
+    line-height: 24px;
+    padding: 20px;
+    z-index: 99999999;
+    background: black;
+    color: #FFBB00;
+    width: 90%;
+    width: 90%;
+    font-size: 24px;
+    font-weight: 600;
+}
+
+#masterSelector span {
+    color: black;
+}
+
+#masterSelector #map {
+    position: relative;
+    color: black;
+    margin: 0;
+    padding: 20px;
+    background: #FFBB00;
+    margin: 20px auto;
+    text-align: center;
+    cursor: pointer;
+
+}
+
+#masterSelector #end:hover {
+    background: #BBBB00;
+}
+
+#masterSelector #user {
+    position: relative;
+    color: black;
+    margin: 0;
+    padding: 20px;
+    background: #FFBB00;
+    margin: 20px auto;
+    text-align: center;
+    cursor: pointer;
+}
+
+#masterSelector #sound {
+    position: relative;
+    color: black;
+    margin: 0;
+    padding: 20px;
+    background: #FFBB00;
+    margin: 20px auto;
+    text-align: center;
+    cursor: pointer;
+}
+
+#masterSelector #reload:hover {
+    background: #BBBB00;
+}
+
 .mfield {
     margin-bottom: 10px;
 }
@@ -154,3 +243,20 @@ progress[value]::-webkit-progress-value {
 #validator #no:hover {}
 
 #validator #yes:hover {}
+
+#previous{
+    background: #FFBB00;
+    position: fixed;
+    top: 90%;
+    left: 80%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    font-size: 16px;
+    line-height: 24px;
+    padding: 5px;
+    z-index: 99999999;
+    background: #FFBB00;
+    color: black; 
+    font-size: 24px;
+    font-weight: 600;
+}
