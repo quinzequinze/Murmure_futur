@@ -1,7 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <meta content="width=device-width, initial-scale=1" name="viewport">
+        <!-- <meta content="width=device-width, initial-scale=1" name="viewport"> -->
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="black">
+        <meta name="apple-mobile-web-app-title" content="Full Screen">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, minimal-ui">
         <title>
         LARIDME MASTER
         </title>
@@ -30,6 +34,8 @@
             <div id="no">TRASH
             </div>
         </div>
+        <div class ="hidden" id="previous">Previous
+        </div>
         <div class="hidden" id="manager">
             <span>tag id </span>
             <div id="id" class='mfield'>
@@ -42,28 +48,31 @@
             </div>
             <div id="end">END SESSION
             </div>
+            <div id="reload">RELOAD SESSION
+            </div>
+        </div>
+        <div id="masterSelector">
+            <div id="map"> MAP
+            </div>
+            <div id="user"> USER
+            </div>
+            <div id="sound"> SOUND
+            </div>
         </div>
         <script type="text/javascript">
-            var d = document.createElement('div')
-            d.id = "mapSelector"
-            document.body.appendChild(d)
-            var t = document.createTextNode("Map")
-            d.appendChild(t)
+
+
+            var d = document.getElementById("map")
             d.onclick = initMap
 
-            d = document.createElement('div')
-            d.id = "userSelector"
-            document.body.appendChild(d)
-            var t = document.createTextNode("User")
-            d.appendChild(t)
+            d = document.getElementById("user")
             d.onclick = initUser
 
-            d = document.createElement('div')
-            d.id = "soundSelector"
-            document.body.appendChild(d)
-            var t = document.createTextNode("Sound")
-            d.appendChild(t)
+            d = document.getElementById("sound")
             d.onclick = initSound
+
+            d = document.getElementById("previous")
+            d.onclick = getMasterSelector
         </script>
     </body>
 </html>

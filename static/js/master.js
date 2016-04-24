@@ -21,12 +21,12 @@ socket.on('updateState', updateState)
 function updateTag(_tag) {
     tag = _tag
     if (initedMap) {
-        drawTag()  
+        drawTag()
     }
     if (initedUser) {
-        drawUser()  
+        drawUser()
     }
-   
+
 }
 
 function updateState(_state) {
@@ -43,13 +43,13 @@ function updateSound(_sound) {
     sound = _sound
     updateManager()
     if (initedMap) {
-        drawSound()   
+        drawSound()
     }
     if (initedSound) {
         drawSoundList()
     }
-    
-   
+
+
 }
 
 function drawTag() {
@@ -71,9 +71,26 @@ function drawTag() {
 
 function drawUser() {
     for (var key in display.user) {
+        var d = document.getElementById(key)
+        d.onclick = function(e) {
+            masterMap.onclick = function(eb) {
+                hideValidator()
+            }
+            manager.classList.remove('hidden')
+            manager.dataset.user = this.id
+            manager.dataset.uuid = user[this.id]
+            console.log(manager.dataset.user)
+            if (sound[user[this.id]]) {
+                manager.dataset.hasSound = true
+            } else {
+                manager.dataset.hasSound = false
+            }
+            updateManager()
+            e.stopPropagation()
+        }
         if (tag[key]) {
             display.user[key].classList.remove('hidden')
-            display.user[key].style.top = window.innerHeight/display.user.length*key + 'px'
+            display.user[key].style.top = window.innerHeight / display.user.length * key + 'px'
             display.user[key].style.left = 20 + 'px'
         } else {
             display.user[key].classList.add('hidden')
@@ -94,15 +111,6 @@ function drawSound() {
     for (var key in sound) {
         if (!document.getElementById(key)) {
             display.sound[key] = document.createElement("div")
-            display.sound[key].onmousedown = function(e) {
-                e.stopPropagation()
-                var player = document.getElementById("player")
-                var validator = document.getElementById("validator")
-                validator.classList.add('hidden')
-                player.src = this.id + '.m4a'
-                player.dataset.sound = this.id
-                player.play()
-            }
             display.sound[key].id = key
             display.sound[key].classList.add('circle')
             display.sound[key].classList.add('sound')
@@ -112,7 +120,7 @@ function drawSound() {
 
             display.sound[key].style.top = webUnit(z).y + 'px'
             display.sound[key].style.left = webUnit(z).x + 'px'
-            if (sound[key].valid == true) {
+            if (sound[key].valid != false) {
                 display.sound[key].style.backgroundImage = 'url("valid_sound.svg")';
             }
             masterMap.appendChild(display.sound[key])
@@ -122,9 +130,15 @@ function drawSound() {
 
 function drawSoundList() {
     var masterMap = document.getElementById("masterMap")
+
+    console.log(sound)
+
     for (var key in display.sound) {
-        display.sound[key].parentNode.removeChild(display.sound[key]);
+
+        display.sound[key].parentNode.removeChild(display.sound[key])
     }
+    var i = 0
+
     for (var key in sound) {
         if (!document.getElementById(key)) {
             display.sound[key] = document.createElement("div")
@@ -139,17 +153,20 @@ function drawSoundList() {
             }
             display.sound[key].id = key
             display.sound[key].classList.add('circle')
-            display.sound[key].classList.add('sound')
-            var z = {}
-            z.x = sound[key].x * config.ROOM_WIDTH
-            z.y = sound[key].y * config.ROOM_LENGTH
+            display.sound[key].classList.add('user')
 
-            display.sound[key].style.top = webUnit(z).y + 'px'
-            display.sound[key].style.left = webUnit(z).x + 'px'
-            if (sound[key].valid == true) {
-                display.sound[key].style.backgroundImage = 'url("valid_sound.svg")';
-            }
+            display.sound[key].style.top = (window.innerHeight / Object.keys(sound).length * i + 30) + 'px'
+            display.sound[key].style.left = 20 + 'px'
+            i = i + 1;
+
             masterMap.appendChild(display.sound[key])
+
+            if (sound[key].valid != null) {
+                display.sound[key].classList.add('hidden')
+            }
+
+
+
         }
     }
 }
@@ -163,14 +180,14 @@ function updateManager() {
 
 function initUser() {
     if (initedUser) return
-    activateMasterMap()
+    activateMasterMap("User")
     drawUser()
     initedUser = true
 }
 
 function initSound() {
     if (initedSound) return
-    activateMasterMap()
+    activateMasterMap("Sound")
     var progressbar = document.getElementById('seekbar');
     progressbar.classList.remove("hidden")
     drawSoundList()
@@ -179,7 +196,8 @@ function initSound() {
 
 function initMap() {
     if (initedMap) return
-    activateMasterMap()
+    activateMasterMap("Map")
+    drawSound()
     initedMap = true
 }
 
@@ -189,7 +207,7 @@ function init(_config) {
     var masterMap = document.getElementById("masterMap")
     var manager = document.getElementById("manager")
     var validator = document.getElementById("validator")
-    // 
+        // 
     display.user = []
     display.sound = []
     for (var i = 1; i <= config.TAG_NUMBER; i++) {
@@ -198,55 +216,57 @@ function init(_config) {
         display.user[i].classList.add('circle')
         display.user[i].classList.add('hidden')
         display.user[i].classList.add('user')
-        display.user[i].onclick = function(e) {
-            manager.classList.remove('hidden')
-            manager.dataset.user = this.id
-            manager.dataset.uuid = user[this.id]
-               console.log(manager.dataset.user)
-            if (sound[user[this.id]]) {
-                manager.dataset.hasSound = true
-            } else {
-                manager.dataset.hasSound = false
-            }
-            updateManager()
-            e.stopPropagation()
-        }
+
+        
         masterMap.appendChild(display.user[i])
         display.user[i].textContent = i
     }
 
-    document.body.addEventListener("mousedown", function(e) {
-        validator.classList.add('hidden')
-        manager.classList.add('hidden')
-        e.stopPropagation()}, false)
-    document.body.addEventListener("touchstart", function(e) {
-        validator.classList.add('hidden')
-        manager.classList.add('hidden')
-        e.stopPropagation()}, false)
-
     var end = document.getElementById("end")
     end.onclick = function(e) {
-
         var data = {}
         data.UUID = manager.dataset.uuid
         data.id = manager.dataset.user
         socket.emit('endSession', data)
+        hideValidator()
     }
+
+    var reload = document.getElementById("reload")
+    reload.onclick = function(e) {
+        var data = {}
+        data.UUID = manager.dataset.uuid
+        data.id = manager.dataset.user
+        socket.emit('reloadSession', data)
+        hideValidator()
+    }
+
     inited = true
 }
 
-function activateMasterMap(){
+function hideValidator() {
+    validator.classList.add('hidden')
+    manager.classList.add('hidden')
+}
 
-    var mapSelector = document.getElementById("mapSelector")
-    var userSelector = document.getElementById("userSelector")
-    var soundSelector = document.getElementById("soundSelector")
-    mapSelector.classList.add('hidden')
-    userSelector.classList.add('hidden')
-    soundSelector.classList.add('hidden')
+function activateMasterMap(_mode) {
 
+    var masterSelector = document.getElementById("masterSelector")
+    var previous = document.getElementById("previous")
+
+    var d = document.createElement('div');
+    d.id = 'mode';
+    var modeText = document.createTextNode(_mode)
+    d.appendChild(modeText)
+    masterMap.appendChild(d);
+
+    masterSelector.classList.add('hidden')
     masterMap.classList.remove('hidden')
+    previous.classList.remove('hidden')
 
+}
 
+function getMasterSelector() {
+    location.reload(true)
 }
 
 function webUnit(_tag) {
@@ -262,7 +282,9 @@ function webUnit(_tag) {
 function udpateProgress() {
     var player = document.getElementById('player');
     var progressbar = document.getElementById('seekbar');
-    progressbar.value = player.currentTime / player.duration
+    if (player.duration) {
+        progressbar.value = player.currentTime / player.duration
+    }
     if (progressbar.value == 1) {
         var validator = document.getElementById("validator")
         validator.classList.remove('hidden')
@@ -272,10 +294,12 @@ function udpateProgress() {
             socket.emit('validate', player.dataset.sound)
             var valid = document.getElementById(player.dataset.sound)
             validator.classList.add('hidden')
+            progressbar.value = 0
         }
         no.onclick = function() {
             socket.emit('invalidate', player.dataset.sound)
             validator.classList.add('hidden')
+            progressbar.value = 0
         }
     }
 }
