@@ -178,6 +178,8 @@ function writeSound(data) {
         fs.writeFile(__dirname + '/static/sound/sample/' + user[id] + '.m4a', data.buffer, 'hex')
         if (sound[user[id]]) {
             client.emit('removeSound', user[id])
+            db('sound').set([user[id], 'status'], 'pending')
+            db('sound').set([user[id], 'time'], unixTime())
             console.log(colors.client('#client [override sound]'))
         }
         sound[user[id]] = {
@@ -194,6 +196,7 @@ function writeSound(data) {
         console.log(colors.client('#client [new sound]'))
         if (persistence) {
             db('sound').set(user[id], tag[id])
+            db('sound').set([user[id], 'status'], 'pending')
             db('sound').set([user[id], 'time'], unixTime())
         }
     }

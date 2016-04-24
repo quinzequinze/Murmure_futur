@@ -97,7 +97,7 @@ var state = StateMachine.create({
         },
         onenterexploration: function() {
             //VJM
-           // audio.sfx.introduction = audio.loadSound('exploration.m4a', false, function() {
+            audio.sfx.introduction = audio.loadSound('exploration.m4a', false, function() {
                 exploration.init()
                 audio.fadeIn(6, audio.sample)
                     //
@@ -110,7 +110,7 @@ var state = StateMachine.create({
                     exploration.collect()
                     ui.exploration(exploration.getProximity())
                 }
-           // })
+            })
         },
         onleaveexploration: function() {
             if (logicItems.exploration) {

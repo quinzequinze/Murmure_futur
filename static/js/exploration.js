@@ -39,11 +39,11 @@ instal.exploration = (function(window, undefined) {
             if (collected.size >= maxCollection && !canRecord && !instruction) {
                 instruction = true
                 audio.fadeOut(1, audio.sample)
-               // audio.sfx.instruction = audio.loadSound('record.m4a', false, function() {
+                audio.sfx.instruction = audio.loadSound('record.m4a', false, function() {
                     canRecord = true
                     rec = true
                     audio.fadeIn(3, audio.sample)
-              //  })
+                })
             }
         }
 
