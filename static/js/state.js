@@ -16,10 +16,6 @@ var state = StateMachine.create({
         from: '*',
         to: 'theme'
     }, {
-        name: 'toPrompt',
-        from: '*',
-        to: 'prompt'
-    }, {
         name: 'toYear',
         from: '*',
         to: 'year'
@@ -27,29 +23,32 @@ var state = StateMachine.create({
     callbacks: {
         onenterwait: function() {
             audio.fadeOut(0.01, audio.sample)
+            ui.reset()
             ui.wait(true)
-            eventUp.wait = starter
-
+            eventUp.wait = function() {
+                state.toIntroduction()
+            }
         },
         onleavewait: function() {
             ui.wait(false)
             delete eventUp.wait
-
         },
         onenterintroduction: function() {
+            ui.introduction(true)
             audio.sfx.introduction = audio.loadSound('introduction.m4a', false, function() {
                 state.toTheme()
             })
-            ui.introduction(true)
         },
         onleaveintroduction: function() {
             if (audio.sfx.introduction) {
                 delete audio.sfx.introduction
             }
             ui.introduction(false)
+            console.log("leaveintro")
         },
         onentertheme: function() {
             theme.init()
+            ui.reset()
             eventUp.theme = theme.getTheme
             if (typeof map !== 'undefined') {
                 map.drawTheme()
@@ -75,19 +74,18 @@ var state = StateMachine.create({
             ui.theme(false)
         },
         onenteryear: function() {
-        audio.sfx.year = audio.loadSound('year.m4a', false, function() {
-            year.init()
-            eventUp.year = year.getYear
-            if (typeof map !== 'undefined') {
-                //map.drawYear()
-            }
-            logicItems.year = function() {
-                var a = year.active()
-                year.setGain()
-                ui.year(a)
-            }
-
-         })
+            audio.sfx.year = audio.loadSound('year.m4a', false, function() {
+                year.init()
+                eventUp.year = year.getYear
+                if (typeof map !== 'undefined') {
+                    //map.drawYear()
+                }
+                logicItems.year = function() {
+                    var a = year.active()
+                    year.setGain()
+                    ui.year(a)
+                }
+            })
         },
         onleaveyear: function() {
             if (year) {
@@ -98,28 +96,27 @@ var state = StateMachine.create({
             ui.year(false)
         },
         onenterexploration: function() {
-            audio.fadeIn(3, audio.sample)
-            ui.exploration(true)
-            exploration.init()
-            eventDown.exploration = exploration.beginRecord
-            eventUp.exploration = exploration.endRecord
-            eventDown.ui = ui.beginRecord
-            eventUp.ui = ui.endRecord
-            logicItems.exploration = function() {
-                exploration.collect()
-                if(exploration.canRecord && exploration.instruction){
-                                 var s = closestSound().dist
-                var t = closestTag().dist
-                ui.exploration(true,s,t)   
+            //VJM
+           // audio.sfx.introduction = audio.loadSound('exploration.m4a', false, function() {
+                exploration.init()
+                audio.fadeIn(6, audio.sample)
+                    //
+                eventDown.exploration = exploration.beginRecord
+                eventUp.exploration = exploration.endRecord
+                eventDown.ui = ui.beginRecord
+                eventUp.ui = ui.endRecord
+                    //
+                logicItems.exploration = function() {
+                    exploration.collect()
+                    ui.exploration(exploration.getProximity())
                 }
-
-            }
+           // })
         },
         onleaveexploration: function() {
             if (logicItems.exploration) {
                 delete logicItems.exploration
             }
-            audio.fadeOut(3, audio.sample)
+            audio.fadeOut(1, audio.sample)
             ui.exploration(false)
             delete eventDown.exploration
             delete eventUp.exploration

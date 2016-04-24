@@ -32,7 +32,6 @@ instal.ui = (function(window, undefined) {
             }
 
             function year(_a) {
-                //'rgba(' + 255/_a.step +',255,255 ,' + _a.value + ')'
                 if (_a) {
                     light.style.backgroundColor = 'hsl(194,' + Math.floor(_a.value * 100) + '%,' + Math.floor((_a.step * 100) / 4) + '%)'
                 } else {
@@ -40,30 +39,27 @@ instal.ui = (function(window, undefined) {
                 }
             }
 
-            function exploration(_boolean, _sound, _tag) {
-                if (!_sound && !_tag) {
-                    if (_boolean) {
-                        light.classList.add('exploration')
-                    } else {
-                        light.classList.remove('exploration')
-                    }
-                } else if (_boolean) {
-                    //light.style.backgroundColor = 'hsl(194,' + _sound * 100 + '%,' + _tag * 100 + '%)'
+            function exploration(_boolean) {
+                if (_boolean) {
+                    light.classList.add('exploration')
+                } else {
+                    light.classList.remove('exploration')
                 }
             }
 
             function beginRecord() {
-                console.log('begin')
-                light.classList.add('recording')
-                light.classList.remove('exploration')
+                if (rec) {
+                    light.classList.add('recording')
+                }
             }
 
             function endRecord() {
-                light.classList.remove('recording')
-                light.addEventListener("animationend", function() {
-                    console.log('end')
-                }, false);
-                light.classList.add('exploration')
+                if (rec) {
+                    light.classList.remove('recording')
+                }
+            }
+            function reset(){
+                light.className = "";
             }
             return {
                 wait: wait,
@@ -72,7 +68,8 @@ instal.ui = (function(window, undefined) {
                 year: year,
                 exploration: exploration,
                 beginRecord: beginRecord,
-                endRecord: endRecord
+                endRecord: endRecord,
+                reset:reset
             }
         }
         return ui

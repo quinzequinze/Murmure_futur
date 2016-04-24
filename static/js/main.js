@@ -9,12 +9,12 @@ var tag = {}
 var sound = {}
 var logicItems = {}
 var choice = {}
-                    choice.id = TAG_ID
-
+choice.id = TAG_ID
+var rec  = false
     //modules 
 var audio = instal.audio()
 var ui = instal.ui()
-    var map = instal.map()
+var map = instal.map()
 var theme = instal.theme()
 var year = instal.year()
 var exploration = instal.exploration()
@@ -45,11 +45,6 @@ function reloadSession() {
     location.reload(true)
 }
 
-function starter() {
-    document.body.removeEventListener("mousedown", starter, false)
-    document.body.removeEventListener("touchstart", starter, false)
-    state.toIntroduction()
-}
 
 function setState(_state) {
     switch (_state) {
@@ -123,7 +118,9 @@ function updateSound(_sound) {
     }
     //remove sound that should not be there anymore
     for (var key in audio.sample) {
-        if (!sound.hasOwnProperty(key)) {
+        if (!sound[key]) {
+            console.log('rogue sound : ' + key)
+            clearTimeout(audio.sample[key].timeOut)
             audio.sample[key].randomLooping = false
             audio.sample[key].source.disconnect()
             delete audio.sample[key]
@@ -164,29 +161,15 @@ function closestTag() {
     }
     return t
 }
-//returns closest sound id / distance (in m)
-function closestSound() {
-    var s = {}
-    for (var key in sound) {
-        if (typeof tag[TAG_ID] !== 'undefined') {
-            var distance = dist(tag[TAG_ID].x, tag[TAG_ID].y, sound[key].x, sound[key].y)
-            if (distance < s.dist || typeof s.dist == 'undefined') {
-                s.dist = distance
-                s.id = key
-            }
-        }
-    }
-    return s
-}
 ///////////////////////
 document.body.addEventListener("mousedown", edown, true)
 document.body.addEventListener("touchstart", edown, true)
 document.body.addEventListener("mouseup", eup, true)
 document.body.addEventListener("touchend", eup, true)
-//
+    //
 var eventUp = {}
 var eventDown = {}
-//
+    //
 function edown() {
     for (key in eventDown) {
         eventDown[key]()

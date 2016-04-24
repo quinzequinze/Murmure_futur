@@ -215,9 +215,7 @@ function init(_config) {
         display.user[i].id = i
         display.user[i].classList.add('circle')
         display.user[i].classList.add('hidden')
-        display.user[i].classList.add('user')
-
-        
+        display.user[i].classList.add('user')        
         masterMap.appendChild(display.user[i])
         display.user[i].textContent = i
     }
