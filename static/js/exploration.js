@@ -5,7 +5,8 @@ instal.exploration = (function(window, undefined) {
         var collected = new Set()
         var minDist = 1.5
         var canRecord = false
-        var MaxCollection = 1
+        var MaxCollection = 0
+        var instruction = false
 
         function init() {
             collected = new Set()
@@ -19,48 +20,33 @@ instal.exploration = (function(window, undefined) {
                 collection.textContent = "collection: " + collected.size
             }
             if (collected.size >= MaxCollection && canRecord == false) {
-                audio.fadeOut(0.01, audio.sample)
+                audio.fadeOut(1, audio.sample)
                 canRecord = true
-
                 audio.sfx.instruction = audio.loadSound('record.m4a', false, function() {
-                    allowRecording()
+                    instruction = true
                 })
             }
         }
 
-        function allowRecording() {
-            document.body.addEventListener("mousedown", beginRecord, false)
-            document.body.addEventListener("touchstart", beginRecord, false)
-            document.body.addEventListener("mouseup", endRecord, false)
-            document.body.addEventListener("touchend", endRecord, false)
-            audio.fadeIn(2, audio.sample)
-        }
-
-        function disallowRecording() {
-            document.body.removeEventListener("mousedown", beginRecord, false)
-            document.body.removeEventListener("touchstart", beginRecord, false)
-            document.body.removeEventListener("mouseup", endRecord, false)
-            document.body.removeEventListener("touchend", endRecord, false)
-            canRecord = false
-        }
-
         function beginRecord() {
-            audio.fadeOut(0.4, audio.sample)
-            document.body.style.background = 'white'
-            window.webkit.messageHandlers.scriptMessageHandler.postMessage('beginRecord')
-            event.preventDefault()
+            if (canRecord && instruction) {
+                audio.fadeOut(0.4, audio.sample)
+                window.webkit.messageHandlers.scriptMessageHandler.postMessage('beginRecord')
+            }
         }
 
         function endRecord() {
-            audio.fadeIn(2, audio.sample)
-            document.body.style.background = '#F3EFE0'
-            window.webkit.messageHandlers.scriptMessageHandler.postMessage('endRecord')
-            event.preventDefault()
+            if (canRecord && instruction) {
+                audio.fadeIn(2, audio.sample)
+                window.webkit.messageHandlers.scriptMessageHandler.postMessage('endRecord')
+                event.preventDefault()
+            }
         }
         return {
-            collect: collect,
             init: init,
-            disallowRecording: disallowRecording
+            collect: collect,
+            beginRecord: beginRecord,
+            endRecord: endRecord
         }
     }
     return exploration

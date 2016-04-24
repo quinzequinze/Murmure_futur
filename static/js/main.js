@@ -9,10 +9,12 @@ var tag = {}
 var sound = {}
 var logicItems = {}
 var choice = {}
+                    choice.id = TAG_ID
+
     //modules 
 var audio = instal.audio()
 var ui = instal.ui()
-//var map = instal.map()
+    //var map = instal.map()
 var theme = instal.theme()
 var year = instal.year()
 var exploration = instal.exploration()
@@ -172,6 +174,26 @@ function closestSound() {
     return s
 }
 ///////////////////////
+document.body.addEventListener("mousedown", edown, true)
+document.body.addEventListener("touchstart", edown, true)
+document.body.addEventListener("mouseup", eup, true)
+document.body.addEventListener("touchend", eup, true)
+//
+var eventUp = {}
+var eventDown = {}
+//
+function edown() {
+    for (key in eventDown) {
+        eventDown[key]()
+    }
+}
+
+function eup() {
+    for (key in eventUp) {
+        eventUp[key]()
+    }
+}
+////
 ;
 (function logicLoop() {
     if (deviceOrientation.angles.alpha) {

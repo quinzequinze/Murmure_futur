@@ -3,6 +3,8 @@ instal.ui = (function(window, undefined) {
         var light = document.createElement("div")
         light.id = 'light'
         document.body.appendChild(light)
+        var mask = document.getElementById('mask')
+        mask.display = 'none'
 
         function ui() {
             function wait(boolean) {
@@ -21,8 +23,8 @@ instal.ui = (function(window, undefined) {
                 }
             }
 
-            function theme(boolean) {
-                if (boolean) {
+            function theme(_boolean) {
+                if (_boolean) {
                     light.classList.add('thema')
                 } else {
                     light.classList.remove('thema')
@@ -30,20 +32,48 @@ instal.ui = (function(window, undefined) {
             }
 
             function year(_a) {
- //'rgba(' + 255/_a.step +',255,255 ,' + _a.value + ')'
-            	light.style.backgroundColor =  'hsl(194,' +Math.floor(_a.value*100)+'%,'+ Math.floor((_a.step * 100)/4)+'%)'
+                //'rgba(' + 255/_a.step +',255,255 ,' + _a.value + ')'
+                if (_a) {
+                    light.style.backgroundColor = 'hsl(194,' + Math.floor(_a.value * 100) + '%,' + Math.floor((_a.step * 100) / 4) + '%)'
+                } else {
+                    light.style.backgroundColor = "black"
+                }
             }
 
-            function exploration() {
+            function exploration(_boolean, _sound, _tag) {
+                if (!_sound && !_tag) {
+                    if (_boolean) {
+                        light.classList.add('exploration')
+                    } else {
+                        light.classList.remove('exploration')
+                    }
+                } else if (_boolean) {
+                    light.style.backgroundColor = 'hsl(194,' + _sound * 100 + '%,' + _tag * 100 + '%)'
+                    console.log('azfazf')
+                }
+            }
 
-            	
+            function beginRecord() {
+                console.log('begin')
+                light.classList.add('recording')
+                light.classList.remove('exploration')
+            }
+
+            function endRecord() {
+                light.classList.remove('recording')
+                light.addEventListener("animationend", function() {
+                    console.log('end')
+                }, false);
+                light.classList.add('exploration')
             }
             return {
                 wait: wait,
                 introduction: introduction,
                 theme: theme,
                 year: year,
-                exploration: exploration
+                exploration: exploration,
+                beginRecord: beginRecord,
+                endRecord: endRecord
             }
         }
         return ui
