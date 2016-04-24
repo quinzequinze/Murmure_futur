@@ -27,6 +27,7 @@ socket.on('updateTag', updateTag)
 socket.on('updateSound', updateSound)
 socket.on('removeSound', removeSound)
 socket.on('endSession', endSession)
+socket.on('reloadSession', reloadSession)
 socket.on('setState', setState)
     //
 if (getMobileOperatingSystem() === 'iOS') {
@@ -38,6 +39,10 @@ if (getMobileOperatingSystem() === 'iOS') {
 function endSession() {
     reset()
     socket.emit('identify', TAG_ID)
+}
+
+function reloadSession() {
+    location.reload(true)
 }
 
 function starter() {
