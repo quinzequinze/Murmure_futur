@@ -1,9 +1,11 @@
 var instal = instal || {}
 instal.theme = (function(window, undefined) {
     var minDist = 1
+    var event
 
     function theme() {
         var sample = {}
+        var self = this
         var list = {
             /*
             Argent: {
@@ -55,8 +57,7 @@ instal.theme = (function(window, undefined) {
 
         function init() {
             for (var key in list) {
-                            audio.fadeOut(0.01, audio.sample)
-
+                audio.fadeOut(0.01, audio.sample)
                 list[key].x = list[key].x * config.ROOM_WIDTH
                 list[key].y = list[key].y * config.ROOM_LENGTH
             }
@@ -78,6 +79,15 @@ instal.theme = (function(window, undefined) {
             sample = {}
         }
 
+        function getTheme() {
+            if (closest()) {
+                console.log("get theme : " + this)
+                audio.sfx.valid = audio.loadSound('validate.m4a')
+                choice.theme = closest().name
+                state.toYear()
+            }
+        }
+
         function closest() {
             var t = {}
             var thematique = document.getElementById('thematique')
@@ -91,21 +101,17 @@ instal.theme = (function(window, undefined) {
                 }
             }
             if (t.dist > minDist) {
-                document.body.classList.remove('light')
                 thematique.textContent = 'undefined'
                 return false
-            } else {
-                document.body.classList.add('light')
             }
             thematique.textContent = t.name
             return t
         }
         return {
-            list: list,
-            closest: closest,
             init: init,
-            sample: sample,
-            kill: kill
+            closest: closest,
+            kill: kill,
+            getTheme: getTheme
         }
     }
     return theme

@@ -31,7 +31,7 @@ var active_tag_id = [
     8
 ]
 var db = require('origindb')(__dirname + '/static/db')
-const persistence = true
+const persistence = false
     //var piIp = '192.168.1.21'
 const piIp = '192.168.1.88'
 var state = persistence ? queryState() : {}
@@ -43,7 +43,7 @@ colors.setTheme({
     master: ['green', 'bold'],
     lps: ['blue', 'bold'],
     client: ['magenta', 'bold'],
-    error: 'red'
+    error: ['red', 'bold']
 })
 app.use(express.static(__dirname + '/static/css'))
 app.use(express.static(__dirname + '/static/js'))
@@ -190,7 +190,7 @@ function writeSound(data) {
         }
         sound[user[id]].valid = null
             //
-            console.log('now')
+        console.log('now')
         soundHandler()
         client.emit('updateSound', sound)
         master.emit('updateSound', sound)
@@ -331,12 +331,12 @@ function getLPS() {
                 var data = JSON.parse(result)
                 parseLPS(data)
             } catch (e) {
-                console.log("request error : pi is down")
+                console.log(colors.error('#error [parse pi data]'))
             }
         })
     })
     req.on('error', function(e) {
-        console.log('request error : ' + e.message)
+        console.log(colors.error('#error [request][pi is down]'))
     })
 }
 for (var RA = []; RA.push([]) < config.TAG_NUMBER;) {}

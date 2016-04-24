@@ -9,9 +9,8 @@ instal.year = (function(window, undefined) {
         function init() {
             length = config.ROOM_WIDTH < config.ROOM_LENGTH ? config.ROOM_LENGTH : config.ROOM_WIDTH
             for (var i = 0; i < list.length; i++) {
-                sample[i] = audio.loadSound(list[i] + '.m4a',true)
+                sample[i] = audio.loadSound(list[i] + '.m4a', true)
                 sample[i].maxDelay = 5000
-                //sample[i].source.loop = true
                 sample[i].volume.gain.value = 0
             }
         }
@@ -25,6 +24,13 @@ instal.year = (function(window, undefined) {
                     sample[i].volume.gain.value = 0
                 }
             }
+        }
+
+        function getYear() {
+            audio.sfx.valid = audio.loadSound('validate.m4a')
+            choice.year = active().name
+            socket.emit('choice', choice)
+            state.toExploration()
         }
 
         function active() {
@@ -57,12 +63,11 @@ instal.year = (function(window, undefined) {
             sample = {}
         }
         return {
-            setGain: setGain,
-            list: list,
-            active: active,
             init: init,
-            kill: kill,
-            sample: sample
+            setGain: setGain,
+            getYear: getYear,
+            active: active,
+            kill: kill
         }
     }
     return year
