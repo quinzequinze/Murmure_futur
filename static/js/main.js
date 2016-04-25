@@ -11,12 +11,15 @@ var tag = {}
 var sound = {}
 var logicItems = {}
 var choice = {}
+var debug = true
 choice.id = TAG_ID
 var rec = false
     //modules 
 var audio = instal.audio()
 var ui = instal.ui()
+if(debug){
 var map = instal.map()
+}
 var theme = instal.theme()
 var year = instal.year()
 var exploration = instal.exploration()
@@ -35,14 +38,18 @@ socket.on('setState', setState)
 if (getMobileOperatingSystem() === 'iOS') {
     setInterval(function() {
         updateBattery()
+        if(debug){
         var plugElem = document.getElementById('plug')
         plugElem.textContent = plug
+        }
     }, 5000)
 }
 
 function updateBattery() {
     window.webkit.messageHandlers.scriptMessageHandler.postMessage('getBattery')
-    socket.emit('plug', {1:plug})
+    var p = {}
+    p[TAG_ID] = plug
+    socket.emit('plug', p)
 }
 
 function endSession() {
@@ -111,7 +118,6 @@ function setOrientation(_angles) {
 
 function updateSound(_sound) {
     sound = _sound
-    console.log(sound)
         //load sound if necessary
     for (var key in sound) {
         if (!audio.sample.hasOwnProperty(key)) {

@@ -138,7 +138,9 @@ var state = StateMachine.create({
         onenterstate: function() {
             if (state) {
                 var status = document.getElementById('status')
+                if(debug){
                 status.textContent = state.current
+                }
                 var status = {}
                 status.id = TAG_ID
                 status.state = state.current

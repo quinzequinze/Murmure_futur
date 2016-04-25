@@ -97,10 +97,14 @@ instal.theme = (function(window, undefined) {
                 }
             }
             if (t.dist > minDist) {
+                if(debug){
                 thematique.textContent = 'undefined'
+                }
                 return false
             }
+            if(debug){
             thematique.textContent = t.name
+            }
             return t
         }
         return {

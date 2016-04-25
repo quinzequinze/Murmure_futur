@@ -137,7 +137,6 @@ function choice(_choice) {
         theme: _choice.theme,
         year: _choice.year
     })
-    console.log(_choice)
 }
 
 function identify(id) {
@@ -188,8 +187,6 @@ function writeSound(data) {
             z: 1.7
         }
         sound[user[id]].status = "pending"
-            //
-        console.log('now')
         soundHandler()
         client.emit('updateSound', sound)
         master.emit('updateSound', sound)

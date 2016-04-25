@@ -1,4 +1,5 @@
 //Prompt module [CYM]
+/*
 function prompt(_type, _choice, _ackSound, _cancelSound) {
     var validator = document.getElementById("validator")
     var yes = document.getElementById("yes")
@@ -32,7 +33,6 @@ function prompt(_type, _choice, _ackSound, _cancelSound) {
     }
 
     function validate() {
-        console.log("yes")
         exit()
             //Emit the validated choice to the server to be written in BD
         audio.sfx.prompt = audio.loadSound('Validate.m4a',false, function() {
@@ -48,7 +48,6 @@ function prompt(_type, _choice, _ackSound, _cancelSound) {
     }
 
     function cancel() {
-        console.log("no")
         exit()
         audio.sfx.prompt = audio.loadSound('Cancel.m4a',false, function() {
             audio.sfx.prompt = audio.loadSound(_cancelSound, false, function() {
@@ -66,3 +65,4 @@ function prompt(_type, _choice, _ackSound, _cancelSound) {
     console.log(_choice)
     }
 }
+*/

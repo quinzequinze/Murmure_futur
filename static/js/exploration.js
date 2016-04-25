@@ -4,7 +4,7 @@ instal.exploration = (function(window, undefined) {
     function exploration() {
         var collected = new Set()
         var minDist = 1
-        var maxCollection = 0
+        var maxCollection = 3
         var canRecord
         var instruction
         var proximity = false
@@ -30,8 +30,10 @@ instal.exploration = (function(window, undefined) {
                 proximity = true
                 if (!collected.has(c.id)) {
                     collected.add(c.id)
-                    var collection = document.getElementById('collection')
-                    collection.textContent = "collection: " + collected.size
+                    if (debug) {
+                        var collection = document.getElementById('collection')
+                        collection.textContent = "collection: " + collected.size
+                    }
                 }
             } else {
                 proximity = false
