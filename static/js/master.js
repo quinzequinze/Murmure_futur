@@ -20,12 +20,8 @@ socket.on('updateState', updateState)
     //
 function updateTag(_tag) {
     tag = _tag
-    if (initedMap) {
-        drawTag()
-    }
-    if (initedUser) {
-        drawUser()
-    }
+    drawTag()
+    drawUser()
 
 }
 
@@ -42,184 +38,42 @@ function updateUser(_user) {
 function updateSound(_sound) {
     sound = _sound
     updateManager()
-    if (initedMap) {
-        drawSound()
-    }
-    if (initedSound) {
-        drawSoundList()
-    }
-
-
-}
-
-function drawTag() {
-    for (var key in display.user) {
-        if (tag[key]) {
-            display.user[key].classList.remove('hidden')
-            display.user[key].style.top = webUnit(tag[key]).y + 'px'
-            display.user[key].style.left = webUnit(tag[key]).x + 'px'
-        } else {
-            display.user[key].classList.add('hidden')
-        }
-        if (state[key] !== 'wait' && state[key]) {
-            display.user[key].classList.add('active')
-        } else {
-            display.user[key].classList.remove('active')
-        }
-    }
-}
-
-function drawUser() {
-    for (var key in display.user) {
-        var d = document.getElementById(key)
-        d.onclick = function(e) {
-            masterMap.onclick = function(eb) {
-                hideValidator()
-            }
-            manager.classList.remove('hidden')
-            manager.dataset.user = this.id
-            manager.dataset.uuid = user[this.id]
-            console.log(manager.dataset.user)
-            if (sound[user[this.id]]) {
-                manager.dataset.hasSound = true
-            } else {
-                manager.dataset.hasSound = false
-            }
-            updateManager()
-            e.stopPropagation()
-        }
-        if (tag[key]) {
-            display.user[key].classList.remove('hidden')
-            display.user[key].style.top = window.innerHeight / display.user.length * key + 'px'
-            display.user[key].style.left = 20 + 'px'
-        } else {
-            display.user[key].classList.add('hidden')
-        }
-        if (state[key] !== 'wait' && state[key]) {
-            display.user[key].classList.add('active')
-        } else {
-            display.user[key].classList.remove('active')
-        }
-    }
-}
-
-function drawSound() {
-    var masterMap = document.getElementById("masterMap")
-    for (var key in display.sound) {
-        display.sound[key].parentNode.removeChild(display.sound[key]);
-    }
-    for (var key in sound) {
-        if (!document.getElementById(key)) {
-            display.sound[key] = document.createElement("div")
-            display.sound[key].id = key
-            display.sound[key].classList.add('circle')
-            display.sound[key].classList.add('sound')
-            var z = {}
-            z.x = sound[key].x * config.ROOM_WIDTH
-            z.y = sound[key].y * config.ROOM_LENGTH
-
-            display.sound[key].style.top = webUnit(z).y + 'px'
-            display.sound[key].style.left = webUnit(z).x + 'px'
-            if (sound[key].valid != false) {
-                display.sound[key].style.backgroundImage = 'url("valid_sound.svg")';
-            }
-            masterMap.appendChild(display.sound[key])
-        }
-    }
-}
-
-function drawSoundList() {
-    var masterMap = document.getElementById("masterMap")
-
-    console.log(sound)
-
-    for (var key in display.sound) {
-
-        display.sound[key].parentNode.removeChild(display.sound[key])
-    }
-    var i = 0
-
-    for (var key in sound) {
-        if (!document.getElementById(key)) {
-            display.sound[key] = document.createElement("div")
-            display.sound[key].onmousedown = function(e) {
-                e.stopPropagation()
-                var player = document.getElementById("player")
-                var validator = document.getElementById("validator")
-                validator.classList.add('hidden')
-                player.src = this.id + '.m4a'
-                player.dataset.sound = this.id
-                player.play()
-            }
-            display.sound[key].id = key
-            display.sound[key].classList.add('circle')
-            display.sound[key].classList.add('user')
-
-            display.sound[key].style.top = (window.innerHeight / Object.keys(sound).length * i + 30) + 'px'
-            display.sound[key].style.left = 20 + 'px'
-            i = i + 1;
-
-            masterMap.appendChild(display.sound[key])
-
-            if (sound[key].valid != null) {
-                display.sound[key].classList.add('hidden')
-            }
-
-
-
-        }
-    }
-}
-
-function updateManager() {
-    var manager = document.getElementById('manager')
-    document.getElementById('id').textContent = manager.dataset.user
-    document.getElementById('uuid').textContent = manager.dataset.uuid
-    document.getElementById('hasSound').textContent = manager.dataset.hasSound
-}
-
-function initUser() {
-    if (initedUser) return
-    activateMasterMap("User")
-    drawUser()
-    initedUser = true
-}
-
-function initSound() {
-    if (initedSound) return
-    activateMasterMap("Sound")
-    var progressbar = document.getElementById('seekbar');
-    progressbar.classList.remove("hidden")
-    drawSoundList()
-    initedSound = true
-}
-
-function initMap() {
-    if (initedMap) return
-    activateMasterMap("Map")
     drawSound()
-    initedMap = true
+
+
 }
+
 
 function init(_config) {
     if (inited) return
     config = _config
     var masterMap = document.getElementById("masterMap")
+    var masterUser = document.getElementById("masterUser")
+
     var manager = document.getElementById("manager")
     var validator = document.getElementById("validator")
         // 
     display.user = []
     display.sound = []
+    display.userMap = []
+    display.soundMap = []
     for (var i = 1; i <= config.TAG_NUMBER; i++) {
         display.user[i] = document.createElement("div")
-        display.user[i].id = i
-        display.user[i].classList.add('circle')
-        display.user[i].classList.add('hidden')
-        display.user[i].classList.add('user')
+        display.userMap[i] = document.createElement("div")
 
-        
-        masterMap.appendChild(display.user[i])
-        display.user[i].textContent = i
+        display.user[i].id = i
+        display.user[i].classList.add('hidden')
+        display.user[i].classList.add('userList')
+
+        display.userMap[i].id = i
+        display.userMap[i].classList.add('circle')
+        display.userMap[i].classList.add('hidden')
+        display.userMap[i].classList.add('user')
+
+        masterMap.appendChild(display.userMap[i])
+        masterUser.appendChild(display.user[i])
+
+        display.userMap[i].textContent = i
     }
 
     var end = document.getElementById("end")
@@ -243,30 +97,164 @@ function init(_config) {
     inited = true
 }
 
+
+function drawTag() {
+    for (var key in display.user) {
+        if (tag[key]) {
+            display.userMap[key].classList.remove('hidden')
+            display.userMap[key].style.top = webUnit(tag[key]).y + 'px'
+            display.userMap[key].style.left = webUnit(tag[key]).x + 'px'
+        } else {
+            display.userMap[key].classList.add('hidden')
+        }
+        if (state[key] !== 'wait' && state[key]) {
+            display.userMap[key].classList.add('active')
+        } else {
+            display.userMap[key].classList.remove('active')
+        }
+    }
+}
+
+function drawUser() {
+    for (var key in display.user) {
+        var d = display.user[key]
+        d.onclick = function(e) {
+            masterUser.onclick = function(eb) {
+                hideValidator()
+            }
+            manager.classList.remove('hidden')
+            manager.dataset.user = this.id
+            manager.dataset.uuid = user[this.id]
+            console.log(manager.dataset.user)
+            if (sound[user[this.id]] && sound[user[this.id]].valid) {
+                manager.dataset.hasSound = true
+            } else {
+                manager.dataset.hasSound = false
+            }
+            updateManager()
+            e.stopPropagation()
+        }
+        if (sound[user[key]] && sound[user[key]].valid) {
+            display.user[key].textContent = "Id: " + key + " HasSound: True"
+        }else{
+            display.user[key].textContent = "Id: " + key + " HasSound: False"
+        }
+        
+        if (tag[key]) {
+            display.user[key].classList.remove('hidden')
+        } else {
+            display.user[key].classList.add('hidden')
+        }
+        if (state[key] !== 'wait' && state[key]) {
+            display.user[key].classList.add('active')
+        } else {
+            display.user[key].classList.remove('active')
+        }
+    }
+}
+
+function drawSound() {
+    var masterMap = document.getElementById("masterMap")
+    var masterSound = document.getElementById("masterSound")
+
+    for (var key in display.soundMap) {
+        display.soundMap[key].parentNode.removeChild(display.soundMap[key]);
+    }
+    for (var key in display.sound) {
+        display.sound[key].parentNode.removeChild(display.sound[key]);
+    }
+
+    var i = 0
+
+    for (var key in sound) {
+        if (!document.getElementById(key)) {
+            display.soundMap[key] = document.createElement("div")
+            display.soundMap[key].id = key
+            display.soundMap[key].classList.add('circle')
+            display.soundMap[key].classList.add('sound')
+            var z = {}
+            z.x = sound[key].x * config.ROOM_WIDTH
+            z.y = sound[key].y * config.ROOM_LENGTH
+
+            display.soundMap[key].style.top = webUnit(z).y + 'px'
+            display.soundMap[key].style.left = webUnit(z).x + 'px'
+            if (sound[key].valid != false) {
+                display.soundMap[key].style.backgroundImage = 'url("valid_sound.svg")';
+            }
+            masterMap.appendChild(display.soundMap[key])
+
+
+            display.sound[key] = document.createElement("div")
+            display.sound[key].onmousedown = function(e) {
+                e.stopPropagation()
+                var player = document.getElementById("player")
+                var validator = document.getElementById("validator")
+                validator.classList.add('hidden')
+                player.src = this.id + '.m4a'
+                player.dataset.sound = this.id
+                player.play()
+            }
+
+            display.sound[key].id = key
+            display.sound[key].classList.add('soundList')
+
+            display.sound[key].textContent = key
+            if (sound[key].valid != false) {
+                display.soundMap[key].style.backgroundImage = 'url("valid_sound.svg")';
+            }
+
+            if (sound[key].valid != null) {
+                display.sound[key].classList.add('hidden')
+            }
+
+            masterSound.appendChild(display.sound[key])
+        }
+    }
+}
+
+function updateManager() {
+    var manager = document.getElementById('manager')
+    document.getElementById('id').textContent = manager.dataset.user
+    document.getElementById('uuid').textContent = manager.dataset.uuid
+    document.getElementById('hasSound').textContent = manager.dataset.hasSound
+}
+
+function showUser() {
+    var masterUser = document.getElementById("masterUser")
+    var masterSound = document.getElementById("masterSound")
+    var masterMap = document.getElementById("masterMap")
+
+    masterUser.classList.remove('hidden')
+    masterSound.classList.add('hidden')
+    masterMap.classList.add('hidden')
+
+}
+
+function showSound() {
+    var masterUser = document.getElementById("masterUser")
+    var masterSound = document.getElementById("masterSound")
+    var masterMap = document.getElementById("masterMap")
+
+    masterUser.classList.add('hidden')
+    masterSound.classList.remove('hidden')
+    masterMap.classList.add('hidden')
+}
+
+function showMap() {
+    var masterUser = document.getElementById("masterUser")
+    var masterSound = document.getElementById("masterSound")
+    var masterMap = document.getElementById("masterMap")
+
+    masterUser.classList.add('hidden')
+    masterSound.classList.add('hidden')
+    masterMap.classList.remove('hidden')
+
+}
+
+
 function hideValidator() {
     validator.classList.add('hidden')
     manager.classList.add('hidden')
-}
-
-function activateMasterMap(_mode) {
-
-    var masterSelector = document.getElementById("masterSelector")
-    var previous = document.getElementById("previous")
-
-    var d = document.createElement('div');
-    d.id = 'mode';
-    var modeText = document.createTextNode(_mode)
-    d.appendChild(modeText)
-    masterMap.appendChild(d);
-
-    masterSelector.classList.add('hidden')
-    masterMap.classList.remove('hidden')
-    previous.classList.remove('hidden')
-
-}
-
-function getMasterSelector() {
-    location.reload(true)
 }
 
 function webUnit(_tag) {

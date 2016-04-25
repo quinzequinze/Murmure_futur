@@ -31,7 +31,7 @@ var active_tag_id = [
     8
 ]
 var db = require('origindb')(__dirname + '/static/db')
-const persistence = false
+const persistence = true
     //var piIp = '192.168.1.21'
 const piIp = '192.168.1.88'
 var state = persistence ? queryState() : {}

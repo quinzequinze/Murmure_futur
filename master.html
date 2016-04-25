@@ -22,21 +22,29 @@
     <script src="master.js">
     </script>
     <body>
-        <div class="hidden" id="masterMap">
+        <div id="masterMap">
+            <div id="mode" class="mode">MAP
+            </div>
         </div>
-        <progress class="hidden" id="seekbar" max="1" value="0">
-        </progress>
-        <audio autoplay="" id="player" ontimeupdate="udpateProgress()" src="">
-        </audio>
-        <div class="hidden" id="validator">
+        <div class="hidden" id="masterSound">
+            <div id="mode" class="mode">SOUND
+            </div>
+            <progress id="seekbar" max="1" value="0">
+            </progress>
+            <audio autoplay="" id="player" ontimeupdate="udpateProgress()" src="">
+            </audio>
+            <div class="hidden" id="validator">
             <div id="yes">KEEP
             </div>
             <div id="no">TRASH
             </div>
+            </div>
         </div>
-        <div class ="hidden" id="previous">Previous
-        </div>
-        <div class="hidden" id="manager">
+
+        <div class="hidden" id="masterUser">
+            <div id="mode" class="mode">USER
+            </div>
+            <div class="hidden" id="manager">
             <span>tag id </span>
             <div id="id" class='mfield'>
             </div>
@@ -51,6 +59,9 @@
             <div id="reload">RELOAD SESSION
             </div>
         </div>
+        </div>
+        
+        
         <div id="masterSelector">
             <div id="map"> MAP
             </div>
@@ -59,20 +70,19 @@
             <div id="sound"> SOUND
             </div>
         </div>
+
         <script type="text/javascript">
 
 
             var d = document.getElementById("map")
-            d.onclick = initMap
+            d.onclick = showMap
 
             d = document.getElementById("user")
-            d.onclick = initUser
+            d.onclick = showUser
 
             d = document.getElementById("sound")
-            d.onclick = initSound
+            d.onclick = showSound
 
-            d = document.getElementById("previous")
-            d.onclick = getMasterSelector
         </script>
     </body>
 </html>
