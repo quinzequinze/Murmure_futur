@@ -136,6 +136,7 @@ function updateSound(_sound) {
 }
 //replace sound in case of re-recording
 function removeSound(_data) {
+    console.log('remove :' +_data)
     if (audio.sample[_data].timeOut) {
         clearTimeout(audio.sample[_data].timeOut)
     }

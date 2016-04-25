@@ -264,10 +264,10 @@ function validate(_UUID) {
 
 function invalidate(_UUID) {
     sound[_UUID].status = 'censored'
-    client.emit('removeSound', _UUID)
-    client.emit('updateSound', sound)
     master.emit('updateSound', sound)
     delete sound[_UUID]
+        client.emit('updateSound', sound)
+
     if (persistence) {
         db('sound').set([_UUID, 'status'], 'censored')
     }
