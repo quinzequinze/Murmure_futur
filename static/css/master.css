@@ -1,19 +1,112 @@
+body{
+    overflow: auto;
+}
 #masterMap {
     width: 100vw;
-    height: 100vh;
+    height: 90vh;
     overflow: hidden;
     margin: 0;
+    position:relative;
 }
-#masterMap #mode{
+#masterSound {
+    width: 100vw;
+    height: 90vh;
+    top: 50px;
+    margin: 0;
+    position:relative;
+}
+#masterUser {
+    width: 100vw;
+    height: 90vh;
+    overflow: hidden;
+    top: 50px;
+    margin: 0;
+    position:relative;
+}
+
+
+.mode{
+
     text-align: center;
     font-size: 16px;
     color:#FFBB00;
     top:3%;
     left:50%;
-    position: absolute;
+    position: fixed;
     font-size: 24px;
     font-weight: 600;
 }
+
+#masterSelector {
+    /*box-shadow: 0p    x 3px 10px 0px #656565;*/
+    position: fixed;
+    /*transform: translate(-50%, -50%);*/
+    text-align: left;
+    line-height: 24px;
+    /*padding: 20px;*/
+    z-index: 99999999;
+    background: black;
+    color: #FFBB00;
+    width: 100%;
+    font-size: 24px;
+    font-weight: 600;
+    border-color: #FFBB00;
+    /*border-style: solid;*/
+    /*position: relative;*/
+}
+
+#masterSelector span {
+    color: black;
+}
+
+#masterSelector #map {
+    position: relative;
+    color: black;
+    margin: 0;
+    /*padding: 20px;*/
+    background: #FFBB00;
+    margin: 10px auto;
+    text-align: center;
+    cursor: pointer;
+    float:left;
+    width:100px;
+
+}
+
+#masterSelector #end:hover {
+    background: #BBBB00;
+}
+
+#masterSelector #user {
+    position: relative;
+    color: black;
+    margin: 0;
+    /*padding: 20px;*/
+    background: #FFBB00;
+    margin: 10px auto;
+    text-align: center;
+    cursor: pointer;
+    width:100px;
+    float:right;
+
+}
+
+#masterSelector #sound {
+    position: relative;
+    color: black;
+    margin: 0;
+    /*padding: 20px;*/
+    background: #FFBB00;
+    margin: 10px auto;
+    text-align: center;
+    cursor: pointer;
+    width:100px;
+}
+
+#masterSelector #reload:hover {
+    background: #BBBB00;
+}
+
 
 .user {
     width: 40px;
@@ -33,6 +126,38 @@
     cursor: pointer;
 }
 
+.soundList {
+    width: 90%;
+    height: 40px;
+    font-size: 20px;
+    text-align: center;
+    line-height: 40px;
+    z-index: 100;
+    transition: background 400ms;
+    cursor: pointer;
+    margin: 10px auto 0 auto;
+    font-size: 24px;
+    font-weight: 600;
+    color: black;
+    background: #FFBB00;
+}
+
+.userList {
+    width: 90%;
+    height: 40px;
+    font-size: 20px;
+    text-align: center;
+    line-height: 40px;
+    z-index: 100;
+    transition: background 400ms;
+    cursor: pointer;
+    margin: 10px auto 0 auto;
+    font-size: 24px;
+    font-weight: 600;
+    color: black;
+    background: #ccc;
+}
+
 .active {
     background: #FFBB00;
 }
@@ -43,16 +168,17 @@
 }*/
 
 .sound {
-    width: 130px;
-    height: 130px;
+    width: 100px;
+    height: 100px;
     position: absolute;
     left: 0;
     top: 0;
     transform: translate(-50%, -50%);
-    background: url(sound.svg);
+    background: url(pending_sound.svg);
     background-position: center;
     transition: opacity 400ms;
     cursor: pointer;
+    background-size: 100%;
 }
 
 .sound:hover {
@@ -136,69 +262,6 @@ progress[value]::-webkit-progress-value {
     background: #BBBB00;
 }
 
-#masterSelector {
-    /*box-shadow: 0p    x 3px 10px 0px #656565;*/
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    text-align: left;
-    line-height: 24px;
-    padding: 20px;
-    z-index: 99999999;
-    background: black;
-    color: #FFBB00;
-    width: 90%;
-    width: 90%;
-    font-size: 24px;
-    font-weight: 600;
-}
-
-#masterSelector span {
-    color: black;
-}
-
-#masterSelector #map {
-    position: relative;
-    color: black;
-    margin: 0;
-    padding: 20px;
-    background: #FFBB00;
-    margin: 20px auto;
-    text-align: center;
-    cursor: pointer;
-
-}
-
-#masterSelector #end:hover {
-    background: #BBBB00;
-}
-
-#masterSelector #user {
-    position: relative;
-    color: black;
-    margin: 0;
-    padding: 20px;
-    background: #FFBB00;
-    margin: 20px auto;
-    text-align: center;
-    cursor: pointer;
-}
-
-#masterSelector #sound {
-    position: relative;
-    color: black;
-    margin: 0;
-    padding: 20px;
-    background: #FFBB00;
-    margin: 20px auto;
-    text-align: center;
-    cursor: pointer;
-}
-
-#masterSelector #reload:hover {
-    background: #BBBB00;
-}
 
 .mfield {
     margin-bottom: 10px;

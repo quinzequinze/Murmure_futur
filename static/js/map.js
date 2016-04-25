@@ -56,20 +56,22 @@ instal.map = (function(window, undefined) {
             }
             display.sound = {}
             for (var key in sound) {
-                if (!document.getElementById(key)) {
-                    display.sound[key] = document.createElement("div")
-                    display.sound[key].id = key
-                    display.sound[key].classList.add('circle')
-                    display.sound[key].classList.add('sound')
-                    var normal = {}
-                    normal.x = sound[key].x * config.ROOM_WIDTH //UGLY
-                    normal.y = sound[key].y * config.ROOM_LENGTH //UGLY
-                    display.sound[key].style.top = webUnit(normal).y + 'px'
-                    display.sound[key].style.left = webUnit(normal).x + 'px'
-                    if (sound[key].valid == true) {
-                        display.sound[key].style.backgroundImage = 'url("valid_sound.svg")';
+                if (sound[key].status != "censored") {
+                    if (!document.getElementById(key)) {
+                        display.sound[key] = document.createElement("div")
+                        display.sound[key].id = key
+                        display.sound[key].classList.add('circle')
+                        display.sound[key].classList.add('sound')
+                        var normal = {}
+                        normal.x = sound[key].x * config.ROOM_WIDTH //UGLY
+                        normal.y = sound[key].y * config.ROOM_LENGTH //UGLY
+                        display.sound[key].style.top = webUnit(normal).y + 'px'
+                        display.sound[key].style.left = webUnit(normal).x + 'px'
+                        if (sound[key].status == "valid") {
+                            display.sound[key].style.backgroundImage = 'url("valid_sound.svg")';
+                        }
+                        mapElement.appendChild(display.sound[key])
                     }
-                    mapElement.appendChild(display.sound[key])
                 }
             }
         }
