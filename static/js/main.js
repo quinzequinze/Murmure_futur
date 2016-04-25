@@ -3,7 +3,8 @@
 //globals
 var appBackground = false
 var TAG_ID = TAG_ID || 0;
-var plug, init, config
+var plug = true
+var init, config
 var user = {}
 var inited = false
 var tag = {}
