@@ -1,8 +1,9 @@
 //http://patorjk.com/software/taag/#p=display&v=0&f=Block&t=SOMETHING`
 //constantes
 //globals
+var appBackground = false
 var TAG_ID = TAG_ID || 0;
-var battery, init, config
+var plug, init, config
 var user = {}
 var inited = false
 var tag = {}
@@ -10,7 +11,7 @@ var sound = {}
 var logicItems = {}
 var choice = {}
 choice.id = TAG_ID
-var rec  = false
+var rec = false
     //modules 
 var audio = instal.audio()
 var ui = instal.ui()
@@ -32,19 +33,25 @@ socket.on('setState', setState)
     //
 if (getMobileOperatingSystem() === 'iOS') {
     setInterval(function() {
-        updateBattery();
+        updateBattery()
+        var plugElem = document.getElementById('plug')
+        plugElem.textContent = plug
     }, 5000)
 }
 
+function updateBattery() {
+    window.webkit.messageHandlers.scriptMessageHandler.postMessage('getBattery')
+    socket.emit('plug', {1,plug})
+}
+
 function endSession() {
-    reset()
-    socket.emit('identify', TAG_ID)
+    state.toWait()
+    reloadSession()
 }
 
 function reloadSession() {
     location.reload(true)
 }
-
 
 function setState(_state) {
     switch (_state) {
@@ -80,10 +87,6 @@ function init(_data) {
     inited = true
 }
 
-function updateBattery() {
-    window.webkit.messageHandlers.scriptMessageHandler.postMessage('getBattery')
-        //socket.emit('updateBattery', TAG_ID)
-}
 
 function updateTag(_tag) {
     tag = _tag
@@ -132,8 +135,12 @@ function updateSound(_sound) {
 }
 //replace sound in case of re-recording
 function removeSound(_data) {
-    clearTimeout(audio.sample[_data].timeOut)
-    audio.sample[_data].source.disconnect()
+    if (audio.sample[_data].timeOut) {
+        clearTimeout(audio.sample[_data].timeOut)
+    }
+    if (typeof audio.sample[_data].source !== 'undefined') {
+        audio.sample[_data].source.disconnect()
+    }
     delete audio.sample[_data]
 }
 //upload sound to the server => trigered by the app
@@ -142,10 +149,6 @@ function uploadSound(_buffer) {
     d.buffer = _buffer.toString().replace(/\s+/g, '').substr(10, _buffer.length - 12)
     d.id = TAG_ID.toString()
     socket.emit('uploadSound', d)
-}
-//If a problem occured during the reccording => trigered by the app
-function recordingFail() {
-    console.log('recording too short')
 }
 //returns closest tag id / distance (in m)
 function closestTag() {
@@ -181,8 +184,9 @@ function eup() {
         eventUp[key]()
     }
 }
-////
+////this semicolon is on purpose
 ;
+////////////////////////////////
 (function logicLoop() {
     if (deviceOrientation.angles.alpha) {
         audio.listener.setOrientation(Math.cos(radians(deviceOrientation.angles.alpha)), 0, Math.sin(radians(deviceOrientation.angles.alpha)), 0, 1, 0);
@@ -192,18 +196,29 @@ function eup() {
     }
     requestAnimationFrame(logicLoop);
 })();
+//////////////////////////// limit cas handler
+function bufferError() {
+    console.log("bufferError handler")
+}
 
-function reset() {
-    user = {}
-    tag = {}
-    sound = {}
-    for (var key in audio.sfx) {
-        if (audio.sfx[key].source) {
-            audio.sfx[key].source.disconnect()
+function recordingTooShort() {
+    console.log("recordingTooShort handler")
+}
+
+function applicationDidEnterBackground() {}
+
+function applicationDidBecomeActive() {
+    reloadSession()
+}
+
+function killSound(_object) {
+    for (var key in _object) {
+        if (_object[key].timeOut) {
+            clearTimeout(_object[key].timeOut)
         }
-        clearTimeout(audio.sfx[key].timeOut)
+        if (typeof _object[key].source !== 'undefined') {
+            _object[key].source.disconnect()
+        }
+        delete _object[key]
     }
-    audio.sfx = {}
-    state.toWait()
-    audio.fadeOut(0.5)
 }
