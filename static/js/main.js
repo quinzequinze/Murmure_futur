@@ -41,7 +41,7 @@ if (getMobileOperatingSystem() === 'iOS') {
 
 function updateBattery() {
     window.webkit.messageHandlers.scriptMessageHandler.postMessage('getBattery')
-    socket.emit('plug', {1,plug})
+    socket.emit('plug', {1:plug})
 }
 
 function endSession() {
