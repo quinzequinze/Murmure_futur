@@ -19,8 +19,18 @@ var state = StateMachine.create({
         name: 'toYear',
         from: '*',
         to: 'year'
+    }, {
+        name: 'toBackground',
+        from: '*',
+        to: 'background'
     }],
     callbacks: {
+        onenterbackground: function() {
+
+        },
+        onleavebackground: function() {
+
+        },
         onenterwait: function() {
             audio.fadeOut(0.01, audio.sample)
             ui.reset()
@@ -35,13 +45,13 @@ var state = StateMachine.create({
         },
         onenterintroduction: function() {
             ui.introduction(true)
-            audio.sfx.introduction = audio.loadSound('introduction.m4a', false, function() {
+            audio.sfx.tuto = audio.loadSound('introduction.m4a', false, function() {
                 state.toTheme()
             })
         },
         onleaveintroduction: function() {
-            if (audio.sfx.introduction) {
-                delete audio.sfx.introduction
+            if (audio.sfx.tuto) {
+                delete audio.sfx.tuto
             }
             ui.introduction(false)
             console.log("leaveintro")
@@ -74,7 +84,7 @@ var state = StateMachine.create({
             ui.theme(false)
         },
         onenteryear: function() {
-            audio.sfx.year = audio.loadSound('year.m4a', false, function() {
+            audio.sfx.tuto = audio.loadSound('year.m4a', false, function() {
                 year.init()
                 eventUp.year = year.getYear
                 if (typeof map !== 'undefined') {
@@ -93,11 +103,12 @@ var state = StateMachine.create({
                 delete logicItems.year
             }
             delete eventUp.year
+            delete audio.sfx.tuto
             ui.year(false)
         },
         onenterexploration: function() {
             //VJM
-            audio.sfx.introduction = audio.loadSound('exploration.m4a', false, function() {
+            audio.sfx.tuto = audio.loadSound('exploration.m4a', false, function() {
                 exploration.init()
                 audio.fadeIn(6, audio.sample)
                     //
@@ -122,6 +133,7 @@ var state = StateMachine.create({
             delete eventUp.exploration
             delete eventDown.ui
             delete eventUp.ui
+            delete audio.sfx.tuto
         },
         onenterstate: function() {
             if (state) {

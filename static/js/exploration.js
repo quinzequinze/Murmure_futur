@@ -4,7 +4,7 @@ instal.exploration = (function(window, undefined) {
     function exploration() {
         var collected = new Set()
         var minDist = 1
-        var maxCollection = 1
+        var maxCollection = 0
         var canRecord
         var instruction
         var proximity = false
@@ -54,8 +54,6 @@ instal.exploration = (function(window, undefined) {
             }
         }
 
-
-
         function endRecord() {
             if (canRecord && instruction) {
                 audio.fadeIn(6, audio.sample)
@@ -63,10 +61,10 @@ instal.exploration = (function(window, undefined) {
                 event.preventDefault()
             }
         }
+
         function getProximity() {
             return proximity
         }
-
         return {
             init: init,
             collect: collect,

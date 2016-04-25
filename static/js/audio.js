@@ -22,10 +22,10 @@ instal.audio = (function(window, undefined) {
         a.convolverGain.connect(a.volume)
         a.volume.connect(a.context.destination)
         window.addEventListener('blur', function() {
-            a.volume.disconnect()
+            //a.volume.disconnect()
         }, false)
         window.addEventListener('focus', function() {
-            a.volume.connect(a.context.destination)
+           // a.volume.connect(a.context.destination)
         }, false)
 
         function loadBuffer(soundFileName, callback) {
@@ -35,6 +35,7 @@ instal.audio = (function(window, undefined) {
             request.onload = function() {
                 a.context.decodeAudioData(request.response, callback, function() {
                     console.error('Decoding the audio buffer failed')
+                    bufferError()
                 })
             }
             request.send()
@@ -79,6 +80,7 @@ instal.audio = (function(window, undefined) {
             audioNode.timeOut = setTimeout(function() {
                 randomLoop(audioNode)
             }, (audioNode.source.buffer.duration * 1000) + delay)
+            
         }
 
         function fadeOut(duration, _sample) {
@@ -139,8 +141,7 @@ instal.audio = (function(window, undefined) {
             loadSound: loadSound,
             loadSound3D: loadSound3D,
             randomLoop: randomLoop,
-            sfx: sfx,
-        }
+            sfx: sfx        }
     }
     return audio
 })(window)

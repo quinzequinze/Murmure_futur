@@ -67,7 +67,8 @@ instal.year = (function(window, undefined) {
             setGain: setGain,
             getYear: getYear,
             active: active,
-            kill: kill
+            kill: kill,
+            sample:sample
         }
     }
     return year
