@@ -3,7 +3,7 @@ var config = {
         'SOUND_NUMBER': 6,
         'ROOM_WIDTH': 6.1, //grande longueur
         'ROOM_LENGTH': 4.5, //petite longueur
-        'ORIENTATION_OFFSET': -42,
+        'ORIENTATION_OFFSET': 48, //-42 + 90
     }
     //modules 
 const express = require('express')
@@ -66,7 +66,6 @@ app.get('/debug', function(req, res) {
 app.get('/master', function(req, res) {
     res.sendFile(__dirname + '/master.html')
 })
-
 server.listen(4000, function() {
         console.log(colors.server('#server [listening : localhost:4000]'))
     })
@@ -78,16 +77,15 @@ server.listen(4000, function() {
      _|_|_|    _|    _|      _|      _|    _|  _|_|_|    _|    _|  _|_|_|    _|_|_|_|  
     */
 function querySound() {
-    var q = db('sound').keys()
     var s = {}
-    if (q.length >= config.SOUND_NUMBER) {
-        for (var i = config.SOUND_NUMBER; i > 0; i--) {
-            s[q[q.length - i].toString()] = db('sound').get(q[q.length - i])
-        }
-    } else {
-        for (var i = q.length - 1; i >= 0; i--) {
+    var q = db('sound').keys()
+    var i = q.length - 1
+    while (Object.keys(s).length < config.SOUND_NUMBER && i >= 0) {
+        var status = db('sound').get(q[i]).status
+        if (status == "valid" || status == "pending") {
             s[q[i]] = db('sound').get(q[i])
         }
+        i--
     }
     return s
 }
@@ -107,7 +105,6 @@ function queryUser() {
 function queryState() {
     var s = {}
     for (var i = 0; i < active_tag_id.length; i++) {
-        //console.log(db('state').get(i))
         var t = active_tag_id[i].toString()
         if (typeof db('state').get(t) != 'undefined' && db('state').get(t) != null) {
             s[t] = db('state').get(t).toString()
@@ -181,6 +178,8 @@ function writeSound(data) {
         fs.writeFile(__dirname + '/static/sound/sample/' + user[id] + '.m4a', data.buffer, 'hex')
         if (sound[user[id]]) {
             client.emit('removeSound', user[id])
+            db('sound').set([user[id], 'status'], 'pending')
+            db('sound').set([user[id], 'time'], unixTime())
             console.log(colors.client('#client [override sound]'))
         }
         sound[user[id]] = {
@@ -188,7 +187,7 @@ function writeSound(data) {
             y: tag[id].y / config.ROOM_LENGTH,
             z: 1.7
         }
-        sound[user[id]].valid = null
+        sound[user[id]].status = "pending"
             //
         console.log('now')
         soundHandler()
@@ -197,6 +196,7 @@ function writeSound(data) {
         console.log(colors.client('#client [new sound]'))
         if (persistence) {
             db('sound').set(user[id], tag[id])
+            db('sound').set([user[id], 'status'], 'pending')
             db('sound').set([user[id], 'time'], unixTime())
         }
     }
@@ -253,22 +253,23 @@ master.on('connection', function(socket) {
 })
 
 function validate(_UUID) {
-    console.log(_UUID)
     sound[_UUID].valid = true
     master.emit('updateSound', sound)
     if (persistence) {
-        db('sound').set([_UUID, 'valid'], true)
+        db('sound').set([_UUID, 'status'], 'valid')
     }
+    console.log(colors.master('#master [validate][' + _UUID + ']'))
 }
 
 function invalidate(_UUID) {
-    console.log(_UUID)
-    sound[_UUID].valid = false
     client.emit('removeSound', _UUID)
+    client.emit('updateSound', sound)
     master.emit('updateSound', sound)
+    delete sound[_UUID]
     if (persistence) {
-        db('sound').set([_UUID, 'valid'], false)
+        db('sound').set([_UUID, 'censored'], false)
     }
+    console.log(colors.master('#master [censored][' + _UUID + ']'))
 }
 
 function endSession(data) {
@@ -289,7 +290,6 @@ function reloadSession(data) {
     console.log(data)
     client.to(data.id).emit('reloadSession')
 }
-
 /*                        
  _|        _|_|_|      _|_|_|  
  _|        _|    _|  _|        

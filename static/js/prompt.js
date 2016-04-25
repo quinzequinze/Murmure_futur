@@ -41,10 +41,7 @@ function prompt(_type, _choice, _ackSound, _cancelSound) {
                     choice.theme = _choice
                     state.toYear()
                 } else if (_type == "year") {
-                    choice.year = _choice
-                    choice.id = TAG_ID
-                    socket.emit('choice', choice)
-                    state.toExploration()
+
                 }
             })
         })

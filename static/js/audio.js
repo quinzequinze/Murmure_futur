@@ -6,6 +6,7 @@ instal.audio = (function(window, undefined) {
         var sfx = {}
         var defaultGain = 0
         var a = {}
+        var fading = false
         window.AudioContext = window.AudioContext || window.webkitAudioContext
         a.context = new window.AudioContext()
         a.convolver = a.context.createConvolver()
@@ -85,6 +86,7 @@ instal.audio = (function(window, undefined) {
             for (var key in _sample) {
                 var currentTime = a.context.currentTime
                 var fadeTime = currentTime + duration
+                _sample[key].volume.gain.cancelScheduledValues(currentTime)
                 _sample[key].volume.gain.setValueAtTime(_sample[key].volume.gain.value, currentTime)
                 _sample[key].volume.gain.linearRampToValueAtTime(0, fadeTime)
             }
@@ -95,12 +97,13 @@ instal.audio = (function(window, undefined) {
             for (var key in _sample) {
                 var currentTime = a.context.currentTime
                 var fadeTime = currentTime + duration
+                _sample[key].volume.gain.cancelScheduledValues(currentTime)
                 _sample[key].volume.gain.setValueAtTime(_sample[key].volume.gain.value, currentTime)
                 _sample[key].volume.gain.linearRampToValueAtTime(1, fadeTime)
             }
         }
 
-        function loadSound(soundFileName, loop , callback) {
+        function loadSound(soundFileName, loop, callback) {
             var s = {}
             s.maxDelay = 1000
             if (!loop) {
@@ -136,7 +139,7 @@ instal.audio = (function(window, undefined) {
             loadSound: loadSound,
             loadSound3D: loadSound3D,
             randomLoop: randomLoop,
-            sfx: sfx
+            sfx: sfx,
         }
     }
     return audio

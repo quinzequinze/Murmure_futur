@@ -240,6 +240,7 @@ function showSound() {
     masterMap.classList.add('hidden')
 }
 
+
 function showMap() {
     var masterUser = document.getElementById("masterUser")
     var masterSound = document.getElementById("masterSound")
