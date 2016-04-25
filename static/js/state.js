@@ -133,6 +133,7 @@ var state = StateMachine.create({
                 socket.emit('stateChange', status)
                 console.log('state : ' + state.current)
             }
+            
         },
     }
 })

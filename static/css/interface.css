@@ -74,7 +74,7 @@
     left: 0;
     top: 0;
     transform: translate(-50%, -50%);
-    background: url(sound.svg);
+    background: url(pending_sound.svg);
     background-position: center;
     transition: opacity 400ms;
     cursor: pointer;

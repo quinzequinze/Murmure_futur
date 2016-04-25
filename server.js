@@ -253,8 +253,9 @@ master.on('connection', function(socket) {
 })
 
 function validate(_UUID) {
-    sound[_UUID].valid = true
+    sound[_UUID].status = 'valid'
     master.emit('updateSound', sound)
+    client.emit('updateSound', sound)
     if (persistence) {
         db('sound').set([_UUID, 'status'], 'valid')
     }
@@ -262,12 +263,13 @@ function validate(_UUID) {
 }
 
 function invalidate(_UUID) {
+    sound[_UUID].status = 'censored'
     client.emit('removeSound', _UUID)
     client.emit('updateSound', sound)
     master.emit('updateSound', sound)
     delete sound[_UUID]
     if (persistence) {
-        db('sound').set([_UUID, 'censored'], false)
+        db('sound').set([_UUID, 'status'], 'censored')
     }
     console.log(colors.master('#master [censored][' + _UUID + ']'))
 }

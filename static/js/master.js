@@ -48,6 +48,9 @@ function init(_config) {
     if (inited) return
     config = _config
     var masterMap = document.getElementById("masterMap")
+    masterMapOffsetWidth = masterMap.offsetWidth
+    masterMapOffsetHeight = masterMap.offsetHeight
+
     var masterUser = document.getElementById("masterUser")
 
     var manager = document.getElementById("manager")
@@ -126,20 +129,20 @@ function drawUser() {
             manager.dataset.user = this.id
             manager.dataset.uuid = user[this.id]
             console.log(manager.dataset.user)
-            if (sound[user[this.id]] && sound[user[this.id]].valid) {
-                manager.dataset.hasSound = true
+            if (sound[user[this.id]]) {
+                manager.dataset.hasSound = sound[user[this.id]].status
             } else {
                 manager.dataset.hasSound = false
             }
             updateManager()
             e.stopPropagation()
         }
-        if (sound[user[key]] && sound[user[key]].valid) {
-            display.user[key].textContent = "Id: " + key + " HasSound: True"
-        }else{
-            display.user[key].textContent = "Id: " + key + " HasSound: False"
+        if (sound[user[key]]) {
+            display.user[key].textContent = "Id: " + key + " Sound:" + sound[user[key]].status
+        } else {
+            display.user[key].textContent = "Id: " + key + " Sound: False"
         }
-        
+
         if (tag[key]) {
             display.user[key].classList.remove('hidden')
         } else {
@@ -164,51 +167,54 @@ function drawSound() {
         display.sound[key].parentNode.removeChild(display.sound[key]);
     }
 
+    display.soundMap = {}
+    display.sound = {}
+
     var i = 0
 
     for (var key in sound) {
-        if (!document.getElementById(key)) {
-            display.soundMap[key] = document.createElement("div")
-            display.soundMap[key].id = key
-            display.soundMap[key].classList.add('circle')
-            display.soundMap[key].classList.add('sound')
-            var z = {}
-            z.x = sound[key].x * config.ROOM_WIDTH
-            z.y = sound[key].y * config.ROOM_LENGTH
+        if (sound[key].status != "censored") {
+            if (!document.getElementById(key)) {
+                display.soundMap[key] = document.createElement("div")
+                display.soundMap[key].id = key
+                display.soundMap[key].classList.add('circle')
+                display.soundMap[key].classList.add('sound')
+                var z = {}
+                z.x = sound[key].x * config.ROOM_WIDTH
+                z.y = sound[key].y * config.ROOM_LENGTH
 
-            display.soundMap[key].style.top = webUnit(z).y + 'px'
-            display.soundMap[key].style.left = webUnit(z).x + 'px'
-            if (sound[key].valid != false) {
-                display.soundMap[key].style.backgroundImage = 'url("valid_sound.svg")';
+                display.soundMap[key].style.top = webUnit(z).y + 'px'
+                display.soundMap[key].style.left = webUnit(z).x + 'px'
+                
+                if (sound[key].status == "valid") {
+                    display.soundMap[key].style.backgroundImage = 'url("valid_sound.svg")';
+                } 
+                masterMap.appendChild(display.soundMap[key])
+
+                display.sound[key] = document.createElement("div")
+                display.sound[key].onmousedown = function(e) {
+                    e.stopPropagation()
+                    var player = document.getElementById("player")
+                    var validator = document.getElementById("validator")
+                    validator.classList.add('hidden')
+                    player.src = this.id + '.m4a'
+                    player.dataset.sound = this.id
+                    player.play()
+                }
+
+                display.sound[key].id = key
+                display.sound[key].classList.add('soundList')
+
+                display.sound[key].textContent = key
+
+                if (sound[key].status != "pending") {
+                    display.sound[key].classList.add('hidden')
+                }
+
+                masterSound.appendChild(display.sound[key])
             }
-            masterMap.appendChild(display.soundMap[key])
-
-
-            display.sound[key] = document.createElement("div")
-            display.sound[key].onmousedown = function(e) {
-                e.stopPropagation()
-                var player = document.getElementById("player")
-                var validator = document.getElementById("validator")
-                validator.classList.add('hidden')
-                player.src = this.id + '.m4a'
-                player.dataset.sound = this.id
-                player.play()
-            }
-
-            display.sound[key].id = key
-            display.sound[key].classList.add('soundList')
-
-            display.sound[key].textContent = key
-            if (sound[key].valid != false) {
-                display.soundMap[key].style.backgroundImage = 'url("valid_sound.svg")';
-            }
-
-            if (sound[key].valid != null) {
-                display.sound[key].classList.add('hidden')
-            }
-
-            masterSound.appendChild(display.sound[key])
         }
+
     }
 }
 
@@ -259,10 +265,10 @@ function hideValidator() {
 }
 
 function webUnit(_tag) {
-    var masterMap = document.getElementById("masterMap")
+    // var masterMap = document.getElementById("masterMap")
     return {
-        x: _tag.x * masterMap.offsetWidth / config.ROOM_WIDTH,
-        y: _tag.y * masterMap.offsetHeight / config.ROOM_LENGTH,
+        x: _tag.x * masterMapOffsetWidth / config.ROOM_WIDTH,
+        y: _tag.y * masterMapOffsetHeight / config.ROOM_LENGTH,
         z: 170,
         angle: _tag.angle
     }

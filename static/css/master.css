@@ -168,16 +168,17 @@ body{
 }*/
 
 .sound {
-    width: 130px;
-    height: 130px;
+    width: 100px;
+    height: 100px;
     position: absolute;
     left: 0;
     top: 0;
     transform: translate(-50%, -50%);
-    background: url(sound.svg);
+    background: url(pending_sound.svg);
     background-position: center;
     transition: opacity 400ms;
     cursor: pointer;
+    background-size: 100%;
 }
 
 .sound:hover {
