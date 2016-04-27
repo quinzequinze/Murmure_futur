@@ -31,6 +31,7 @@ socket.on('updateUser', updateUser)
 socket.on('updateTag', updateTag)
 socket.on('updateSound', updateSound)
 socket.on('removeSound', removeSound)
+socket.on('censored', censored)
 socket.on('endSession', endSession)
 socket.on('reloadSession', reloadSession)
 socket.on('setState', setState)
@@ -59,6 +60,11 @@ function endSession() {
 
 function reloadSession() {
     location.reload(true)
+}
+
+function censored(){
+    audio.loadSound('d2.m4a')
+    console.log('censored')
 }
 
 function setState(_state) {
@@ -132,7 +138,9 @@ function updateSound(_sound) {
             console.log('rogue sound : ' + key)
             clearTimeout(audio.sample[key].timeOut)
             audio.sample[key].randomLooping = false
+            if(typeof audio.sample[key].source !== 'undefined'){
             audio.sample[key].source.disconnect()
+            }
             delete audio.sample[key]
         }
     }

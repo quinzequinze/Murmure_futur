@@ -1,8 +1,8 @@
 var config = {
         'TAG_NUMBER': 6,
         'SOUND_NUMBER': 6,
-        'ROOM_WIDTH': 6.1, //grande longueur
-        'ROOM_LENGTH': 4.5, //petite longueur
+        'ROOM_WIDTH': 12.4, //grande longueur
+        'ROOM_LENGTH': 8.75, //petite longueur
         'ORIENTATION_OFFSET': 48, //-42 + 90
     }
     //modules 
@@ -17,7 +17,7 @@ const master = io.of('/master')
 const lps = io.of('/lps')
 const colors = require('colors/safe')
 const uuid = require('node-uuid')
-const LPSfreq = 300
+const LPSfreq = 100
 const raspberry = true
 var active = new Map()
 var active_tag_id = [
@@ -33,7 +33,7 @@ var active_tag_id = [
 var db = require('origindb')(__dirname + '/static/db')
 const persistence = true
     //var piIp = '192.168.1.21'
-const piIp = '192.168.1.88'
+const piIp = '192.168.1.84'
 var state = persistence ? queryState() : {}
 var user = persistence ? queryUser() : {}
 var sound = persistence ? querySound() : {}
@@ -263,7 +263,8 @@ function invalidate(_UUID) {
     sound[_UUID].status = 'censored'
     master.emit('updateSound', sound)
     delete sound[_UUID]
-        client.emit('updateSound', sound)
+    client.emit('updateSound', sound)
+    client.emit('censored')
 
     if (persistence) {
         db('sound').set([_UUID, 'status'], 'censored')

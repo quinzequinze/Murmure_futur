@@ -40,3 +40,15 @@ function randomInt(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min
 }
 
+function getAngleTo(_origin, _target) {
+    if(typeof _origin =='undefined' || typeof _target =='undefined') return
+    var d = {}
+    d.x = _target.x - _origin.x
+    d.y = _target.y - _origin.y
+    var a = 0
+    a = Math.atan2(d.x, d.y)
+    //console.log(tag[TAG_ID])
+    deviceOrientation.angles.alpha
+    //console.log(degrees(a))
+    return a;
+}

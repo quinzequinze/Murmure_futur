@@ -35,13 +35,20 @@ var state = StateMachine.create({
             audio.fadeOut(0.01, audio.sample)
             ui.reset()
             ui.wait(true)
+
+            audio.sfx.tuto = audio.loadSound('d1.m4a')
+            audio.sfx.tuto.source.loop = true
+
             eventUp.wait = function() {
                 state.toIntroduction()
             }
         },
         onleavewait: function() {
             ui.wait(false)
+            audio.sfx.tuto.source.disconnect()
             delete eventUp.wait
+            delete audio.sfx.tuto
+
         },
         onenterintroduction: function() {
             ui.introduction(true)
@@ -108,7 +115,7 @@ var state = StateMachine.create({
         },
         onenterexploration: function() {
             //VJM
-            audio.sfx.tuto = audio.loadSound('exploration.m4a', false, function() {
+           // audio.sfx.tuto = audio.loadSound('exploration.m4a', false, function() {
                 exploration.init()
                 audio.fadeIn(6, audio.sample)
                     //
@@ -119,9 +126,10 @@ var state = StateMachine.create({
                     //
                 logicItems.exploration = function() {
                     exploration.collect()
+                    exploration.orient()
                     ui.exploration(exploration.getProximity())
                 }
-            })
+            //})
         },
         onleaveexploration: function() {
             if (logicItems.exploration) {
