@@ -158,6 +158,10 @@ body{
     background: #ccc;
 }
 
+.plugOff {
+    background: red;
+}
+
 .active {
     background: #FFBB00;
 }

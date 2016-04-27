@@ -36,7 +36,7 @@ instal.year = (function(window, undefined) {
         function active() {
             var y = {}
             if (typeof tag[TAG_ID] != 'undefined') {
-                y.step = Math.floor(list.length * (tag[TAG_ID].x / length) + 1)
+                y.step = Math.floor(list.length * ((config.ROOM_WIDTH - tag[TAG_ID].x) / length) + 1)
                 y.value = (list.length * (tag[TAG_ID].x / length) + 1) - y.step
                 y.name = list[y.step]
                 if (y.step < 1) {

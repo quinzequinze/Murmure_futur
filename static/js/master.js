@@ -9,6 +9,7 @@ var state = {}
 var sound = {}
 var audio = instal.audio()
 var display = {}
+var plugged = [] 
     //
 var socket = io.connect(root + '/master')
     //
@@ -17,6 +18,7 @@ socket.on('updateSound', updateSound)
 socket.on('updateUser', updateUser)
 socket.on('updateTag', updateTag)
 socket.on('updateState', updateState)
+socket.on('plug', updatePlugState)
     //
 function updateTag(_tag) {
     tag = _tag
@@ -41,6 +43,10 @@ function updateSound(_sound) {
     drawSound()
 
 
+}
+
+function updatePlugState(_data){
+    plugged = _data
 }
 
 
@@ -110,11 +116,18 @@ function drawTag() {
         } else {
             display.userMap[key].classList.add('hidden')
         }
-        if (state[key] !== 'wait' && state[key]) {
-            display.userMap[key].classList.add('active')
-        } else {
-            display.userMap[key].classList.remove('active')
+        if (plugged[key]) {
+            display.userMap[key].classList.remove('plugOff')
+            if (state[key] !== 'wait' && state[key]) {
+                display.userMap[key].classList.add('active')
+            } else {
+                display.userMap[key].classList.remove('active')
+            }
+        }else{
+            display.user[key].classList.remove('active')
+            display.userMap[key].classList.add('plugOff')
         }
+        
     }
 }
 
@@ -148,10 +161,17 @@ function drawUser() {
         } else {
             display.user[key].classList.add('hidden')
         }
-        if (state[key] !== 'wait' && state[key]) {
-            display.user[key].classList.add('active')
-        } else {
+        if (plugged[key]) {
+            display.user[key].classList.remove('plugOff')
+            if (state[key] !== 'wait' && state[key]) {
+                display.user[key].classList.add('active')
+            } else {
+                display.user[key].classList.remove('active')
+            }
+        }
+        else{
             display.user[key].classList.remove('active')
+            display.user[key].classList.add('plugOff')
         }
     }
 }
@@ -265,14 +285,24 @@ function hideValidator() {
 }
 
 function webUnit(_tag) {
-    // var masterMap = document.getElementById("masterMap")
-    return {
-        x: _tag.x * masterMapOffsetWidth / config.ROOM_WIDTH,
-        y: _tag.y * masterMapOffsetHeight / config.ROOM_LENGTH,
-        z: 170,
-        angle: _tag.angle
-    }
-}
+            var roomW = config.ROOM_WIDTH > config.ROOM_LENGTH ? config.ROOM_WIDTH : config.ROOM_LENGTH
+            var roomL = config.ROOM_WIDTH > config.ROOM_LENGTH ? config.ROOM_LENGTH : config.ROOM_WIDTH
+            if (masterMapOffsetWidth < masterMapOffsetHeight) {
+                return {
+                    x: _tag.y * masterMapOffsetWidth / roomL,
+                    y: _tag.x * masterMapOffsetHeight / roomW,
+                    z: 170,
+                    angle: tag.angle
+                }
+            } else {
+                return {
+                    x: _tag.x * masterMapOffsetWidth / roomW,
+                    y: _tag.y * masterMapOffsetHeight / roomL,
+                    z: 170,
+                    angle: tag.angle
+                }
+            }
+        }
 
 function udpateProgress() {
     var player = document.getElementById('player');

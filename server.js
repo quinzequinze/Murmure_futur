@@ -1,9 +1,9 @@
 var config = {
         'TAG_NUMBER': 6,
         'SOUND_NUMBER': 6,
-        'ROOM_WIDTH': 6.1, //grande longueur
-        'ROOM_LENGTH': 4.5, //petite longueur
-        'ORIENTATION_OFFSET': 48, //-42 + 90
+        'ROOM_WIDTH': 12.4, //grande longueur
+        'ROOM_LENGTH': 8.75, //petite longueur
+        'ORIENTATION_OFFSET': 75, //-42 + 90
     }
     //modules 
 const express = require('express')
@@ -33,7 +33,7 @@ var active_tag_id = [
 var db = require('origindb')(__dirname + '/static/db')
 const persistence = true
     //var piIp = '192.168.1.21'
-const piIp = '192.168.1.88'
+const piIp = '192.168.1.84'
 var state = persistence ? queryState() : {}
 var user = persistence ? queryUser() : {}
 var sound = persistence ? querySound() : {}
@@ -130,6 +130,7 @@ client.on('connection', function(socket) {
     socket.on('stateChange', stateChange)
     socket.on('choice', choice)
     socket.on('disconnect', disconnected)
+    socket.on('plug', plug)
 })
 
 function choice(_choice) {
@@ -250,6 +251,7 @@ master.on('connection', function(socket) {
     socket.on('invalidate', invalidate)
     socket.on('endSession', endSession)
     socket.on('reloadSession', reloadSession)
+    
 })
 
 function validate(_UUID) {
@@ -260,6 +262,11 @@ function validate(_UUID) {
         db('sound').set([_UUID, 'status'], 'valid')
     }
     console.log(colors.master('#master [validate][' + _UUID + ']'))
+}
+
+function plug(_data) {
+    master.emit('plug',_data)
+    // console.log(_data.id + " is plugged:" + _data.plugged)
 }
 
 function invalidate(_UUID) {

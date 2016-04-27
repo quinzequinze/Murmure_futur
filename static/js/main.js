@@ -22,6 +22,7 @@ var year = instal.year()
 var exploration = instal.exploration()
 var deviceOrientation = instal.deviceOrientation()
 var socket = io.connect(root + '/client')
+var plugged = []
     //socket events
 socket.on('init', init)
 socket.on('updateUser', updateUser)
@@ -41,8 +42,9 @@ if (getMobileOperatingSystem() === 'iOS') {
 }
 
 function updateBattery() {
-    window.webkit.messageHandlers.scriptMessageHandler.postMessage('getBattery')
-    socket.emit('plug', {1:plug})
+    window.webkit.messageHandlers.scriptMessageHandler.postMessage('getBattery') 
+    plugged[TAG_ID] = plug
+    socket.emit('plug', plugged)
 }
 
 function endSession() {
