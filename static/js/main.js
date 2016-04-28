@@ -17,8 +17,8 @@ var rec = false
     //modules 
 var audio = instal.audio()
 var ui = instal.ui()
-if(debug){
-var map = instal.map()
+if (debug) {
+    var map = instal.map()
 }
 var theme = instal.theme()
 var year = instal.year()
@@ -41,15 +41,15 @@ socket.on('setState', setState)
 if (getMobileOperatingSystem() === 'iOS') {
     setInterval(function() {
         updateBattery()
-        if(debug){
-        var plugElem = document.getElementById('plug')
-        plugElem.textContent = plug
+        if (debug) {
+            var plugElem = document.getElementById('plug')
+            plugElem.textContent = plug
         }
     }, 5000)
 }
 
 function updateBattery() {
-    window.webkit.messageHandlers.scriptMessageHandler.postMessage('getBattery') 
+    window.webkit.messageHandlers.scriptMessageHandler.postMessage('getBattery')
     plugged[TAG_ID] = plug
     socket.emit('plug', plugged)
 }
@@ -63,15 +63,14 @@ function reloadSession() {
     location.reload(true)
 }
 
-function censored(){
+function censored() {
     audio.loadSound('censored.m4a')
     console.log('censored')
 }
 
-function success(){
+function success() {
     audio.loadSound('success.m4a')
-        console.log('censored')
-
+    console.log('censored')
 }
 
 function setState(_state) {
@@ -108,7 +107,6 @@ function init(_data) {
     inited = true
 }
 
-
 function updateTag(_tag) {
     tag = _tag
     if (typeof tag[TAG_ID] !== 'undefined') {
@@ -131,22 +129,15 @@ function setOrientation(_angles) {
 
 function updateSound(_sound) {
     sound = _sound
-        //load sound if necessary
-    for (var key in sound) {
-        if (!audio.sample.hasOwnProperty(key)) {
-            audio.sample[key] = audio.loadSound3D(key + '.m4a', true)
-            audio.sample[key].maxDelay = 4000
-            audio.sample[key].panner.setPosition(sound[key].x * config.ROOM_WIDTH, sound[key].y * config.ROOM_LENGTH, 1.70)
-        }
-    }
-    //remove sound that should not be there anymore
+    
+        //remove sound that should not be there anymore
     for (var key in audio.sample) {
         if (!sound[key]) {
             console.log('rogue sound : ' + key)
             clearTimeout(audio.sample[key].timeOut)
             audio.sample[key].randomLooping = false
-            if(typeof audio.sample[key].source !== 'undefined'){
-            audio.sample[key].source.disconnect()
+            if (typeof audio.sample[key].source !== 'undefined') {
+                audio.sample[key].source.disconnect()
             }
             delete audio.sample[key]
         }
@@ -154,10 +145,18 @@ function updateSound(_sound) {
     if (typeof map !== 'undefined') {
         map.drawSound()
     }
+    //load sound if necessary
+    for (var key in sound) {
+        if (!audio.sample.hasOwnProperty(key)) {
+            audio.sample[key] = audio.loadSound3D(key + '.m4a', true)
+            audio.sample[key].maxDelay = 4000
+            audio.sample[key].panner.setPosition(sound[key].x * config.ROOM_WIDTH, sound[key].y * config.ROOM_LENGTH, 1.70)
+        }
+    }
 }
 //replace sound in case of re-recording
 function removeSound(_data) {
-    console.log('remove :' +_data)
+    console.log('remove :' + _data)
     if (audio.sample[_data].timeOut) {
         clearTimeout(audio.sample[_data].timeOut)
     }
