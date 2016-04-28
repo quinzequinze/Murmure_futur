@@ -201,6 +201,8 @@ function writeSound(data) {
             db('sound').set([user[id], 'time'], unixTime())
         }
     }
+    client.to(id).emit('success')
+
 }
 
 function soundHandler() {

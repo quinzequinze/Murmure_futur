@@ -7,52 +7,86 @@ instal.theme = (function(window, undefined) {
         var sample = {}
         var self = this
         var list = {
-            /*
-            Argent: {
-                x: 0.1,
-                y: 1
-            },
-            Guerre: {
-                x: 1,
-                y: 0
-            },
-            Temps: {
-                x: 0.3,
-                y: 0.8
-            },
-            TonFuture: {
-                x: 0.4,
-                y: 0.7
-            },
-            Transport: {
-                x: 0.5,
-                y: 0.6
-            },
-            Heritage: {
-                x: 0.6,
-                y: 0.5
-            },
-            Imortalite: {
-                x: 0.7,
-                y: 0.4
-            },
-            Liberte: {
-                x: 0.8,
-                y: 0.3
-            },
-            Loisir: {
-                x: 0.9,
-                y: 0.2
-            },
-            */
-            Mode: {
-                x: 0.5,
-                y: 0.5
-            },
-            Mort: {
+
+            apprendre: {
                 x: 0,
                 y: 0
+            },
+            arts: {
+                x: 0.33,
+                y: 0
+            },
+            bouger: {
+                x: 0.66,
+                y: 0
+            },
+            comunication: {
+                x: 1,
+                y: 0
             }
+
+            ,
+            ethique: {
+                x: 0,
+                y: 0.33
+            },
+            frontieres: {
+                x: 0.33,
+                y: 0.33
+            },
+            liberte: {
+                x: 0.66,
+                y: 0.33
+            },
+            marche: {
+                x: 1,
+                y: 0.33
+            }
+
+            ,
+            medecine: {
+                x: 0,
+                y: 0.66
+            },
+            naturel: {
+                x: 0.33,
+                y: 0.66
+            }
+
+            ,
+            performance: {
+                x: 0.66,
+                y: 0.66
+            },
+            progres: {
+                x: 1,
+                y: 0.66
+            }
+/*
+            ,
+            resources: {
+                x: 0,
+                y: 1
+            },
+            style: {
+                x: 0.33,
+                y: 1
+            },
+            succes: {
+                x: 0.66,
+                y: 1
+            },
+            toi: {
+                x: 1,
+                y: 1
+            }
+
+*/
+            ///////////////
+            //vie: {
+            //    x: 0.1,
+            //    y: 1
+            //}
         }
 
         function init() {
@@ -60,7 +94,7 @@ instal.theme = (function(window, undefined) {
                 sample[key] = audio.loadSound3D(key + '.m4a', true)
                 sample[key].maxDelay = 4000
                 sample[key].panner.setPosition(list[key].x * config.ROOM_WIDTH, list[key].y * config.ROOM_LENGTH, 0)
-                sample[key].volume.gain.value = 1
+                sample[key].volume.gain.value = 10
             }
         }
 
@@ -97,13 +131,13 @@ instal.theme = (function(window, undefined) {
                 }
             }
             if (t.dist > minDist) {
-                if(debug){
-                thematique.textContent = 'undefined'
+                if (debug) {
+                    thematique.textContent = 'undefined'
                 }
                 return false
             }
-            if(debug){
-            thematique.textContent = t.name
+            if (debug) {
+                thematique.textContent = t.name
             }
             return t
         }

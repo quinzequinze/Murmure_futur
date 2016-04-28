@@ -48,7 +48,7 @@ instal.map = (function(window, undefined) {
                         display.angle.style.top = py + 'px'
                         display.angle.style.left = px + 'px'
                     }
-                } else {
+                } else if(tag[key].active == false && text == true){
                     display.tag[key].classList.add('hidden')
                 }
                 if (user[key]) {
@@ -57,6 +57,7 @@ instal.map = (function(window, undefined) {
                     display.tag[key].classList.remove('active')
                 }
             }
+
         }
 
         function drawSound() {

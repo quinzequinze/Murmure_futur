@@ -4,7 +4,7 @@ instal.year = (function(window, undefined) {
     function year() {
         var sample = {}
         var length
-        var list = ['2017', '2027', '2100', '3000']
+        var list = ['Ns2017', 'Ns2027', 'Ns2047', 'NS2100', 'Ns2392']
 
         function init() {
             length = config.ROOM_WIDTH < config.ROOM_LENGTH ? config.ROOM_LENGTH : config.ROOM_WIDTH
@@ -47,11 +47,10 @@ instal.year = (function(window, undefined) {
                     y.step = list.length
                     y.value = 1
                 }
-                                if(debug){
-                      var annee = document.getElementById('annee')
-                annee.textContent = y.step
+                if (debug) {
+                    var annee = document.getElementById('annee')
+                    annee.textContent = y.step
                 }
-   
             }
             return y
         }
@@ -71,7 +70,7 @@ instal.year = (function(window, undefined) {
             getYear: getYear,
             active: active,
             kill: kill,
-            sample:sample
+            sample: sample
         }
     }
     return year

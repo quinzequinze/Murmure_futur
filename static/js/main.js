@@ -33,6 +33,7 @@ socket.on('updateTag', updateTag)
 socket.on('updateSound', updateSound)
 socket.on('removeSound', removeSound)
 socket.on('censored', censored)
+socket.on('success', success)
 socket.on('endSession', endSession)
 socket.on('reloadSession', reloadSession)
 socket.on('setState', setState)
@@ -63,8 +64,14 @@ function reloadSession() {
 }
 
 function censored(){
-    audio.loadSound('d2.m4a')
+    audio.loadSound('censored.m4a')
     console.log('censored')
+}
+
+function success(){
+    audio.loadSound('success.m4a')
+        console.log('censored')
+
 }
 
 function setState(_state) {

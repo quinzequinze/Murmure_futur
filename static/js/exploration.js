@@ -66,9 +66,7 @@ instal.exploration = (function(window, undefined) {
         }
 
         function endRecord() {
-
             if (canRecord && instruction) {
-                audio.sfx.tuto = audio.loadSound('validate.m4a', false)
                 audio.fadeIn(6, audio.sample)
                 window.webkit.messageHandlers.scriptMessageHandler.postMessage('endRecord')
                 event.preventDefault()
