@@ -38,6 +38,7 @@ instal.map = (function(window, undefined) {
             for (var key in display.tag) {
                 if (tag[key]) {
                     display.tag[key].classList.remove('hidden')
+                    //console.log(tag[key].x)
                     display.tag[key].style.top = webUnit(tag[key]).y + 'px'
                     display.tag[key].style.left = webUnit(tag[key]).x + 'px'
                     if (getMobileOperatingSystem() === 'iOS' && key == TAG_ID) {

@@ -358,7 +358,9 @@ function parseLPS(data) {
             x: data[key].location[1],
             y: data[key].location[0],
             z: data[key].location[2],
+            active: data[key].active
         }
+        //tag[tagKey].active = data[key].active
         tag[tagKey] = position
     }
     client.emit('updateTag', tag)

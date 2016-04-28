@@ -13,13 +13,14 @@ socket.on('updateTag', updateTag)
     //
 function updateTag(_tag) {
     tag = _tag
-    drawTag()
-    drawUser()
+    map.drawTag()
+    
 }
 
 function updateUser(_user) {
     user = _user
     map.drawTag()
+
 }
 
 function init(_config) {
