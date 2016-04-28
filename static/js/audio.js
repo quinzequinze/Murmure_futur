@@ -25,7 +25,7 @@ instal.audio = (function(window, undefined) {
             //a.volume.disconnect()
         }, false)
         window.addEventListener('focus', function() {
-           // a.volume.connect(a.context.destination)
+            // a.volume.connect(a.context.destination)
         }, false)
 
         function loadBuffer(soundFileName, callback) {
@@ -42,10 +42,10 @@ instal.audio = (function(window, undefined) {
             return request
         }
 
-        function loadSound3D(soundFileName, loop, callback) {
+        function loadSound3D(soundFileName, _loop, callback) {
             var s = {}
             s.maxDelay = 1000
-            s.randomLooping = loop
+            s.randomLooping = _loop
             s.panner = a.context.createPanner()
             s.panner.refDistance = 1
             s.panner.distanceModel = 'exponential';
@@ -80,7 +80,6 @@ instal.audio = (function(window, undefined) {
             audioNode.timeOut = setTimeout(function() {
                 randomLoop(audioNode)
             }, (audioNode.source.buffer.duration * 1000) + delay)
-            
         }
 
         function fadeOut(duration, _sample) {
@@ -92,6 +91,13 @@ instal.audio = (function(window, undefined) {
                 _sample[key].volume.gain.setValueAtTime(_sample[key].volume.gain.value, currentTime)
                 _sample[key].volume.gain.linearRampToValueAtTime(0, fadeTime)
             }
+        }
+        function fadeOutSingle(_audioNode) {
+            var currentTime = a.context.currentTime
+            var fadeTime = currentTime + duration
+            _audioNode.volume.gain.cancelScheduledValues(currentTime)
+            _audioNode.volume.gain.setValueAtTime(_sample[key].volume.gain.value, currentTime)
+            _audioNode.volume.gain.linearRampToValueAtTime(0, fadeTime)
         }
 
         function fadeIn(duration, _sample) {
@@ -141,7 +147,8 @@ instal.audio = (function(window, undefined) {
             loadSound: loadSound,
             loadSound3D: loadSound3D,
             randomLoop: randomLoop,
-            sfx: sfx        }
+            sfx: sfx
+        }
     }
     return audio
 })(window)

@@ -11,12 +11,15 @@ var tag = {}
 var sound = {}
 var logicItems = {}
 var choice = {}
+var debug = true
 choice.id = TAG_ID
 var rec = false
     //modules 
 var audio = instal.audio()
 var ui = instal.ui()
+if(debug){
 var map = instal.map()
+}
 var theme = instal.theme()
 var year = instal.year()
 var exploration = instal.exploration()
@@ -29,6 +32,7 @@ socket.on('updateUser', updateUser)
 socket.on('updateTag', updateTag)
 socket.on('updateSound', updateSound)
 socket.on('removeSound', removeSound)
+socket.on('censored', censored)
 socket.on('endSession', endSession)
 socket.on('reloadSession', reloadSession)
 socket.on('setState', setState)
@@ -36,8 +40,10 @@ socket.on('setState', setState)
 if (getMobileOperatingSystem() === 'iOS') {
     setInterval(function() {
         updateBattery()
+        if(debug){
         var plugElem = document.getElementById('plug')
         plugElem.textContent = plug
+        }
     }, 5000)
 }
 
@@ -54,6 +60,11 @@ function endSession() {
 
 function reloadSession() {
     location.reload(true)
+}
+
+function censored(){
+    audio.loadSound('d2.m4a')
+    console.log('censored')
 }
 
 function setState(_state) {
@@ -113,7 +124,6 @@ function setOrientation(_angles) {
 
 function updateSound(_sound) {
     sound = _sound
-    console.log(sound)
         //load sound if necessary
     for (var key in sound) {
         if (!audio.sample.hasOwnProperty(key)) {
@@ -128,7 +138,9 @@ function updateSound(_sound) {
             console.log('rogue sound : ' + key)
             clearTimeout(audio.sample[key].timeOut)
             audio.sample[key].randomLooping = false
+            if(typeof audio.sample[key].source !== 'undefined'){
             audio.sample[key].source.disconnect()
+            }
             delete audio.sample[key]
         }
     }
@@ -138,6 +150,7 @@ function updateSound(_sound) {
 }
 //replace sound in case of re-recording
 function removeSound(_data) {
+    console.log('remove :' +_data)
     if (audio.sample[_data].timeOut) {
         clearTimeout(audio.sample[_data].timeOut)
     }

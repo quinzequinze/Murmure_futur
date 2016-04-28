@@ -47,8 +47,11 @@ instal.year = (function(window, undefined) {
                     y.step = list.length
                     y.value = 1
                 }
-                var annee = document.getElementById('annee')
+                                if(debug){
+                      var annee = document.getElementById('annee')
                 annee.textContent = y.step
+                }
+   
             }
             return y
         }

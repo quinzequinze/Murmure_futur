@@ -17,7 +17,7 @@ const master = io.of('/master')
 const lps = io.of('/lps')
 const colors = require('colors/safe')
 const uuid = require('node-uuid')
-const LPSfreq = 300
+const LPSfreq = 100
 const raspberry = true
 var active = new Map()
 var active_tag_id = [
@@ -138,7 +138,6 @@ function choice(_choice) {
         theme: _choice.theme,
         year: _choice.year
     })
-    console.log(_choice)
 }
 
 function identify(id) {
@@ -189,8 +188,6 @@ function writeSound(data) {
             z: 1.7
         }
         sound[user[id]].status = "pending"
-            //
-        console.log('now')
         soundHandler()
         client.emit('updateSound', sound)
         master.emit('updateSound', sound)
@@ -271,10 +268,11 @@ function plug(_data) {
 
 function invalidate(_UUID) {
     sound[_UUID].status = 'censored'
-    client.emit('removeSound', _UUID)
-    client.emit('updateSound', sound)
     master.emit('updateSound', sound)
     delete sound[_UUID]
+    client.emit('updateSound', sound)
+    client.emit('censored')
+
     if (persistence) {
         db('sound').set([_UUID, 'status'], 'censored')
     }

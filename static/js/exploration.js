@@ -15,6 +15,15 @@ instal.exploration = (function(window, undefined) {
             canRecord = false
         }
 
+        function orient() {
+            for (var key in sound) {
+                var a = getAngleTo(tag[TAG_ID], sound[key]);
+                //var mapedLowPass = mapVar(angle, 180, 0, 100, 10000);
+                //context.soundNodeArray[i].sample.biquadFilter.frequency.value = mapedLowPass;
+            }
+
+        }
+
         function collect() {
             var c = {}
             for (var key in sound) {
@@ -30,8 +39,10 @@ instal.exploration = (function(window, undefined) {
                 proximity = true
                 if (!collected.has(c.id)) {
                     collected.add(c.id)
-                    var collection = document.getElementById('collection')
-                    collection.textContent = "collection: " + collected.size
+                    if (debug) {
+                        var collection = document.getElementById('collection')
+                        collection.textContent = "collection: " + collected.size
+                    }
                 }
             } else {
                 proximity = false
@@ -74,7 +85,8 @@ instal.exploration = (function(window, undefined) {
             collect: collect,
             beginRecord: beginRecord,
             endRecord: endRecord,
-            getProximity: getProximity
+            getProximity: getProximity,
+            orient: orient
         }
     }
     return exploration
