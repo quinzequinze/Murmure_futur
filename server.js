@@ -66,6 +66,9 @@ app.get('/debug', function(req, res) {
 app.get('/master', function(req, res) {
     res.sendFile(__dirname + '/master.html')
 })
+app.get('/videomap', function(req, res) {
+    res.sendFile(__dirname + '/videomap.html')
+})
 server.listen(4000, function() {
         console.log(colors.server('#server [listening : localhost:4000]'))
     })

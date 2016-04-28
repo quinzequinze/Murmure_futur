@@ -1,10 +1,16 @@
 var instal = instal || {}
 instal.map = (function(window, undefined) {
-    function map() {
+    function map(_container) {
         var display = {}
         var mapElement = document.createElement('div')
+        var text = false
         mapElement.id = 'map'
+        if (!_container) {
         document.body.appendChild(mapElement)
+        text = true
+        } else {
+          _container.appendChild(mapElement)
+        }
 
         function init() {
             display.tag = []
@@ -18,7 +24,9 @@ instal.map = (function(window, undefined) {
                 display.tag[i].classList.add('hidden')
                 display.tag[i].classList.add('user')
                 mapElement.appendChild(display.tag[i])
+                if(text){
                 display.tag[i].textContent = i
+                }
             }
             display.angle = document.createElement("div")
             display.angle.classList.add('circle')
